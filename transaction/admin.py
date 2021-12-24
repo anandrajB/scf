@@ -1,7 +1,5 @@
 from django.contrib import admin
 
-from .models import ProgramType ,Programs
-# Register your models here.
-
-admin.site.register(ProgramType)
-admin.site.register(Programs)
+from .models import Programs , Invoices, invoice_uploads
+admin.site.register(invoice_uploads)
+admin.site.register(Invoices)

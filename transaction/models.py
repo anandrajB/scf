@@ -2,6 +2,7 @@ from django.db import models
 from datetime import date
 
 from django.db.models.base import Model
+from django.utils.translation import check_for_language
 
 #  MODELS RELATED TO TRANSACTION
 
@@ -33,17 +34,6 @@ class ProgramType(models.Model):
     def __str__(self):
         return self.description
 
-class Financerequesttype(models.Model):
-    description = models.CharField(max_length=15)
-
-
-class interesttype(models.Model):
-    description = models.CharField(max_length=15)
-
-
-class Interestratetype(models.Model):
-    description = models.CharField(max_length=15)
-
 class submodels(models.Model):
     description = models.CharField(max_length=35)
     api_route = models.CharField(max_length=55)
@@ -56,10 +46,27 @@ class Transitionpartytype(models.Model):
 
 
 class Programs(models.Model):
+
+    finance_request_type = [
+    ('AUTOMATIC','AUTOMATIC'),
+    ('ON_REQUEST','ON_REQUEST')
+    ]
+
+    interest_choices = [
+        ('FIXED','FIXED'),
+        ('FLOATING','FLOATING')
+    ]
+
+    interest_rate_type_choices = [
+        ('LIBOR','LIBOR'),
+        ('EURIBOR','EURIBOR'),
+        ('SOFOR','SOFOR')
+    ]
+
     
     party = models.ForeignKey("accounts.Parties",on_delete=models.CASCADE)
     program_type  = models.OneToOneField(ProgramType,on_delete=models.CASCADE)
-    finance_request_type = models.ForeignKey(Financerequesttype,on_delete=models.DO_NOTHING)
+    finance_request_type = models.CharField(choices=finance_request_type,max_length=15,default=None)
     limit_currency = models.CharField(max_length=3)
     total_limit_amount = models.DecimalField(max_digits=7,decimal_places=2)
     finance_currency = models.CharField(max_length=3)
@@ -75,8 +82,8 @@ class Programs(models.Model):
     financed_amount = models.DecimalField(max_digits=5, decimal_places=2)
     balance_amount = models.DecimalField(max_digits=5, decimal_places=2)
     grace_period = models.IntegerField()
-    interest_type = models.ForeignKey(interesttype,on_delete=models.CASCADE)
-    interest_rate_type = models.ForeignKey(Interestratetype,on_delete=models.CASCADE)
+    interest_type = models.CharField(choices=interest_choices,default=None,max_length=15)
+    interest_rate_type = models.CharField(choices=interest_rate_type_choices,max_length=15,default=None)
     interest_rate = models.DecimalField(max_digits=6,decimal_places=2)
     margin = models.DecimalField(max_digits=5, decimal_places=2)
     wf_item_id = models.ForeignKey("accounts.workflowitems",on_delete=models.CASCADE)
@@ -99,9 +106,25 @@ class FundingRequest(models.Model):
 
 class Pairings(models.Model):
     
+    finance_request_type = [
+    ('AUTOMATIC','AUTOMATIC'),
+    ('ON_REQUEST','ON_REQUEST')
+    ]
+
+    interest_choices = [
+        ('FIXED','FIXED'),
+        ('FLOATING','FLOATING')
+    ]
+
+    interest_rate_type_choices = [
+        ('LIBOR','LIBOR'),
+        ('EURIBOR','EURIBOR'),
+        ('SOFOR','SOFOR')
+    ]
+
     program_type = models.ForeignKey(Programs,on_delete=models.DO_NOTHING)
     counterparty_id = models.ForeignKey("accounts.Parties",on_delete=models.CASCADE)
-    finance_request = models.ForeignKey(Financerequesttype,on_delete=models.CASCADE)
+    finance_request = models.CharField(choices=finance_request_type,max_length=15,default=None)
     currency = models.ForeignKey("accounts.Currencies",on_delete=models.DO_NOTHING,related_name='pairingscurrency')
     total_limit = models.DecimalField(max_digits=8,decimal_places=2)
     finance_currency_type = models.ForeignKey("accounts.Currencies",on_delete=models.DO_NOTHING,related_name='financedcurrency')
@@ -118,8 +141,8 @@ class Pairings(models.Model):
     financed_amount = models.DecimalField(max_digits=8,decimal_places=2)
     balance_amount = models.DecimalField(max_digits=8,decimal_places=2)
     grace_period = models.IntegerField()
-    interest_type = models.ForeignKey(interesttype,on_delete=models.DO_NOTHING)
-    interest_rate_type = models.ForeignKey(Interestratetype,on_delete=models.DO_NOTHING)
+    interest_type = models.CharField(choices=interest_choices,default=None,max_length=15)
+    interest_rate_type = models.CharField(choices=interest_rate_type_choices,max_length=15,default=None)
     interest_rate = models.DecimalField(max_digits=8,decimal_places=2)
     margin = models.DecimalField(max_digits=8,decimal_places=2)
 
@@ -128,6 +151,23 @@ class Pairings(models.Model):
 
 
 class Invoices(models.Model):
+
+    finance_request_type = [
+    ('AUTOMATIC','AUTOMATIC'),
+    ('ON_REQUEST','ON_REQUEST')
+    ]
+
+    interest_choices = [
+        ('FIXED','FIXED'),
+        ('FLOATING','FLOATING')
+    ]
+
+    interest_rate_type_choices = [
+        ('LIBOR','LIBOR'),
+        ('EURIBOR','EURIBOR'),
+        ('SOFOR','SOFOR')
+    ]
+
     
     pairing = models.ForeignKey(Pairings,on_delete=models.DO_NOTHING)
     invoice_no = models.CharField(null=True,blank=True,max_length=10)
@@ -135,7 +175,7 @@ class Invoices(models.Model):
     due_date = models.DateField(default=date.today)
     invoice_currency = models.ForeignKey("accounts.Currencies",on_delete=models.CASCADE,related_name='invoicecurrencytype')
     amount = models.DecimalField(max_digits=8,decimal_places=2)
-    funding_req_type = models.ForeignKey(Financerequesttype,on_delete=models.DO_NOTHING,default=None)
+    funding_req_type = models.CharField(choices=finance_request_type,default=None,max_length=15)
     finance_currency_type = models.ForeignKey("accounts.Currencies" , on_delete=models.DO_NOTHING,related_name='financedinvoicecurrency')
     settlement_currency_type = models.ForeignKey("accounts.Currencies",on_delete=models.CASCADE)
     interest_rate = models.DecimalField(max_digits=6,decimal_places=1)
