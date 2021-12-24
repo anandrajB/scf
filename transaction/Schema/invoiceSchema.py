@@ -1,7 +1,7 @@
 # Altered Invoices
 import graphene
 from graphene_django import DjangoObjectType
-from transaction.models import Pairings, Invoices, FundingRequest
+from transaction.models import Pairings, Invoices
 from accounts.models import Currencies, workflowitems
 # from accounts.models import Parties, User, customer, Currencies, Countries, user_group
 from transaction.Schema.choices import financeType
