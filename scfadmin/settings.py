@@ -19,8 +19,6 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-05(h6_qbkd0dv3)2@gi*$twyh3*u(l@%p9ct7ftk&o=jib8)&9'
 
@@ -49,7 +47,6 @@ SHARED_APPS = [
 ]
 
 
-
 TENANT_APPS = [
     'material',
     'material.admin',
@@ -65,20 +62,21 @@ TENANT_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_swagger',
-] 
+]
 
-# TENANT CONFIGURATIONS 
+# TENANT CONFIGURATIONS
 
-TENANT_MODEL = "client.Client" # app.Model
+TENANT_MODEL = "client.Client"  # app.Model
 
 TENANT_DOMAIN_MODEL = "client.Domain"  # app.Model
 
-# CUSTOMER USER MODEL 
+# CUSTOMER USER MODEL
 
 AUTH_USER_MODEL = 'accounts.User'
 
 
-INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
+INSTALLED_APPS = list(SHARED_APPS) + \
+    [app for app in TENANT_APPS if app not in SHARED_APPS]
 
 
 MIDDLEWARE = [
@@ -105,11 +103,10 @@ ROOT_URLCONF = 'scfadmin.urls'
 PUBLIC_SCHEMA_URLCONF = 'scfadmin.urls_public'
 
 
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -118,8 +115,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            'libraries' : {
-                'staticfiles': 'django.templatetags.static', 
+            'libraries': {
+                'staticfiles': 'django.templatetags.static',
             }
         },
     },
@@ -169,12 +166,11 @@ WSGI_APPLICATION = 'scfadmin.wsgi.application'
 # }
 
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django_tenants.postgresql_backend',
         'NAME': 'scf',
-        'USER': 'postgres',
+        'USER': 'sheik',
         'PASSWORD': 'root',
         'HOST': 'localhost',
         'PORT': '5432',
@@ -187,7 +183,7 @@ DATABASE_ROUTERS = (
 )
 
 
-#added
+# added
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -240,7 +236,7 @@ SITE_ID = 1
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#CUSTOM BACKEND AUTHENTICATION
+# CUSTOM BACKEND AUTHENTICATION
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -248,14 +244,13 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
+# SCHEMA'S FOR REST SWAGGER
 
-# SCHEMA'S FOR REST SWAGGER 
-
-REST_FRAMEWORK = { 
+REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
 }
 
 
-# option for postgresql in heroku 
+# option for postgresql in heroku
 
-SHOW_PUBLIC_IF_NO_TENANT_FOUND=True
+SHOW_PUBLIC_IF_NO_TENANT_FOUND = True

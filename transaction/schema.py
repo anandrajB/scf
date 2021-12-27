@@ -4,7 +4,7 @@ from graphene import relay
 from graphene_django import DjangoListField
 from accounts.models import customer
 from transaction.models import Invoices
-from .Schema import  partiesSchema, programtypeSchema, programsSchema, customerSchema, currencySchema, countrySchema, pairingsSchema, invoiceSchema, fundingSchema, bankSchema, userSchema
+from .Schema import partiesSchema, programsSchema, customerSchema, currencySchema, countrySchema, pairingsSchema, invoiceSchema, fundingSchema, bankSchema, userSchema, invoiceuploadSchema
 
 
 class Query(graphene.ObjectType):
@@ -12,7 +12,6 @@ class Query(graphene.ObjectType):
     all_users = DjangoListField(userSchema.UserDetail)
     all_banks = DjangoListField(bankSchema.BankType)
     all_parties = DjangoListField(partiesSchema.PartiesType)
-    all_programtypes = DjangoListField(programtypeSchema.Program_Type)
     all_programs = DjangoListField(programsSchema.ProgramsType)
     all_customers = graphene.List(
         customerSchema.CustomerType, search=graphene.ID())
@@ -22,6 +21,7 @@ class Query(graphene.ObjectType):
     all_funding = DjangoListField(fundingSchema.FundingType)
     all_invoices = graphene.List(
         invoiceSchema.InvoiceType, curr_less=graphene.String(), curr_greater=graphene.String())
+    all_invoiceuploads = DjangoListField(invoiceuploadSchema.InvoiceUploadType)
 
     def resolve_all_customers(self, info, search=None, **kwargs):
         if search:
@@ -46,16 +46,11 @@ class Query(graphene.ObjectType):
 
 class Mutation(graphene.ObjectType):
 
-
     create_bank = bankSchema.createBank.Field()
 
     create_parties = partiesSchema.PartiesType_create.Field()
     update_parties = partiesSchema.PartiesType_update.Field()
     delete_parties = partiesSchema.PartiesType_delete.Field()
-
-    create_programtype = programtypeSchema.createProgramType.Field()
-    update_programtype = programtypeSchema.updateProgramType.Field()
-    delete_programtype = programtypeSchema.deleteProgramType.Field()
 
     create_program = programsSchema.createPrograms.Field()
     update_program = programsSchema.updatePrograms.Field()

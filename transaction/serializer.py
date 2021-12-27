@@ -1,16 +1,8 @@
 from rest_framework import serializers
-from .models import  Programs , ProgramType
-
-
-
-class ProgramTypeserilaizer(serializers.ModelSerializer):
-    class Meta:
-        model = ProgramType
-        fields = '__all__'
+from .models import Programs
 
 
 class ProgramSerializer(serializers.ModelSerializer):
-    pro = ProgramTypeserilaizer(read_only=True)
     class Meta:
         model = Programs
         fields = [
@@ -33,8 +25,7 @@ class ProgramSerializer(serializers.ModelSerializer):
             "grace_period",
             "interest_type",
             "interest_rate",
-            "margin",
-            "pro"
+            "margin"
         ]
 
         read_only_fields = [

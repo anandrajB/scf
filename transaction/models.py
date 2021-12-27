@@ -23,14 +23,6 @@ from django.utils.translation import check_for_language
 #     ('SOFOR','SOFOR')
 # ]
 
-
-class ProgramType(models.Model):
-    description = models.CharField(max_length=35)
-
-    def __str__(self):
-        return self.description
-
-
 class submodels(models.Model):
     description = models.CharField(max_length=35)
     api_route = models.CharField(max_length=55)
@@ -58,8 +50,17 @@ class Programs(models.Model):
         ('SOFOR', 'SOFOR')
     ]
 
+    program_type = [
+        ('ALL', 'ALL'),
+        ('APF', 'APF'),
+        ('RF', 'RF'),
+        ('DF', 'DF')
+    ]
+
     party = models.ForeignKey("accounts.Parties", on_delete=models.CASCADE)
-    program_type = models.OneToOneField(ProgramType, on_delete=models.CASCADE)
+    program_type = models.CharField(
+        choices=program_type, default='ALL', max_length=10)
+
     finance_request_type = models.CharField(
         choices=finance_request_type, max_length=15, default=None)
     limit_currency = models.CharField(max_length=3)
@@ -84,7 +85,7 @@ class Programs(models.Model):
         choices=interest_rate_type_choices, max_length=15, default=None)
     interest_rate = models.DecimalField(max_digits=6, decimal_places=2)
     margin = models.DecimalField(max_digits=5, decimal_places=2)
-    wf_item_id = models.ForeignKey(
+    wf_item = models.ForeignKey(
         "accounts.workflowitems", on_delete=models.CASCADE)
 
     def __str__(self):
@@ -121,7 +122,7 @@ class Pairings(models.Model):
     ]
 
     program_type = models.ForeignKey(Programs, on_delete=models.DO_NOTHING)
-    counterparty_id = models.ForeignKey(
+    counterparty = models.ForeignKey(
         "accounts.Parties", on_delete=models.CASCADE)
     finance_request = models.CharField(
         choices=finance_request_type, max_length=15, default=None)
@@ -204,7 +205,14 @@ class Actions(models.Model):
 
 
 class invoice_uploads(models.Model):
-    program_type = models.ForeignKey(ProgramType, on_delete=models.CASCADE)
+    program_type = [
+        ('ALL', 'ALL'),
+        ('APF', 'APF'),
+        ('RF', 'RF'),
+        ('DF', 'DF')
+    ]
+    program_type = models.CharField(
+        choices=program_type, default='ALL', max_length=15)
     invoices = models.JSONField()
     wf_item_id = models.ForeignKey(
         "accounts.workflowitems", on_delete=models.CASCADE)
