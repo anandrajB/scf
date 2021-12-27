@@ -1,6 +1,7 @@
+# Altered Parties
 import graphene
 from graphene_django import DjangoObjectType
-from accounts.models import Banks, Countries, Currencies, Parties, User
+from accounts.models import Banks, Countries, Currencies, Parties, User, Partytype
 
 
 class PartiesType(DjangoObjectType):
@@ -11,11 +12,8 @@ class PartiesType(DjangoObjectType):
 
 class PartiesType_create(graphene.Mutation):
     class Arguments:
-        model_id = graphene.Int()
-        customers_user_id = graphene.String(required=True)
-        account_number = graphene.String(required=True)
+        customers_id = graphene.String(required=True)
         name = graphene.String(required=True)
-        bank_related = graphene.Int()
         email = graphene.String()
         phone = graphene.String()
         password = graphene.String()
@@ -26,13 +24,13 @@ class PartiesType_create(graphene.Mutation):
         state = graphene.String(required=True)
         zipcode = graphene.String(required=True)
         country_code = graphene.Int()
-        customer = graphene.Boolean(required=True)
+        onboarded = graphene.Boolean()
+        party_type_id = graphene.Int()
 
     parties = graphene.Field(PartiesType)
 
-    def mutate(self, root, model_id, email, phone, password, customers_user_id, bank_related, account_number, name, base_currency, address_line_1, address_line_2, city, state, zipcode, country_code, customer):
-
-        _bank = Banks.objects.get(id=bank_related)
+    def mutate(self, root, email, phone, password, customer_id, name, base_currency, address_line_1, address_line_2, city, state, zipcode, country_code, onboarded, party_type_id):
+        party_type = Partytype.objects.get(id=party_type_id)
         _currency = Currencies.objects.get(id=base_currency)
         _country = Countries.objects.get(id=country_code)
         _user = User.objects.create(
@@ -40,8 +38,9 @@ class PartiesType_create(graphene.Mutation):
         _user.set_password(password)
         _user.save()
 
-        _party = Parties.objects.create( customers_user_id=customers_user_id, account_number=account_number, name=name, base_currency=_currency, bank_related=_bank, user=_user,
-                                        address_line_1=address_line_1, address_line_2=address_line_2, city=city, state=state, zipcode=zipcode, country_code=_country, customer=customer)
+        _party = Parties.objects.create(customer_id=customer_id, name=name, base_currency=_currency, user=_user,
+                                        address_line_1=address_line_1, address_line_2=address_line_2, city=city, state=state, zipcode=zipcode, country_code=_country, onboarded=onboarded,
+                                        party_type=party_type)
 
         return PartiesType_create(parties=_party)
 
@@ -49,35 +48,31 @@ class PartiesType_create(graphene.Mutation):
 class PartiesType_update(graphene.Mutation):
     class Arguments:
         id = graphene.ID()
-        model_id = graphene.Int()
-        customers_user_id = graphene.String()
-        account_number = graphene.String()
-        name = graphene.String()
+        customers_id = graphene.String(required=True)
+        name = graphene.String(required=True)
+        email = graphene.String()
+        phone = graphene.String()
+        password = graphene.String()
         base_currency = graphene.Int()
-        bank_related = graphene.Int()
-        address_line_1 = graphene.String()
-        address_line_2 = graphene.String()
-        city = graphene.String()
-        state = graphene.String()
-        zipcode = graphene.String()
+        address_line_1 = graphene.String(required=True)
+        address_line_2 = graphene.String(required=True)
+        city = graphene.String(required=True)
+        state = graphene.String(required=True)
+        zipcode = graphene.String(required=True)
         country_code = graphene.Int()
-        customer = graphene.Boolean()
+        onboarded = graphene.Boolean()
+        party_type_id = graphene.Int()
 
     parties = graphene.Field(PartiesType)
 
-    def mutate(self, root, id, model_id, customers_user_id, bank_related, user, account_number, name, base_currency, address_line_1, address_line_2, city, state, zipcode, country_code, customer):
-
-        _bank = Banks.objects.get(id=bank_related)
+    def mutate(self, root, customer_id, name, base_currency, address_line_1, address_line_2, city, state, zipcode, country_code, onboarded, party_type_id):
+        party_type = Partytype.objects.get(id=party_type_id)
         _currency = Currencies.objects.get(id=base_currency)
         _country = Countries.objects.get(id=country_code)
-        
 
         _party = Parties.objects.get(id=id)
-        _party.customers_user_id = customers_user_id
-        _party.account_number = account_number
+        _party.customer_id = customer_id
         _party.name = name
-        # _party.user = _user
-        _party.bank_related = _bank
         _party.base_currency = _currency
         _party.address_line_1 = address_line_1
         _party.address_line_2 = address_line_2
@@ -85,7 +80,8 @@ class PartiesType_update(graphene.Mutation):
         _party.state = state
         _party.zipcode = zipcode
         _party.country_code = _country
-        _party.customer = customer
+        _party.onboarded = onboarded
+        _party.party_type = party_type
         _party.save()
         return PartiesType_update(parties=_party)
 
