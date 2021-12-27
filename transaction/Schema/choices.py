@@ -15,3 +15,10 @@ class interestRate(graphene.Enum):
     LIBOR = "LIBOR"
     EURIBOR = "EURIBOR"
     SOFOR = "SOFOR"
+
+
+class ProgramTypeChoices(graphene.Enum):
+    ALL = "ALL"
+    APF = "APF"
+    RF = "RF"
+    DF = "DF"

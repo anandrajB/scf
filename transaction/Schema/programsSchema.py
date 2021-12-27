@@ -13,7 +13,6 @@ class ProgramsType(DjangoObjectType):
 
 class createPrograms(graphene.Mutation):
     class Arguments:
-        model_id = graphene.Int()
         party_id = graphene.Int()
         programtype_id = graphene.Int()
         finance_type = graphene.Argument(financeType)
