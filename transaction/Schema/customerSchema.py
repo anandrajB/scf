@@ -1,6 +1,6 @@
 import graphene
 from graphene_django import DjangoObjectType
-from accounts.models import Parties, User, customer, user_group
+from accounts.models import Parties, User, customer
 
 
 class CustomerType(DjangoObjectType):
@@ -23,7 +23,6 @@ class createCustomer(graphene.Mutation):
     customers = graphene.Field(CustomerType)
 
     def mutate(self, root, first_name, last_name, display_name, email, phone, password, user_group_type_id, party_type_id):
-        user_group_type = user_group.objects.get(id=user_group_type_id)
         party = Parties.objects.get(id=party_type_id)
 
         _user = User.objects.create(
@@ -32,7 +31,7 @@ class createCustomer(graphene.Mutation):
         _user.save()
 
         _customer = customer.objects.create(first_name=first_name, last_name=last_name, display_name=display_name,
-                                            user=_user, email=email, phone=phone, user_group_type_id=user_group_type, party_type_id=party)
+                                            user=_user, email=email, phone=phone, party_type_id=party)
         return createCustomer(customers=_customer)
 
 
@@ -52,14 +51,12 @@ class updateCustomer(graphene.Mutation):
 
     def mutate(self, root, first_name, last_name, display_name, user, email, phone, user_group_type_id, party_type_id):
         user = User.objects.get(id=user)
-        user_group_type = user_group.objects.get(id=user_group_type_id)
         party = Parties.objects.get(id=party_type_id)
 
         _customer = customer.objects.get(id=id)
         _customer.first_name = first_name
         _customer.last_name = last_name
         _customer.user = user
-        _customer.user_group_type_id = user_group_type
         _customer.party_type_id = party
         _customer.display_name = display_name
         _customer.email = email

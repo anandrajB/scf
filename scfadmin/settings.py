@@ -19,8 +19,7 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-#postgresql from sqlite  conversion step
-
+# postgresql from sqlite  conversion step
 
 
 # Quick-start development settings - unsuitable for production
@@ -32,7 +31,7 @@ SECRET_KEY = 'django-insecure-05(h6_qbkd0dv3)2@gi*$twyh3*u(l@%p9ct7ftk&o=jib8)&9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['venzoscf.herokuapp.com','*']
+ALLOWED_HOSTS = ['venzoscf.herokuapp.com', '*']
 
 # Application definition
 
@@ -92,9 +91,9 @@ INSTALLED_APPS = [
 
 # #TENANT SPECIFICATION
 
-# TENANT_MODEL = "client.Client" 
+# TENANT_MODEL = "client.Client"
 
-# TENANT_DOMAIN_MODEL = "client.Domain"  
+# TENANT_DOMAIN_MODEL = "client.Domain"
 
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -127,7 +126,7 @@ ROOT_URLCONF = 'scfadmin.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -136,8 +135,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            'libraries' : {
-                'staticfiles': 'django.templatetags.static', 
+            'libraries': {
+                'staticfiles': 'django.templatetags.static',
             }
         },
     },
@@ -149,12 +148,12 @@ WSGI_APPLICATION = 'scfadmin.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
 
 
 #   DATABASE CONFIG FOR HEROKU POSTGRES
@@ -174,16 +173,16 @@ WSGI_APPLICATION = 'scfadmin.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django_tenants.postgresql_backend',
-        'NAME': 'scf',
-        'USER': 'postgres',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django_tenants.postgresql_backend',
+#         'NAME': 'scf',
+#         'USER': 'sheik',
+#         'PASSWORD': 'root',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 
 # DATABASE_ROUTERS = (
@@ -191,7 +190,7 @@ DATABASES = {
 # )
 
 
-#added
+# added
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -241,7 +240,7 @@ STATICFILES_DIRS = (
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#CUSTOM BACKEND AUTHENTICATION
+# CUSTOM BACKEND AUTHENTICATION
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -249,12 +248,11 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
+# SCHEMA'S FOR REST SWAGGER
 
-# SCHEMA'S FOR REST SWAGGER 
-
-REST_FRAMEWORK = { 
+REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
 }
 
 
-# option for postgresql in heroku 
+# option for postgresql in heroku
