@@ -4,7 +4,7 @@ from graphene import relay
 from graphene_django import DjangoListField
 from accounts.models import customer
 from transaction.models import Invoices
-from .Schema import partiesSchema, programsSchema, customerSchema, currencySchema, countrySchema, pairingsSchema, invoiceSchema, fundingSchema, bankSchema, userSchema, invoiceuploadSchema
+from .Schema import partiesSchema, programsSchema, customerSchema, currencySchema, countrySchema, pairingsSchema, invoiceSchema, fundingSchema, bankSchema, userSchema, invoiceuploadSchema, workitemeventsSchema
 
 
 class Query(graphene.ObjectType):
@@ -22,6 +22,7 @@ class Query(graphene.ObjectType):
     all_invoices = graphene.List(
         invoiceSchema.InvoiceType, curr_less=graphene.String(), curr_greater=graphene.String())
     all_invoiceuploads = DjangoListField(invoiceuploadSchema.InvoiceUploadType)
+    all_workevents = DjangoListField(workitemeventsSchema.workeventsType)
 
     def resolve_all_customers(self, info, search=None, **kwargs):
         if search:

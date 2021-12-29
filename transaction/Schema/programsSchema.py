@@ -5,12 +5,41 @@ from graphene_django import DjangoObjectType
 from transaction.models import Programs
 from accounts.models import Parties, workflowitems
 from transaction.Schema.choices import financeType, interestRate, interestType, ProgramTypeChoices
+from transaction.Schema import workflowitemSchema
 
 
 class ProgramsType(DjangoObjectType):
+    # workflowitems = workflowitemSchema.workflowitemType()
+
     class Meta:
         model = Programs
         fields = '__all__'
+        # fields = [
+        #     'party',
+        #     'program_type',
+
+        #     'finance_request_type',
+        #     'limit_currency',
+        #     'total_limit_amount',
+        #     'finance_currency',
+        #     'settlement_currency',
+        #     'expiry_date',
+        #     'max_finance_percentage',
+        #     'max_invoice_age_for_funding',
+        #     'max_age_for_repayment',
+        #     'minimum_period',
+        #     'maximum_period',
+        #     'maximum_amount',
+        #     'minimum_amount',
+        #     'financed_amount',
+        #     'balance_amount',
+        #     'grace_period',
+        #     'interest_type',
+        #     'interest_rate_type',
+        #     'interest_rate',
+        #     'margin',
+        #     'workflowitems'
+        # ]
 
 
 class createPrograms(graphene.Mutation):

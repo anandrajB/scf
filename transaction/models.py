@@ -85,8 +85,8 @@ class Programs(models.Model):
         choices=interest_rate_type_choices, max_length=15, default=None)
     interest_rate = models.DecimalField(max_digits=6, decimal_places=2)
     margin = models.DecimalField(max_digits=5, decimal_places=2)
-    wf_item = models.ForeignKey(
-        "accounts.workflowitems", on_delete=models.CASCADE)
+    # wf_item = models.ForeignKey(
+    #     "accounts.workflowitems", on_delete=models.CASCADE)
 
     def __str__(self):
         return '%s - %s' % (self.party, self.program_model)

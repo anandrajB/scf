@@ -29,10 +29,10 @@ ALLOWED_HOSTS = ['*']
 
 SHARED_APPS = [
     "django_tenants",
-    'material',
-    'material.admin',
+    # 'material',
+    # 'material.admin',
     'client',
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -48,9 +48,9 @@ SHARED_APPS = [
 
 
 TENANT_APPS = [
-    'material',
-    'material.admin',
-    # 'django.contrib.admin',
+    # 'material',
+    # 'material.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
