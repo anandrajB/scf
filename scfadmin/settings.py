@@ -14,7 +14,6 @@ if os.path.isfile(dotenv_file):
     dotenv.load_dotenv(dotenv_file)
 
 
-
 # –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 # IMPORTANT CONFIG'S
 # –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
@@ -25,13 +24,13 @@ DEBUG = True
 
 # ALLOWED_HOSTS = ['tfxworld.com','*','*.tfxworld.com','.tfxworld.com','icici.tfxworld.com','142.93.218.145']
 
-ALLOWED_HOSTS = ['tfxworld.com','*','*.tfxworld.com','.tfxworld.com']
+ALLOWED_HOSTS = ['tfxworld.com', '*', '*.tfxworld.com', '.tfxworld.com']
 
 
-#//
+# //
 
 
-## COMMENT THIS BEFORE USING TENANT'S
+# COMMENT THIS BEFORE USING TENANT'S
 
 INSTALLED_APPS = [
     'jazzmin',
@@ -51,12 +50,9 @@ INSTALLED_APPS = [
 ]
 
 
-
-
 # –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 # TENANT CONFIGURATIONS
 # –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-
 
 
 # SHARED_APPS = [
@@ -74,7 +70,7 @@ INSTALLED_APPS = [
 #     'rest_framework.authtoken',
 #     'corsheaders',
 #     'rest_framework_swagger',
-    
+
 # ]
 
 
@@ -95,9 +91,9 @@ INSTALLED_APPS = [
 # INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
 
 
-# TENANT_MODEL = "client.Client" 
+# TENANT_MODEL = "client.Client"
 
-# TENANT_DOMAIN_MODEL = "client.Domain"  
+# TENANT_DOMAIN_MODEL = "client.Domain"
 
 # PUBLIC_SCHEMA_URLCONF = 'scfadmin.urls_public'
 
@@ -109,9 +105,8 @@ INSTALLED_APPS = [
 # )
 
 
-
 # –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-# END OF TENANT CONFIGURATIONS 
+# END OF TENANT CONFIGURATIONS
 # –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 
@@ -144,17 +139,15 @@ CORS_ALLOW_ALL_ORIGINS = True
 ROOT_URLCONF = 'scfadmin.urls'
 
 
-
 # –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-# DEFAULT TEMPLATES AND 404 
+# DEFAULT TEMPLATES AND 404
 # –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-
 
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -163,8 +156,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            'libraries' : {
-                'staticfiles': 'django.templatetags.static', 
+            'libraries': {
+                'staticfiles': 'django.templatetags.static',
             }
         },
     },
@@ -173,13 +166,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'scfadmin.wsgi.application'
 
 
-
-
-
 # –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-# DATABASE SETUP 
+# DATABASE SETUP
 # –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-
 
 
 # DATABASES = {}
@@ -198,19 +187,16 @@ WSGI_APPLICATION = 'scfadmin.wsgi.application'
 # }
 
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django_tenants.postgresql_backend',
-        'NAME': 'scf',
-        'USER': 'postgres',
+        'NAME': 'scf1',
+        'USER': 'sheik',
         'PASSWORD': 'root',
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
-
-
 
 
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -262,7 +248,6 @@ STATICFILES_DIRS = (
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-
 # –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 # CUSTOM AUTH BACKEND
 # –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
@@ -288,11 +273,11 @@ EMAIL_HOST_PASSWORD = 'password'
 
 
 # –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-# REST FRAMEWORK AUTH TOKEN 
+# REST FRAMEWORK AUTH TOKEN
 # –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 
-REST_FRAMEWORK = { 
+REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'COERCE_DECIMAL_TO_STRING': False,
     'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata',
@@ -300,5 +285,5 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ],
-    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated",],
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated", ],
 }

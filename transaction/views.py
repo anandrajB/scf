@@ -44,7 +44,7 @@ class ProgramListApiView(ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = ProgramListserializer(queryset, many=True)
-        return Response({"status": "success", "data": serializer.data},status=status.HTTP_200_OK)
+        return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
 
 class ProgramCreateApiView(CreateAPIView):
@@ -70,7 +70,7 @@ class ProgramUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
         queryset = Programs.objects.all()
         user = get_object_or_404(queryset, pk=pk)
         serializer = ProgramListserializer(user)
-        return Response({"status": "success", "data": serializer.data},status=status.HTTP_200_OK)
+        return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
     def update(self, request, pk=None):
         queryset = Programs.objects.all()
@@ -78,8 +78,8 @@ class ProgramUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
         serializer = ProgramListserializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"status": "success", "data": serializer.data},status=status.HTTP_200_OK)
-        return Response({"status": "failure", "data": serializer.errors},status=status.HTTP_406_NOT_ACCEPTABLE)
+            return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"status": "failure", "data": serializer.errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
 class WorkEventCreateApiview(CreateAPIView):
@@ -92,7 +92,7 @@ class WorkEventCreateApiview(CreateAPIView):
         if serializer.is_valid():
             serializer.save()
             return Response({"status": "success"}, status=status.HTTP_201_CREATED)
-        return Response({"status": "failure", "data": serializer.errors},status=status.HTTP_424_FAILED_DEPENDENCY)
+        return Response({"status": "failure", "data": serializer.errors}, status=status.HTTP_424_FAILED_DEPENDENCY)
 
 
 class SignatureList(ListAPIView):
@@ -103,7 +103,7 @@ class SignatureList(ListAPIView):
     def list(self, request):
         queryset = signatures.objects.all()
         serializer = signaturesserializer(queryset, many=True)
-        return Response({"status": "success", "data": serializer.data},status=status.HTTP_200_OK)
+        return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
 
 # -----------------------------------------------------------------------------
@@ -123,7 +123,7 @@ class InboxListApiview(ListAPIView):
     def list(self, request, *args, **kwargs):
         var = self.get_queryset()
         serializer = Workeventsserializer(var, many=True)
-        return Response({"data":serializer.data},status=status.HTTP_200_OK)
+        return Response({"data": serializer.data}, status=status.HTTP_200_OK)
 
 
 class SentListApiview(ListAPIView):
@@ -137,8 +137,7 @@ class SentListApiview(ListAPIView):
     def list(self, request, *args, **kwargs):
         var = self.get_queryset()
         serializer = Workeventsserializer(var, many=True)
-        return Response({"data":serializer.data},status=status.HTTP_200_OK)
-
+        return Response({"data": serializer.data}, status=status.HTTP_200_OK)
 
 
 class DraftListApiview(ListAPIView):
@@ -153,7 +152,7 @@ class DraftListApiview(ListAPIView):
     def list(self, request, *args, **kwargs):
         var = self.get_queryset()
         serializer = Workeventsserializer(var, many=True)
-        return Response({"data":serializer.data},status=status.HTTP_200_OK)
+        return Response({"data": serializer.data}, status=status.HTTP_200_OK)
 
 
 # -----------------------------------------------------------------------------
@@ -164,15 +163,20 @@ class DraftListApiview(ListAPIView):
 
 # SUBMIT /--  ACTION
 
-@api_view(['GET', 'POST'])
+# FSM TRANSITION FUNCTIONS ---
+
+# < === DELETE VIEW === >
+
 def deleted(self, pk):
     obj = generics.get_object_or_404(workflowitems, id=pk)
     obj.delete()
     obj.save()
     return "data ok "
 
+# < === SUBMIT VIEWS === >
 
-@api_view(['POST','PATCH'])
+
+@api_view(['GET', 'PATCH'])
 def submitted(self, pk):
     # if workflowitems.objects.get(id=pk , initial_state = 'DELETED' ):
     #     raise APIException({"YOUR SUBMISION IS ALREADY DELETED , PLEASE CHECK "})
@@ -193,8 +197,6 @@ def submitted_level_1(request, pk):
             raise PermissionDenied
         obj.submit_sign_a()
         obj.save()
-        transitions = list(obj.get_available_FIELD_transitions())
-        print(transitions)
         return Response({"Sign_A => Approval Awaited"})
 
 
@@ -203,8 +205,6 @@ def submitted_level_2(self, pk):
     obj = generics.get_object_or_404(workflowitems, id=pk)
     obj.submit_sign_b()
     obj.save()
-    transitions = list(obj.get_available_FIELD_transitions())
-    print(transitions)
     return Response("Sign_B => Approval Awaited")
 
 
@@ -213,19 +213,75 @@ def submitted_level_3(self, pk):
     obj = generics.get_object_or_404(workflowitems, id=pk)
     obj.submit_sign_c()
     obj.save()
-    transitions = list(obj.get_available_FIELD_transitions())
-    print(transitions)
     return Response("Sign_C => Approval Awaited")
+
+# < === REJECT VIEWS === >
 
 
 @api_view(['GET', 'PATCH'])
-def submit_rejected(self, pk):
+def rejected(self, pk):
     obj = generics.get_object_or_404(workflowitems, id=pk)
-    obj.submit_reject()
+    obj.reject()
     obj.save()
-    transitions = list(obj.get_available_FIELD_transitions())
-    print(transitions)
-    return Response("submission rejected")
+    return Response("AW_AC => Sign_A")
+
+
+@api_view(['GET', 'PATCH'])
+def rejected_level_1(self, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    obj.reject_sign_a()
+    obj.save()
+    return Response("Sign_A => Rejected")
+
+
+@api_view(['GET', 'PATCH'])
+def rejected_level_2(self, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    obj.reject_sign_b()
+    obj.save()
+    return Response("Sign_B => Rejected")
+
+
+@api_view(['GET', 'PATCH'])
+def rejected_level_3(self, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    obj.reject_sign_c()
+    obj.save()
+    return Response("Sign_C => Rejected")
+
+# < === ACCEPT VIEWS === >
+
+
+@api_view(['GET', 'PATCH'])
+def accepted(self, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    obj.accept()
+    obj.save()
+    return Response("AW_ACC => Sign_A")
+
+
+@api_view(['GET', 'PATCH'])
+def accepted_level_1(self, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    obj.accept_sign_a()
+    obj.save()
+    return Response("Sign_A => Acccepted")
+
+
+@api_view(['GET', 'PATCH'])
+def accepted_level_2(self, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    obj.accept_sign_b()
+    obj.save()
+    return Response("Sign_B => Acccepted")
+
+
+@api_view(['GET', 'PATCH'])
+def accepted_level_3(self, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    obj.accept_sign_c()
+    obj.save()
+    return Response("Sign_C => Acccepted")
 
 
 # REJECT WORKFLOW 12/2021
