@@ -340,7 +340,7 @@ class workflowitems(models.Model):
 
     # /-- ACTION : RETURN  --/
 
-    @transition(field=accept_state, source=STATUS_AWAITING_SIGN_C, target=STATUS_AWAITING_SIGN_B)
+    @transition(field=return_state, source=STATUS_AWAITING_SIGN_C, target=STATUS_AWAITING_SIGN_B)
     def return_1(self):
         self.interim_state = "AWAITING_SIGN_B"
         self.final_state = "AWAITING_SIGN_B"
@@ -349,7 +349,7 @@ class workflowitems(models.Model):
         workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_C',
                                   to_state='AWAITING_SIGN_B', interim_state='AWAITING_SIGN_B')
 
-    @transition(field=accept_state, source=STATUS_AWAITING_SIGN_B, target=STATUS_AWAITING_SIGN_A)
+    @transition(field=return_state, source=STATUS_AWAITING_SIGN_B, target=STATUS_AWAITING_SIGN_A)
     def return_2(self):
         self.interim_state = "AWAITING_SIGN_A"
         self.final_state = "AWAITING_SIGN_A"
@@ -358,7 +358,7 @@ class workflowitems(models.Model):
         workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_B',
                                   to_state='AWAITING_SIGN_A', interim_state='AWAITING_SIGN_A')
 
-    @transition(field=accept_state, source=STATUS_AWAITING_SIGN_A, target=STATUS_DRAFT)
+    @transition(field=return_state, source=STATUS_AWAITING_SIGN_A, target=STATUS_DRAFT)
     def return_3(self):
         self.interim_state = "DRAFT"
         self.final_state = "DRAFT"
