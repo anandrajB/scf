@@ -283,6 +283,32 @@ def accepted_level_3(self, pk):
     obj.save()
     return Response("Sign_C => Acccepted")
 
+# < === RETURN VIEWS === >
+
+
+@api_view(['GET', 'PATCH'])
+def return_level_1(self, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    obj.return_1()
+    obj.save()
+    return Response("Sign_C => Sign_B")
+
+
+@api_view(['GET', 'PATCH'])
+def return_level_2(self, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    obj.return_2()
+    obj.save()
+    return Response("Sign_B => Sign_A")
+
+
+@api_view(['GET', 'PATCH'])
+def return_level_3(self, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    obj.return_3()
+    obj.save()
+    return Response("Sign_A => DRAFT")
+
 
 # REJECT WORKFLOW 12/2021
 

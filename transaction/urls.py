@@ -12,6 +12,9 @@ from .views import (
     accepted_level_1,
     accepted_level_2,
     accepted_level_3,
+    return_level_1,
+    return_level_2,
+    return_level_3,
     submitted,
     submitted_level_1,
     submitted_level_2,
@@ -43,7 +46,11 @@ urlpatterns = [
     path('program/transition/accept_sign_a/<int:pk>/', accepted_level_1),
     path('program/transition/accept_sign_b/<int:pk>/', accepted_level_2),
     path('program/transition/accept_sign_c/<int:pk>/', accepted_level_3),
-# <------------------------------------------------------------------------>
+    # RETURN URLS
+    path('program/transition/return_1/<int:pk>', return_level_1),
+    path('program/transition/return_2/<int:pk>', return_level_2),
+    path('program/transition/return_3/<int:pk>', return_level_3),
+    # <------------------------------------------------------------------------>
     path('sign/', SignatureList.as_view(), name='signatures'),
     path('program/approve/', include('transaction.urls1'),
          name='program-transition-approvals'),

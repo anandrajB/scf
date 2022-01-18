@@ -1,3 +1,4 @@
+from random import choices
 from django.db import models
 from datetime import date
 from django.dispatch import receiver
@@ -193,6 +194,7 @@ class workflowitems(models.Model):
     initial_state = FSMField(choices=STATE_TYPE, default=STATUS_DRAFT)
     reject_state = FSMField(choices=STATE_TYPE, default=STATUS_AW_ACCEPT)
     accept_state = FSMField(choices=STATE_TYPE, default=STATUS_AW_ACCEPT)
+    return_state = FSMField(choices=STATE_TYPE)
     interim_state = models.CharField(max_length=25, default=STATUS_DRAFT)
     final_state = models.CharField(
         choices=STATE_TYPE, default=STATUS_DRAFT, max_length=50)
@@ -336,8 +338,35 @@ class workflowitems(models.Model):
         workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_C',
                                   to_state='ACCEPTED', interim_state='ACCEPTED')
 
+    # /-- ACTION : RETURN  --/
 
-# -----------------------------------------------------------------------------------------------------------------------------------
+    @transition(field=accept_state, source=STATUS_AWAITING_SIGN_C, target=STATUS_AWAITING_SIGN_B)
+    def return_1(self):
+        self.interim_state = "AWAITING_SIGN_B"
+        self.final_state = "AWAITING_SIGN_B"
+        self.action = "RETURN"
+        ws = workflowitems.objects.get(id=self.id)
+        workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_C',
+                                  to_state='AWAITING_SIGN_B', interim_state='AWAITING_SIGN_B')
+
+    @transition(field=accept_state, source=STATUS_AWAITING_SIGN_B, target=STATUS_AWAITING_SIGN_A)
+    def return_2(self):
+        self.interim_state = "AWAITING_SIGN_A"
+        self.final_state = "AWAITING_SIGN_A"
+        self.action = "RETURN"
+        ws = workflowitems.objects.get(id=self.id)
+        workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_B',
+                                  to_state='AWAITING_SIGN_A', interim_state='AWAITING_SIGN_A')
+
+    @transition(field=accept_state, source=STATUS_AWAITING_SIGN_A, target=STATUS_DRAFT)
+    def return_3(self):
+        self.interim_state = "DRAFT"
+        self.final_state = "DRAFT"
+        self.action = "RETURN"
+        ws = workflowitems.objects.get(id=self.id)
+        workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_A',
+                                  to_state='DRAFT', interim_state='DRAFT')
+#   -----------------------------------------------------------------------------------------------------------------------------------
 
     # END OF TRANSITION'S
 
