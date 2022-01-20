@@ -190,7 +190,7 @@ WSGI_APPLICATION = 'scfadmin.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django_tenants.postgresql_backend',
-        'NAME': 'scf1',
+        'NAME': 'scf3',
         'USER': 'sheik',
         'PASSWORD': 'root',
         'HOST': 'localhost',

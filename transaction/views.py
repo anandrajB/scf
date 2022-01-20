@@ -1,5 +1,6 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from accounts.models import signatures
+from transaction.flows import WorkFlow
 from .models import Programs, workevents, workflowitems
 from django.shortcuts import render
 from rest_framework.exceptions import APIException, PermissionDenied
@@ -167,147 +168,166 @@ class DraftListApiview(ListAPIView):
 
 # < === DELETE VIEW === >
 
-def deleted(self, pk):
-    obj = generics.get_object_or_404(workflowitems, id=pk)
-    obj.delete()
-    obj.save()
-    return "data ok "
+# def deleted(self, pk):
+#     obj = generics.get_object_or_404(workflowitems, id=pk)
+#     obj.delete()
+#     obj.save()
+#     return "data ok "
 
-# < === SUBMIT VIEWS === >
+# # < === SUBMIT VIEWS === >
+
+
+# @api_view(['GET', 'PATCH'])
+# def submitted(self, pk):
+#     # if workflowitems.objects.get(id=pk , initial_state = 'DELETED' ):
+#     #     raise APIException({"YOUR SUBMISION IS ALREADY DELETED , PLEASE CHECK "})
+#     obj = generics.get_object_or_404(workflowitems, id=pk)
+#     obj.submit()
+#     obj.save()
+#     return Response(" submit success ")
+
+
+# @api_view(['GET', 'PATCH'])
+# def submitted_level_1(request, pk):
+#     try:
+#         workflowitems.objects.get(id=pk, initial_state='DRAFT')
+#         return APIException({"status : not ok"})
+#     except:
+#         obj = generics.get_object_or_404(workflowitems, id=pk)
+#         if not has_transition_perm(obj.submit_sign_a, request.user):
+#             raise PermissionDenied
+#         obj.submit_sign_a()
+#         obj.save()
+#         return Response({"Sign_A => Approval Awaited"})
+
+
+# @api_view(['GET', 'PATCH'])
+# def submitted_level_2(self, pk):
+#     obj = generics.get_object_or_404(workflowitems, id=pk)
+#     obj.submit_sign_b()
+#     obj.save()
+#     return Response("Sign_B => Approval Awaited")
+
+
+# @api_view(['GET', 'PATCH'])
+# def submitted_level_3(self, pk):
+#     obj = generics.get_object_or_404(workflowitems, id=pk)
+#     obj.submit_sign_c()
+#     obj.save()
+#     return Response("Sign_C => Approval Awaited")
+
+# # < === REJECT VIEWS === >
+
+
+# @api_view(['GET', 'PATCH'])
+# def rejected(self, pk):
+#     obj = generics.get_object_or_404(workflowitems, id=pk)
+#     obj.reject()
+#     obj.save()
+#     return Response("AW_AC => Sign_A")
+
+
+# @api_view(['GET', 'PATCH'])
+# def rejected_level_1(self, pk):
+#     obj = generics.get_object_or_404(workflowitems, id=pk)
+#     obj.reject_sign_a()
+#     obj.save()
+#     return Response("Sign_A => Rejected")
+
+
+# @api_view(['GET', 'PATCH'])
+# def rejected_level_2(self, pk):
+#     obj = generics.get_object_or_404(workflowitems, id=pk)
+#     obj.reject_sign_b()
+#     obj.save()
+#     return Response("Sign_B => Rejected")
+
+
+# @api_view(['GET', 'PATCH'])
+# def rejected_level_3(self, pk):
+#     obj = generics.get_object_or_404(workflowitems, id=pk)
+#     obj.reject_sign_c()
+#     obj.save()
+#     return Response("Sign_C => Rejected")
+
+# # < === ACCEPT VIEWS === >
+
+
+# @api_view(['GET', 'PATCH'])
+# def accepted(self, pk):
+#     obj = generics.get_object_or_404(workflowitems, id=pk)
+#     obj.accept()
+#     obj.save()
+#     return Response("AW_ACC => Sign_A")
+
+
+# @api_view(['GET', 'PATCH'])
+# def accepted_level_1(self, pk):
+#     obj = generics.get_object_or_404(workflowitems, id=pk)
+#     obj.accept_sign_a()
+#     obj.save()
+#     return Response("Sign_A => Acccepted")
+
+
+# @api_view(['GET', 'PATCH'])
+# def accepted_level_2(self, pk):
+#     obj = generics.get_object_or_404(workflowitems, id=pk)
+#     obj.accept_sign_b()
+#     obj.save()
+#     return Response("Sign_B => Acccepted")
+
+
+# @api_view(['GET', 'PATCH'])
+# def accepted_level_3(self, pk):
+#     obj = generics.get_object_or_404(workflowitems, id=pk)
+#     obj.accept_sign_c()
+#     obj.save()
+#     return Response("Sign_C => Acccepted")
+
+# # < === RETURN VIEWS === >
+
+
+# @api_view(['GET', 'PATCH'])
+# def return_level_1(self, pk):
+#     obj = generics.get_object_or_404(workflowitems, id=pk)
+#     obj.return_1()
+#     obj.save()
+#     return Response("Sign_C => Sign_B")
+
+
+# @api_view(['GET', 'PATCH'])
+# def return_level_2(self, pk):
+#     obj = generics.get_object_or_404(workflowitems, id=pk)
+#     obj.return_2()
+#     obj.save()
+#     return Response("Sign_B => Sign_A")
+
+
+# @api_view(['GET', 'PATCH'])
+# def return_level_3(self, pk):
+#     obj = generics.get_object_or_404(workflowitems, id=pk)
+#     obj.return_3()
+#     obj.save()
+#     return Response("Sign_A => DRAFT")
+
+@api_view(['GET', 'PATCH'])
+def submitted(request, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    flow = WorkFlow(obj)
+    flow.submit()
+    print("Step changed")
+    obj.save()
+    return Response({"data": "Success"})
 
 
 @api_view(['GET', 'PATCH'])
-def submitted(self, pk):
-    # if workflowitems.objects.get(id=pk , initial_state = 'DELETED' ):
-    #     raise APIException({"YOUR SUBMISION IS ALREADY DELETED , PLEASE CHECK "})
+def submitted_1(request, pk):
     obj = generics.get_object_or_404(workflowitems, id=pk)
-    obj.submit()
+    flow = WorkFlow(obj)
+    flow.submit_level_1()
+    print("Step changed")
     obj.save()
-    return Response(" submit success ")
-
-
-@api_view(['GET', 'PATCH'])
-def submitted_level_1(request, pk):
-    try:
-        workflowitems.objects.get(id=pk, initial_state='DRAFT')
-        return APIException({"status : not ok"})
-    except:
-        obj = generics.get_object_or_404(workflowitems, id=pk)
-        if not has_transition_perm(obj.submit_sign_a, request.user):
-            raise PermissionDenied
-        obj.submit_sign_a()
-        obj.save()
-        return Response({"Sign_A => Approval Awaited"})
-
-
-@api_view(['GET', 'PATCH'])
-def submitted_level_2(self, pk):
-    obj = generics.get_object_or_404(workflowitems, id=pk)
-    obj.submit_sign_b()
-    obj.save()
-    return Response("Sign_B => Approval Awaited")
-
-
-@api_view(['GET', 'PATCH'])
-def submitted_level_3(self, pk):
-    obj = generics.get_object_or_404(workflowitems, id=pk)
-    obj.submit_sign_c()
-    obj.save()
-    return Response("Sign_C => Approval Awaited")
-
-# < === REJECT VIEWS === >
-
-
-@api_view(['GET', 'PATCH'])
-def rejected(self, pk):
-    obj = generics.get_object_or_404(workflowitems, id=pk)
-    obj.reject()
-    obj.save()
-    return Response("AW_AC => Sign_A")
-
-
-@api_view(['GET', 'PATCH'])
-def rejected_level_1(self, pk):
-    obj = generics.get_object_or_404(workflowitems, id=pk)
-    obj.reject_sign_a()
-    obj.save()
-    return Response("Sign_A => Rejected")
-
-
-@api_view(['GET', 'PATCH'])
-def rejected_level_2(self, pk):
-    obj = generics.get_object_or_404(workflowitems, id=pk)
-    obj.reject_sign_b()
-    obj.save()
-    return Response("Sign_B => Rejected")
-
-
-@api_view(['GET', 'PATCH'])
-def rejected_level_3(self, pk):
-    obj = generics.get_object_or_404(workflowitems, id=pk)
-    obj.reject_sign_c()
-    obj.save()
-    return Response("Sign_C => Rejected")
-
-# < === ACCEPT VIEWS === >
-
-
-@api_view(['GET', 'PATCH'])
-def accepted(self, pk):
-    obj = generics.get_object_or_404(workflowitems, id=pk)
-    obj.accept()
-    obj.save()
-    return Response("AW_ACC => Sign_A")
-
-
-@api_view(['GET', 'PATCH'])
-def accepted_level_1(self, pk):
-    obj = generics.get_object_or_404(workflowitems, id=pk)
-    obj.accept_sign_a()
-    obj.save()
-    return Response("Sign_A => Acccepted")
-
-
-@api_view(['GET', 'PATCH'])
-def accepted_level_2(self, pk):
-    obj = generics.get_object_or_404(workflowitems, id=pk)
-    obj.accept_sign_b()
-    obj.save()
-    return Response("Sign_B => Acccepted")
-
-
-@api_view(['GET', 'PATCH'])
-def accepted_level_3(self, pk):
-    obj = generics.get_object_or_404(workflowitems, id=pk)
-    obj.accept_sign_c()
-    obj.save()
-    return Response("Sign_C => Acccepted")
-
-# < === RETURN VIEWS === >
-
-
-@api_view(['GET', 'PATCH'])
-def return_level_1(self, pk):
-    obj = generics.get_object_or_404(workflowitems, id=pk)
-    obj.return_1()
-    obj.save()
-    return Response("Sign_C => Sign_B")
-
-
-@api_view(['GET', 'PATCH'])
-def return_level_2(self, pk):
-    obj = generics.get_object_or_404(workflowitems, id=pk)
-    obj.return_2()
-    obj.save()
-    return Response("Sign_B => Sign_A")
-
-
-@api_view(['GET', 'PATCH'])
-def return_level_3(self, pk):
-    obj = generics.get_object_or_404(workflowitems, id=pk)
-    obj.return_3()
-    obj.save()
-    return Response("Sign_A => DRAFT")
+    return Response({"data": "Success"})
 
 
 # REJECT WORKFLOW 12/2021

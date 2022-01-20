@@ -6,6 +6,8 @@ from django_fsm import FSMField, transition
 from transaction.permission import is_approver, is_uploader
 from django.contrib.auth import get_user_model
 
+from transaction.states import StateChoices
+
 #  MODELS RELATED TO TRANSACTION
 
 
@@ -155,49 +157,56 @@ class Actions(models.Model):
 
 class workflowitems(models.Model):
 
-    STATUS_DRAFT = 'DRAFT'
-    STATUS_AW_APPROVAL = 'AWAITING_APPROVAL'
-    STATUS_AW_ACCEPT = 'AWAITING_ACCEPTANCE'
-    STATUS_ACCEPTED = 'ACCEPTED'
-    STATUS_APPROVED = 'APPROVED'
-    STATUS_REJECTED = 'REJECTED'
-    STATUS_FINANCE_REQUESTED = 'FINANCE_REQUESTED'
-    STATUS_FINANCED = 'FINANCED'
-    STATUS_FINANCE_REJECTED = 'FINANCE_REJECTED'
-    STATUS_SETTLED = 'SETTLED'
-    STATUS_OVERDUE = 'OVERDUE'
-    STATUS_AWAITING_SIGN_A = 'AWAITING_SIGN_A'
-    STATUS_AWAITING_SIGN_B = 'AWAITING_SIGN_B'
-    STATUS_AWAITING_SIGN_C = 'AWAITING_SIGN_C'
-    STATUS_DELETED = 'DELETED'
+    # STATUS_DRAFT = 'DRAFT'
+    # STATUS_AW_APPROVAL = 'AWAITING_APPROVAL'
+    # STATUS_AW_ACCEPT = 'AWAITING_ACCEPTANCE'
+    # STATUS_ACCEPTED = 'ACCEPTED'
+    # STATUS_APPROVED = 'APPROVED'
+    # STATUS_REJECTED = 'REJECTED'
+    # STATUS_FINANCE_REQUESTED = 'FINANCE_REQUESTED'
+    # STATUS_FINANCED = 'FINANCED'
+    # STATUS_FINANCE_REJECTED = 'FINANCE_REJECTED'
+    # STATUS_SETTLED = 'SETTLED'
+    # STATUS_OVERDUE = 'OVERDUE'
+    # STATUS_AWAITING_SIGN_A = 'AWAITING_SIGN_A'
+    # STATUS_AWAITING_SIGN_B = 'AWAITING_SIGN_B'
+    # STATUS_AWAITING_SIGN_C = 'AWAITING_SIGN_C'
+    # STATUS_DELETED = 'DELETED'
 
-    STATE_TYPE = [
-        (STATUS_DRAFT, 'DRAFT'),
-        (STATUS_AW_APPROVAL, 'AWAITING_APPROVAL'),
-        (STATUS_AW_ACCEPT, 'AWAITING_ACCEPTANCE'),
-        (STATUS_ACCEPTED, 'ACCEPTED'),
-        (STATUS_APPROVED, 'APPROVED'),
-        (STATUS_REJECTED, 'REJECTED'),
-        (STATUS_FINANCE_REQUESTED, 'FINANCE_REQUESTED'),
-        (STATUS_FINANCED, 'FINANCED'),
-        (STATUS_FINANCE_REJECTED, 'FINANCE_REJECTED'),
-        (STATUS_SETTLED, 'SETTLED'),
-        (STATUS_OVERDUE, 'OVERDUE'),
-        (STATUS_AWAITING_SIGN_A, 'AWAITING_SIGN_A'),
-        (STATUS_AWAITING_SIGN_B, 'AWAITING_SIGN_B'),
-        (STATUS_AWAITING_SIGN_C, 'AWAITING_SIGN_C'),
-        (STATUS_DELETED, 'DELETED')
-    ]
+    # STATE_TYPE = [
+    #     (STATUS_DRAFT, 'DRAFT'),
+    #     (STATUS_AW_APPROVAL, 'AWAITING_APPROVAL'),
+    #     (STATUS_AW_ACCEPT, 'AWAITING_ACCEPTANCE'),
+    #     (STATUS_ACCEPTED, 'ACCEPTED'),
+    #     (STATUS_APPROVED, 'APPROVED'),
+    #     (STATUS_REJECTED, 'REJECTED'),
+    #     (STATUS_FINANCE_REQUESTED, 'FINANCE_REQUESTED'),
+    #     (STATUS_FINANCED, 'FINANCED'),
+    #     (STATUS_FINANCE_REJECTED, 'FINANCE_REJECTED'),
+    #     (STATUS_SETTLED, 'SETTLED'),
+    #     (STATUS_OVERDUE, 'OVERDUE'),
+    #     (STATUS_AWAITING_SIGN_A, 'AWAITING_SIGN_A'),
+    #     (STATUS_AWAITING_SIGN_B, 'AWAITING_SIGN_B'),
+    #     (STATUS_AWAITING_SIGN_C, 'AWAITING_SIGN_C'),
+    #     (STATUS_DELETED, 'DELETED')
+    # ]
 
     created_date = models.DateTimeField(auto_now_add=True)
     program = models.OneToOneField(Programs, on_delete=models.CASCADE)
-    initial_state = FSMField(choices=STATE_TYPE, default=STATUS_DRAFT)
-    reject_state = FSMField(choices=STATE_TYPE, default=STATUS_AW_ACCEPT)
-    accept_state = FSMField(choices=STATE_TYPE, default=STATUS_AW_ACCEPT)
-    return_state = FSMField(choices=STATE_TYPE)
-    interim_state = models.CharField(max_length=25, default=STATUS_DRAFT)
+    # initial_state = FSMField(choices=STATE_TYPE, default=STATUS_DRAFT)
+    # reject_state = FSMField(choices=STATE_TYPE, default=STATUS_AW_ACCEPT)
+    # accept_state = FSMField(choices=STATE_TYPE, default=STATUS_AW_ACCEPT)
+    # return_state = FSMField(choices=STATE_TYPE)
+    # interim_state = models.CharField(max_length=25, default=STATUS_DRAFT)
+    # final_state = models.CharField(
+    #     choices=STATE_TYPE, default=STATUS_DRAFT, max_length=50)
+    stage = models.CharField(max_length=255, choices=StateChoices.choices)
+    initial_state = models.CharField(
+        max_length=50, default=StateChoices.STATUS_DRAFT)
+    interim_state = models.CharField(
+        max_length=50, default=StateChoices.STATUS_DRAFT)
     final_state = models.CharField(
-        choices=STATE_TYPE, default=STATUS_DRAFT, max_length=50)
+        max_length=50, default=StateChoices.STATUS_DRAFT)
     next_available_transitions = models.CharField(max_length=255)
     event_users = models.ForeignKey(
         "accounts.User", on_delete=models.CASCADE, related_name='customername')
@@ -215,157 +224,157 @@ class workflowitems(models.Model):
 
     # ACTION DELETE
 
-    @transition(field=initial_state, source=['*'], target=STATUS_DELETED, custom=({'button_name': 'Cancel'}),)
-    def delete(self):
-        self.final_state = 'DELETED'
-        self.interim_state = 'DELETED'
-        self.action = 'DELETE'
-        ws = workflowitems.objects.get(id=self.id)
-        workevents.objects.create(workitems=ws, from_state=self.final_state,
-                                  to_state=self.final_state, interim_state=self.interim_state, from_party=self.current_from_party, to_party=self.current_to_party)
+    # @transition(field=initial_state, source=['*'], target=STATUS_DELETED, custom=({'button_name': 'Cancel'}),)
+    # def delete(self):
+    #     self.final_state = 'DELETED'
+    #     self.interim_state = 'DELETED'
+    #     self.action = 'DELETE'
+    #     ws = workflowitems.objects.get(id=self.id)
+    #     workevents.objects.create(workitems=ws, from_state=self.final_state,
+    #                               to_state=self.final_state, interim_state=self.interim_state, from_party=self.current_from_party, to_party=self.current_to_party)
 
-    # /-- ACTION : SUBMIT  --/
+    # # /-- ACTION : SUBMIT  --/
 
-    @transition(field=initial_state, source=[STATUS_DRAFT, STATUS_AW_ACCEPT], target=STATUS_AWAITING_SIGN_A, custom=({'button_name': 'Cancel'}),)
-    def submit(self):
-        self.final_state = 'AWAITING_APPROVAL'
-        self.interim_state = 'AWAITING_SIGN_A'
-        self.action = 'SUBMIT'
-        ws = workflowitems.objects.get(id=self.id)
-        workevents.objects.create(workitems=ws, from_state='DRAFT', to_state='AWAITING_APPROVAL',
-                                  interim_state='AWAITING_SIGN_A', from_party=self.current_from_party, to_party=self.current_to_party)
+    # @transition(field=initial_state, source=[STATUS_DRAFT, STATUS_AW_ACCEPT], target=STATUS_AWAITING_SIGN_A, custom=({'button_name': 'Cancel'}),)
+    # def submit(self):
+    #     self.final_state = 'AWAITING_APPROVAL'
+    #     self.interim_state = 'AWAITING_SIGN_A'
+    #     self.action = 'SUBMIT'
+    #     ws = workflowitems.objects.get(id=self.id)
+    #     workevents.objects.create(workitems=ws, from_state='DRAFT', to_state='AWAITING_APPROVAL',
+    #                               interim_state='AWAITING_SIGN_A', from_party=self.current_from_party, to_party=self.current_to_party)
 
-    @transition(field=initial_state, source=STATUS_AWAITING_SIGN_A, target=STATUS_AWAITING_SIGN_B)
-    def submit_sign_a(self):
-        self.final_state = 'AWAITING_APPROVAL'
-        self.interim_state = 'AWAITING_SIGN_B'
-        self.action = 'SUBMIT_SIGN_A'
-        ws = workflowitems.objects.get(id=self.id)
-        workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_A',
-                                  to_state='AWAITING_APPROVAL', interim_state='AWAITING_SIGN_B', from_party=self.current_from_party, to_party=self.current_to_party)
+    # @transition(field=initial_state, source=STATUS_AWAITING_SIGN_A, target=STATUS_AWAITING_SIGN_B)
+    # def submit_sign_a(self):
+    #     self.final_state = 'AWAITING_APPROVAL'
+    #     self.interim_state = 'AWAITING_SIGN_B'
+    #     self.action = 'SUBMIT_SIGN_A'
+    #     ws = workflowitems.objects.get(id=self.id)
+    #     workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_A',
+    #                               to_state='AWAITING_APPROVAL', interim_state='AWAITING_SIGN_B', from_party=self.current_from_party, to_party=self.current_to_party)
 
-    @transition(field=initial_state, source=STATUS_AWAITING_SIGN_B, target=STATUS_AWAITING_SIGN_C, permission=is_approver)
-    def submit_sign_b(self):
-        self.final_state = 'AWAITING_APPROVAL'
-        self.interim_state = 'AWAITING_SIGN_C'
-        self.action = 'SUBMIT_SIGN_B'
-        ws = workflowitems.objects.get(id=self.id)
-        workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_B',
-                                  to_state='AWAITING_APPROVAL', interim_state='AWAITING_SIGN_C', from_party=self.current_from_party, to_party=self.current_to_party)
+    # @transition(field=initial_state, source=STATUS_AWAITING_SIGN_B, target=STATUS_AWAITING_SIGN_C, permission=is_approver)
+    # def submit_sign_b(self):
+    #     self.final_state = 'AWAITING_APPROVAL'
+    #     self.interim_state = 'AWAITING_SIGN_C'
+    #     self.action = 'SUBMIT_SIGN_B'
+    #     ws = workflowitems.objects.get(id=self.id)
+    #     workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_B',
+    #                               to_state='AWAITING_APPROVAL', interim_state='AWAITING_SIGN_C', from_party=self.current_from_party, to_party=self.current_to_party)
 
-    @transition(field=initial_state, source=STATUS_AWAITING_SIGN_C, target=STATUS_AW_APPROVAL,)
-    def submit_sign_c(self):
-        self.final_state = "AWAITING_APPROVAL"
-        self.interim_state = "AWAITING_APPROVAL"
-        self.action = 'SUBMIT_SIGN_C'
-        ws = workflowitems.objects.get(id=self.id)
-        workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_C',
-                                  to_state='AWAITING_APPROVAL', interim_state='AWAITING_APPROVAL', from_party=self.current_from_party, to_party=self.current_to_party)
+    # @transition(field=initial_state, source=STATUS_AWAITING_SIGN_C, target=STATUS_AW_APPROVAL,)
+    # def submit_sign_c(self):
+    #     self.final_state = "AWAITING_APPROVAL"
+    #     self.interim_state = "AWAITING_APPROVAL"
+    #     self.action = 'SUBMIT_SIGN_C'
+    #     ws = workflowitems.objects.get(id=self.id)
+    #     workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_C',
+    #                               to_state='AWAITING_APPROVAL', interim_state='AWAITING_APPROVAL', from_party=self.current_from_party, to_party=self.current_to_party)
 
-    # /-- ACTION : REJECT  --/
+    # # /-- ACTION : REJECT  --/
 
-    @transition(field=reject_state, source=STATUS_AW_ACCEPT, target=STATUS_AWAITING_SIGN_A, permission=is_approver)
-    def reject(self):
-        self.final_state = "REJECTED"
-        self.interim_state = "AWAITING_SIGN_A"
-        self.action = 'REJECT'
-        ws = workflowitems.objects.get(id=self.id)
-        workevents.objects.create(workitems=ws, from_state='AWAITING ACCEPTANCE',
-                                  to_state='REJECTED', interim_state='AWAITING_SIGN_A')
+    # @transition(field=reject_state, source=STATUS_AW_ACCEPT, target=STATUS_AWAITING_SIGN_A, permission=is_approver)
+    # def reject(self):
+    #     self.final_state = "REJECTED"
+    #     self.interim_state = "AWAITING_SIGN_A"
+    #     self.action = 'REJECT'
+    #     ws = workflowitems.objects.get(id=self.id)
+    #     workevents.objects.create(workitems=ws, from_state='AWAITING ACCEPTANCE',
+    #                               to_state='REJECTED', interim_state='AWAITING_SIGN_A')
 
-    @transition(field=reject_state, source=STATUS_AWAITING_SIGN_A, target=STATUS_AWAITING_SIGN_B, permission=is_approver)
-    def reject_sign_a(self):
-        self.final_state = "REJECTED"
-        self.interim_state = "AWAITING_SIGN_B"
-        self.action = 'REJECT_SIGN_A'
-        ws = workflowitems.objects.get(id=self.id)
-        workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_A',
-                                  to_state='REJECTED', interim_state='AWAITING_SIGN_B')
+    # @transition(field=reject_state, source=STATUS_AWAITING_SIGN_A, target=STATUS_AWAITING_SIGN_B, permission=is_approver)
+    # def reject_sign_a(self):
+    #     self.final_state = "REJECTED"
+    #     self.interim_state = "AWAITING_SIGN_B"
+    #     self.action = 'REJECT_SIGN_A'
+    #     ws = workflowitems.objects.get(id=self.id)
+    #     workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_A',
+    #                               to_state='REJECTED', interim_state='AWAITING_SIGN_B')
 
-    @transition(field=reject_state, source=STATUS_AWAITING_SIGN_B, target=STATUS_AWAITING_SIGN_C, permission=is_approver)
-    def reject_sign_b(self):
-        self.final_state = "REJECTED"
-        self.interim_state = "AWAITING_SIGN_C"
-        self.action = 'REJECT_SIGN_B'
-        ws = workflowitems.objects.get(id=self.id)
-        workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_B',
-                                  to_state='REJECTED', interim_state='AWAITING_SIGN_C')
+    # @transition(field=reject_state, source=STATUS_AWAITING_SIGN_B, target=STATUS_AWAITING_SIGN_C, permission=is_approver)
+    # def reject_sign_b(self):
+    #     self.final_state = "REJECTED"
+    #     self.interim_state = "AWAITING_SIGN_C"
+    #     self.action = 'REJECT_SIGN_B'
+    #     ws = workflowitems.objects.get(id=self.id)
+    #     workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_B',
+    #                               to_state='REJECTED', interim_state='AWAITING_SIGN_C')
 
-    @transition(field=reject_state, source=STATUS_AWAITING_SIGN_C, target=STATUS_REJECTED, permission=is_approver)
-    def reject_sign_c(self):
-        self.final_state = "REJECTED"
-        self.interim_state = "REJECTED"
-        self.action = 'REJECT_SIGN_C'
-        ws = workflowitems.objects.get(id=self.id)
-        workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_C',
-                                  to_state='REJECTED', interim_state='REJECTED')
+    # @transition(field=reject_state, source=STATUS_AWAITING_SIGN_C, target=STATUS_REJECTED, permission=is_approver)
+    # def reject_sign_c(self):
+    #     self.final_state = "REJECTED"
+    #     self.interim_state = "REJECTED"
+    #     self.action = 'REJECT_SIGN_C'
+    #     ws = workflowitems.objects.get(id=self.id)
+    #     workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_C',
+    #                               to_state='REJECTED', interim_state='REJECTED')
 
-    # /-- ACTION : ACCEPT  --/
+    # # /-- ACTION : ACCEPT  --/
 
-    @transition(field=accept_state, source=STATUS_AW_ACCEPT, target=STATUS_AWAITING_SIGN_A, permission=is_approver)
-    def accept(self):
-        self.final_state = "ACCEPTED"
-        self.interim_state = "AWAITING_SIGN_A"
-        self.action = "ACCEPT"
-        ws = workflowitems.objects.get(id=self.id)
-        workevents.objects.create(workitems=ws, from_state='AWAITING_ACCEPTANCE',
-                                  to_state='ACCEPTED', interim_state='AWAITING_SIGN_A')
+    # @transition(field=accept_state, source=STATUS_AW_ACCEPT, target=STATUS_AWAITING_SIGN_A, permission=is_approver)
+    # def accept(self):
+    #     self.final_state = "ACCEPTED"
+    #     self.interim_state = "AWAITING_SIGN_A"
+    #     self.action = "ACCEPT"
+    #     ws = workflowitems.objects.get(id=self.id)
+    #     workevents.objects.create(workitems=ws, from_state='AWAITING_ACCEPTANCE',
+    #                               to_state='ACCEPTED', interim_state='AWAITING_SIGN_A')
 
-    @transition(field=accept_state, source=STATUS_AWAITING_SIGN_A, target=STATUS_AWAITING_SIGN_B, permission=is_approver)
-    def accept_sign_a(self):
-        self.final_state = "ACCEPTED"
-        self.interim_state = "AWAITING_SIGN_B"
-        self.action = "ACCEPT_SIGN_A"
-        ws = workflowitems.objects.get(id=self.id)
-        workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_A',
-                                  to_state='ACCEPTED', interim_state='AWAITING_SIGN_B')
+    # @transition(field=accept_state, source=STATUS_AWAITING_SIGN_A, target=STATUS_AWAITING_SIGN_B, permission=is_approver)
+    # def accept_sign_a(self):
+    #     self.final_state = "ACCEPTED"
+    #     self.interim_state = "AWAITING_SIGN_B"
+    #     self.action = "ACCEPT_SIGN_A"
+    #     ws = workflowitems.objects.get(id=self.id)
+    #     workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_A',
+    #                               to_state='ACCEPTED', interim_state='AWAITING_SIGN_B')
 
-    @transition(field=accept_state, source=STATUS_AWAITING_SIGN_B, target=STATUS_AWAITING_SIGN_C, permission=is_approver)
-    def accept_sign_b(self):
-        self.final_state = "ACCEPTED"
-        self.interim_state = "AWAITING_SIGN_C"
-        self.action = "ACCEPT_SIGN_B"
-        ws = workflowitems.objects.get(id=self.id)
-        workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_B',
-                                  to_state='ACCEPTED', interim_state='AWAITING_SIGN_C')
+    # @transition(field=accept_state, source=STATUS_AWAITING_SIGN_B, target=STATUS_AWAITING_SIGN_C, permission=is_approver)
+    # def accept_sign_b(self):
+    #     self.final_state = "ACCEPTED"
+    #     self.interim_state = "AWAITING_SIGN_C"
+    #     self.action = "ACCEPT_SIGN_B"
+    #     ws = workflowitems.objects.get(id=self.id)
+    #     workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_B',
+    #                               to_state='ACCEPTED', interim_state='AWAITING_SIGN_C')
 
-    @transition(field=accept_state, source=STATUS_AWAITING_SIGN_C, target=STATUS_ACCEPTED, permission=is_approver)
-    def accept_sign_c(self):
-        self.final_state = "ACCEPTED"
-        self.interim_state = "ACCEPTED"
-        self.action = "ACCEPT_SIGN_C"
-        ws = workflowitems.objects.get(id=self.id)
-        workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_C',
-                                  to_state='ACCEPTED', interim_state='ACCEPTED')
+    # @transition(field=accept_state, source=STATUS_AWAITING_SIGN_C, target=STATUS_ACCEPTED, permission=is_approver)
+    # def accept_sign_c(self):
+    #     self.final_state = "ACCEPTED"
+    #     self.interim_state = "ACCEPTED"
+    #     self.action = "ACCEPT_SIGN_C"
+    #     ws = workflowitems.objects.get(id=self.id)
+    #     workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_C',
+    #                               to_state='ACCEPTED', interim_state='ACCEPTED')
 
-    # /-- ACTION : RETURN  --/
+    # # /-- ACTION : RETURN  --/
 
-    @transition(field=return_state, source=STATUS_AWAITING_SIGN_C, target=STATUS_AWAITING_SIGN_B)
-    def return_1(self):
-        self.interim_state = "AWAITING_SIGN_B"
-        self.final_state = "AWAITING_SIGN_B"
-        self.action = "RETURN"
-        ws = workflowitems.objects.get(id=self.id)
-        workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_C',
-                                  to_state='AWAITING_SIGN_B', interim_state='AWAITING_SIGN_B')
+    # @transition(field=return_state, source=STATUS_AWAITING_SIGN_C, target=STATUS_AWAITING_SIGN_B)
+    # def return_1(self):
+    #     self.interim_state = "AWAITING_SIGN_B"
+    #     self.final_state = "AWAITING_SIGN_B"
+    #     self.action = "RETURN"
+    #     ws = workflowitems.objects.get(id=self.id)
+    #     workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_C',
+    #                               to_state='AWAITING_SIGN_B', interim_state='AWAITING_SIGN_B')
 
-    @transition(field=return_state, source=STATUS_AWAITING_SIGN_B, target=STATUS_AWAITING_SIGN_A)
-    def return_2(self):
-        self.interim_state = "AWAITING_SIGN_A"
-        self.final_state = "AWAITING_SIGN_A"
-        self.action = "RETURN"
-        ws = workflowitems.objects.get(id=self.id)
-        workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_B',
-                                  to_state='AWAITING_SIGN_A', interim_state='AWAITING_SIGN_A')
+    # @transition(field=return_state, source=STATUS_AWAITING_SIGN_B, target=STATUS_AWAITING_SIGN_A)
+    # def return_2(self):
+    #     self.interim_state = "AWAITING_SIGN_A"
+    #     self.final_state = "AWAITING_SIGN_A"
+    #     self.action = "RETURN"
+    #     ws = workflowitems.objects.get(id=self.id)
+    #     workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_B',
+    #                               to_state='AWAITING_SIGN_A', interim_state='AWAITING_SIGN_A')
 
-    @transition(field=return_state, source=STATUS_AWAITING_SIGN_A, target=STATUS_DRAFT)
-    def return_3(self):
-        self.interim_state = "DRAFT"
-        self.final_state = "DRAFT"
-        self.action = "RETURN"
-        ws = workflowitems.objects.get(id=self.id)
-        workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_A',
-                                  to_state='DRAFT', interim_state='DRAFT')
+    # @transition(field=return_state, source=STATUS_AWAITING_SIGN_A, target=STATUS_DRAFT)
+    # def return_3(self):
+    #     self.interim_state = "DRAFT"
+    #     self.final_state = "DRAFT"
+    #     self.action = "RETURN"
+    #     ws = workflowitems.objects.get(id=self.id)
+    #     workevents.objects.create(workitems=ws, from_state='AWAITING_SIGN_A',
+    #                               to_state='DRAFT', interim_state='DRAFT')
 #   -----------------------------------------------------------------------------------------------------------------------------------
 
     # END OF TRANSITION'S

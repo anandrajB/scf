@@ -41,6 +41,7 @@ class Workitemserializer(serializers.ModelSerializer):
         fields = [
             'program',
             'initial_state',
+            'interim_state',
             'final_state',
             'next_available_transitions',
             'current_from_party',
