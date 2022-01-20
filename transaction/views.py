@@ -317,7 +317,7 @@ def submitted(request, pk):
     flow.submit()
     print("Step changed")
     obj.save()
-    return Response({"data": "Success"})
+    return Response({"data": "Success", "action": "SUBMIT"})
 
 
 @api_view(['GET', 'PATCH'])
@@ -327,8 +327,107 @@ def submitted_1(request, pk):
     flow.submit_level_1()
     print("Step changed")
     obj.save()
-    return Response({"data": "Success"})
+    return Response({"data": "Success", "action": "SUBMIT"})
 
+
+@api_view(['GET', 'PATCH'])
+def submitted_2(request, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    flow = WorkFlow(obj)
+    flow.submit_level_2()
+    print("Step changed")
+    obj.save()
+    return Response({"data": "Success", "action": "SUBMIT"})
+
+
+@api_view(['GET', 'PATCH'])
+def submitted_3(request, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    flow = WorkFlow(obj)
+    flow.submit_level_3()
+    print("Step changed")
+    obj.save()
+    return Response({"data": "Success", "action": "SUBMIT"})
+
+
+@api_view(['GET', 'PATCH'])
+def rejected(request, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    flow = WorkFlow(obj)
+    flow.reject()
+    print("Step changed")
+    obj.save()
+    return Response({"data": "Success", "action": "REJECT"})
+
+
+@api_view(['GET', 'PATCH'])
+def rejected_1(request, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    flow = WorkFlow(obj)
+    flow.reject_level_1()
+    print("Step changed")
+    obj.save()
+    return Response({"data": "Success", "action": "REJECT"})
+
+
+@api_view(['GET', 'PATCH'])
+def rejected_2(request, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    flow = WorkFlow(obj)
+    flow.reject_level_2()
+    print("Step changed")
+    obj.save()
+    return Response({"data": "Success", "action": "REJECT"})
+
+
+@api_view(['GET', 'PATCH'])
+def rejected_3(request, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    flow = WorkFlow(obj)
+    flow.reject_level_3()
+    print("Step changed")
+    obj.save()
+    return Response({"data": "Success", "action": "REJECT"})
+
+
+@api_view(['GET', 'PATCH'])
+def accepted(request, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    flow = WorkFlow(obj)
+    flow.accept()
+    print("Step changed")
+    obj.save()
+    return Response({"data": "Success", "action": "ACCEPT"})
+
+
+@api_view(['GET', 'PATCH'])
+def accepted_1(request, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    flow = WorkFlow(obj)
+    flow.accept_level_1()
+    print("Step changed")
+    obj.save()
+    return Response({"data": "Success", "action": "ACCEPT"})
+
+
+@api_view(['GET', 'PATCH'])
+def accepted_2(request, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    flow = WorkFlow(obj)
+    flow.accept_level_2()
+    print("Step changed")
+    obj.save()
+    return Response({"data": "Success", "action": "ACCEPT"})
+
+
+@api_view(['GET', 'PATCH'])
+def accepted_3(request, pk):
+    obj = generics.get_object_or_404(workflowitems, id=pk)
+    flow = WorkFlow(obj)
+    flow.accept_level_3()
+    print("Step changed")
+    obj.save()
+    return Response({"data": "Success", "action": "ACCEPT"})
 
 # REJECT WORKFLOW 12/2021
 

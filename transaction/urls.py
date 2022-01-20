@@ -3,6 +3,10 @@ from .views import (
     ProgramListApiView,
     ProgramCreateApiView,
     ProgramUpdateDeleteApiview,
+    accepted,
+    accepted_1,
+    accepted_2,
+    accepted_3,
     # deleted,
     # rejected,
     # rejected_level_1,
@@ -21,6 +25,10 @@ from .views import (
     # submitted_level_3,
     submitted,
     submitted_1,
+    submitted_2,
+    submitted_3,
+    rejected, rejected_1, rejected_2,
+    rejected_3,
     SignatureList,
 )
 from graphene_django.views import GraphQLView
@@ -54,6 +62,18 @@ urlpatterns = [
     # path('program/transition/return_3/<int:pk>', return_level_3),
     path('program/transition/submit/<int:pk>/', submitted),
     path('program/transition/submit_1/<int:pk>/', submitted_1),
+    path('program/transition/submit_2/<int:pk>/', submitted_2),
+    path('program/transition/submit_3/<int:pk>/', submitted_3),
+    # <------------------------------------------------------------------------>
+    path('program/transition/reject/<int:pk>/', rejected),
+    path('program/transition/reject_1/<int:pk>/', rejected_1),
+    path('program/transition/reject_2/<int:pk>/', rejected_2),
+    path('program/transition/reject_3/<int:pk>/', rejected_3),
+    # <------------------------------------------------------------------------>
+    path('program/transition/accept/<int:pk>/', accepted),
+    path('program/transition/accept_1/<int:pk>/', accepted_1),
+    path('program/transition/accept_2/<int:pk>/', accepted_2),
+    path('program/transition/accept_3/<int:pk>/', accepted_3),
     # <------------------------------------------------------------------------>
     path('sign/', SignatureList.as_view(), name='signatures'),
     path('program/approve/', include('transaction.urls1'),
