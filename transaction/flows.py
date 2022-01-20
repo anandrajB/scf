@@ -5,28 +5,28 @@ from viewflow import fsm
 
 
 class WorkFlow(object):
-    workitems = workflowitems()
+    # workitems = workflowitems()
     stage = fsm.State(StateChoices, default=StateChoices.STATUS_DRAFT)
 
-    def __init__(self, status):
-        self.status = status
+    def __init__(self, workflowitems):
+        self.workflowitems = workflowitems
 
     @stage.setter()
     def _set_status_stage(self, value):
-        self.status.stage = value
+        self.workflowitems.initial_state = value
 
     @stage.getter()
     def _get_status(self):
-        return self.status.stage
+        return self.workflowitems.initial_state
 
     @stage.transition(source=StateChoices.STATUS_DRAFT, target=StateChoices.STATUS_AWAITING_SIGN_A)
     def submit(self):
-        self.workitems.initial_state = StateChoices.STATUS_DRAFT
-        self.workitems.interim_state = StateChoices.STATUS_AWAITING_SIGN_A
-        self.workitems.final_state = StateChoices.STATUS_AW_APPROVAL
+        self.workflowitems.initial_state = StateChoices.STATUS_DRAFT
+        self.workflowitems.interim_state = StateChoices.STATUS_AWAITING_SIGN_A
+        self.workflowitems.final_state = StateChoices.STATUS_AW_APPROVAL
 
     @stage.transition(source=StateChoices.STATUS_AWAITING_SIGN_A, target=StateChoices.STATUS_AWAITING_SIGN_B)
     def submit_level_1(self):
-        self.workitems.initial_state = StateChoices.STATUS_AWAITING_SIGN_A
-        self.workitems.interim_state = StateChoices.STATUS_AWAITING_SIGN_B
-        self.workitems.final_state = StateChoices.STATUS_AW_APPROVAL
+        self.workflowitems.initial_state = StateChoices.STATUS_AWAITING_SIGN_A
+        self.workflowitems.interim_state = StateChoices.STATUS_AWAITING_SIGN_B
+        self.workflowitems.final_state = StateChoices.STATUS_AW_APPROVAL
