@@ -15,3 +15,4 @@
 1. python manage.py migrate_schemas  ( for schmeas migration )
 2. python manage.py create_tenant_superuser  ( superuser for tenant's )
 
+# updated fsm => viewflow
