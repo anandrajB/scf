@@ -1,0 +1,78 @@
+[
+    {
+        "model": "accounts.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$260000$1sc4vCZZNGUVYmfdeaQLPi$fAjHAc1pMpfydWiz6XNLvZOf8SJhgb1XxlULWDnYoQM=",
+            "last_login": "2022-01-13T18:28:00.572Z",
+            "phone": "9677210269",
+            "email": "anand@admin.com",
+            "is_active": true,
+            "is_supervisor": true,
+            "is_administrator": true,
+            "created_date": "2022-01-13T18:07:03.982Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 1,
+        "fields": {
+            "iso": 123,
+            "description": "INR"
+        }
+    },
+    {
+        "model": "accounts.countries",
+        "pk": 1,
+        "fields": {
+            "country": "INDIA"
+        }
+    },
+    {
+        "model": "accounts.parties",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "customer_id": "12345",
+            "name": "ANAND RAJ B",
+            "base_currency": 1,
+            "address_line_1": "NO:109 , RAJAGOPALAN SALAI , KARUMA",
+            "address_line_2": "dff",
+            "city": "CHENNAI",
+            "state": "TAMILNADU",
+            "zipcode": "600087",
+            "country_code": 1,
+            "onboarded": true,
+            "party_type": "CUSTOMER"
+        }
+    },
+    {
+        "model": "accounts.customer",
+        "pk": 1,
+        "fields": {
+            "first_name": "sheik",
+            "last_name": "mohamed",
+            "display_name": "mohamed sheik ali",
+            "user": 1,
+            "email": "customer2@gmail.com",
+            "phone": "213456y7u",
+            "party": 1,
+            "is_supervisor": true,
+            "is_administrator": false
+        }
+    },
+    {
+        "model": "accounts.signatures",
+        "pk": 1,
+        "fields": {
+            "party_belongs": 1,
+            "sign_a": true,
+            "sign_b": true,
+            "sign_c": false,
+            "action": "SUBMIT",
+            "workflowitem": 1
+        }
+    }
+]
