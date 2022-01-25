@@ -7,6 +7,7 @@ from transaction.models import workevents, workflowitems
 from viewflow import fsm
 
 
+
 class WorkFlow(object):
     # workitems = workflowitems()
     stage = fsm.State(StateChoices, default=StateChoices.STATUS_DRAFT)
