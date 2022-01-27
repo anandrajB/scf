@@ -22,3 +22,9 @@ class ProgramTypeChoices(graphene.Enum):
     APF = "APF"
     RF = "RF"
     DF = "DF"
+
+
+class PartyType(graphene.Enum):
+    BANK = "BANK"
+    CUSTOMER = "CUSTOMER"
+    OTHER = "OTHER"

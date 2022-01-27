@@ -4,7 +4,6 @@ from graphene_django import DjangoObjectType
 from transaction.models import Pairings, Invoices
 from accounts.models import Currencies
 from transaction.models import workflowitems
-# from accounts.models import Parties, User, customer, Currencies, Countries, user_group
 from transaction.Schema.choices import financeType
 
 
