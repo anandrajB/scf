@@ -1,12 +1,11 @@
-from pyexpat import model
 from django.db import models
 from django.contrib.auth.models import BaseUserManager , AbstractBaseUser ,PermissionsMixin
-from transaction.models import workevents , Programs , submodels , Actions , invoice_uploads, workflowitems
+from transaction.models import submodels 
 from django.core.validators import MaxValueValidator , MinValueValidator
 
 
 
-# OTHER FIELDS      
+# OTHER MODELS     
 
 class Currencies(models.Model):
     iso = models.IntegerField()
@@ -72,7 +71,7 @@ class Partyaccounts(models.Model):
 
 
 
-# CUSTOM USER MODEL ( PHONE / EMAIL )
+# CUSTOM USER MODEL SETUP  ( PHONE / EMAIL )
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -106,7 +105,7 @@ class UserManager(BaseUserManager):
         )
 
 
-# USER MODEL
+# MY USER MODEL
 
 class User(AbstractBaseUser,PermissionsMixin):
     phone = models.CharField(max_length=16, unique=True)

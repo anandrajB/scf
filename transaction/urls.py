@@ -1,5 +1,4 @@
 from django.urls import path, include
-
 from accounts.views import index
 from .views import (
     ProgramListApiView,

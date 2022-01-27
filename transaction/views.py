@@ -10,7 +10,6 @@ from .models import (
 )
 from django.shortcuts import render
 from rest_framework.exceptions import APIException, PermissionDenied
-from django_fsm import has_transition_perm, get_available_FIELD_transitions
 from rest_framework import serializers
 from rest_framework.generics import (
     ListAPIView,
@@ -270,10 +269,10 @@ class SubmitTransitionSign_CApiview(CreateAPIView):
             return Response({"can't do this transition  "})
 
 
-# -----------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------
 
 ## REJECT TRANSITIONS 
-# -----------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------
 
 # REJECT TRANSITION
 

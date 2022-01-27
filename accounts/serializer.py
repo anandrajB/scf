@@ -37,10 +37,8 @@ class BankSignupSerializer(serializers.Serializer):
 
 
 class partieserializer(serializers.ModelSerializer):
-    country_code = serializers.SlugRelatedField(
-        read_only=True, slug_field='country')
-    base_currency = serializers.SlugRelatedField(
-        read_only=True, slug_field='description')
+    country_code = serializers.SlugRelatedField(read_only=True, slug_field='country')
+    base_currency = serializers.SlugRelatedField(read_only=True, slug_field='description')
     class Meta:
         model = Parties
         fields = [
@@ -57,6 +55,7 @@ class partieserializer(serializers.ModelSerializer):
             'country_code',
             'party_type'
         ]
+
 
 
 class PartiesSignupSerailizer(serializers.Serializer):

@@ -4,7 +4,20 @@ from graphene import relay
 from graphene_django import DjangoListField
 from accounts.models import customer
 from transaction.models import Invoices, Programs
-from .Schema import partiesSchema, programsSchema, customerSchema, currencySchema, countrySchema, pairingsSchema, invoiceSchema, fundingSchema, bankSchema, userSchema, invoiceuploadSchema, workitemeventsSchema
+from .Schema import (
+    partiesSchema,
+    programsSchema,
+    customerSchema,
+    currencySchema,
+    countrySchema, 
+    pairingsSchema,
+    invoiceSchema, 
+    fundingSchema, 
+    bankSchema, 
+    userSchema,
+    invoiceuploadSchema,
+    workitemeventsSchema
+)
 
 
 class Query(graphene.ObjectType):

@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.admin import AdminSite
 from django.utils.translation import ugettext_lazy
-from .models import Banks, Countries, Currencies, User , Parties, signatures, userprocessauth, workflowitems
+from .models import Banks, Countries, Currencies, User , Parties, signatures, userprocessauth
 
 
 
@@ -43,7 +43,6 @@ class UserAdmin(admin.ModelAdmin):
 
 
 
-admin.site.register(workflowitems)
 admin.site.register(Parties)
 admin.site.register(Banks)
 admin.site.register(Currencies)

@@ -25,8 +25,7 @@ class Actionserializer(serializers.ModelSerializer):
 
 
 class Workeventsserializer(serializers.ModelSerializer):
-    from_party = serializers.SlugRelatedField(
-        read_only=True, slug_field='name')
+    from_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
     to_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
 
     class Meta:
@@ -46,10 +45,8 @@ class Workeventsserializer(serializers.ModelSerializer):
 
 class Workitemserializer(serializers.ModelSerializer):
     workflowevent = Workeventsserializer(many=True, read_only=True)
-    current_from_party = serializers.SlugRelatedField(
-        read_only=True, slug_field='name')
-    current_to_party = serializers.SlugRelatedField(
-        read_only=True, slug_field='name')
+    current_from_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    current_to_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
 
     class Meta:
         model = workflowitems
@@ -132,18 +129,16 @@ class Programcreateserializer(serializers.Serializer):
         ('EURIBOR', 'EURIBOR'),
         ('SOFOR', 'SOFOR')
     ]
+    
     party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all())
     program_type = serializers.CharField()
-    finance_request_type = serializers.ChoiceField(
-        choices=finance_request_type, default=None)
+    finance_request_type = serializers.ChoiceField(choices=finance_request_type, default=None)
     limit_currency = serializers.CharField()
-    total_limit_amount = serializers.DecimalField(
-        max_digits=5, decimal_places=2)
+    total_limit_amount = serializers.DecimalField(max_digits=5, decimal_places=2)
     finance_currency = serializers.CharField()
     settlement_currency = serializers.CharField()
     expiry_date = serializers.DateField()
-    max_finance_percentage = serializers.DecimalField(
-        max_digits=5, decimal_places=2)
+    max_finance_percentage = serializers.DecimalField(max_digits=5, decimal_places=2)
     max_invoice_age_for_funding = serializers.IntegerField()
     max_age_for_repayment = serializers.IntegerField()
     minimum_period = serializers.IntegerField()
@@ -157,14 +152,11 @@ class Programcreateserializer(serializers.Serializer):
     interest_rate_type = serializers.ChoiceField(choices=interest_rate_type)
     interest_rate = serializers.DecimalField(max_digits=6, decimal_places=2)
     margin = serializers.DecimalField(max_digits=5, decimal_places=2)
-    event_user = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all())
+    event_user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     sign = serializers.PrimaryKeyRelatedField(queryset = signatures.objects.all())
     # record_datas = serializers.JSONField()
-    from_party = serializers.PrimaryKeyRelatedField(
-        queryset=Parties.objects.all())
-    to_party = serializers.PrimaryKeyRelatedField(
-        queryset=Parties.objects.all())
+    from_party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all())
+    to_party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all())
 
     def create(self, validated_data):
         party = validated_data.pop('party')
@@ -176,8 +168,7 @@ class Programcreateserializer(serializers.Serializer):
         settlement_currency = validated_data.pop('settlement_currency')
         expiry_date = validated_data.pop('expiry_date')
         max_finance_percentage = validated_data.pop('max_finance_percentage')
-        max_invoice_age_for_funding = validated_data.pop(
-            'max_invoice_age_for_funding')
+        max_invoice_age_for_funding = validated_data.pop('max_invoice_age_for_funding')
         max_age_for_repayment = validated_data.pop('max_age_for_repayment')
         minimum_period = validated_data.pop('minimum_period')
         maximum_period = validated_data.pop('maximum_period')
