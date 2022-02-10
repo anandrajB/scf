@@ -60,6 +60,7 @@ class WorkFlow(object):
             self.workflowitems.interim_state = StateChoices.STATUS_AW_APPROVAL
             self.workflowitems.final_state = StateChoices.STATUS_AW_APPROVAL
             self.workflowitems.next_available_transitions = []
+            self.workflowitems.final = "YES"
             self.workflowitems.initial_state = StateChoices.STATUS_AW_ACCEPT
             ws = workflowitems.objects.get(id=self.workflowitems.id)
             workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_A,
@@ -94,6 +95,7 @@ class WorkFlow(object):
             self.workflowitems.interim_state = StateChoices.STATUS_AW_APPROVAL
             self.workflowitems.final_state = StateChoices.STATUS_AW_APPROVAL
             self.workflowitems.next_available_transitions = []
+            self.workflowitems.final = "YES"
             self.workflowitems.initial_state = StateChoices.STATUS_AW_ACCEPT
             ws = workflowitems.objects.get(id=self.workflowitems.id)
             workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_B,
@@ -115,6 +117,7 @@ class WorkFlow(object):
         self.workflowitems.final_state = StateChoices.STATUS_AW_APPROVAL
         self.workflowitems.initial_state = StateChoices.STATUS_AW_ACCEPT
         self.workflowitems.action = 'SUBMIT'
+        self.workflowitems.final = "YES"
         ws = workflowitems.objects.get(id=self.workflowitems.id)
         workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_C,
                                   to_state=StateChoices.STATUS_AW_APPROVAL, interim_state=StateChoices.STATUS_AW_APPROVAL, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party)
@@ -159,6 +162,7 @@ class WorkFlow(object):
             self.workflowitems.interim_state = StateChoices.STATUS_REJECTED
             self.workflowitems.final_state = StateChoices.STATUS_REJECTED
             self.workflowitems.next_available_transitions = []
+            self.workflowitems.final = "YES"
             self.workflowitems.initial_state = StateChoices.STATUS_AW_ACCEPT
             ws = workflowitems.objects.get(id=self.workflowitems.id)
             workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_A,
@@ -192,6 +196,7 @@ class WorkFlow(object):
             self.workflowitems.interim_state = StateChoices.STATUS_REJECTED
             self.workflowitems.final_state = StateChoices.STATUS_REJECTED
             self.workflowitems.next_available_transitions = []
+            self.workflowitems.final = "YES"
             self.workflowitems.initial_state = StateChoices.STATUS_AW_ACCEPT
             ws = workflowitems.objects.get(id=self.workflowitems.id)
             workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_B,
@@ -211,6 +216,7 @@ class WorkFlow(object):
         self.workflowitems.final_state = StateChoices.STATUS_REJECTED
         self.workflowitems.initial_state = StateChoices.STATUS_AW_ACCEPT
         self.workflowitems.action = "REJECT"
+        self.workflowitems.final = "YES"
         ws = workflowitems.objects.get(id=self.workflowitems.id)
         workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_C,
                                   to_state=StateChoices.STATUS_REJECTED, interim_state=StateChoices.STATUS_REJECTED, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party)
@@ -256,6 +262,7 @@ class WorkFlow(object):
             self.workflowitems.interim_state = StateChoices.STATUS_ACCEPTED
             self.workflowitems.final_state = StateChoices.STATUS_ACCEPTED
             self.workflowitems.next_available_transitions = []
+            self.workflowitems.final = "YES"
             ws = workflowitems.objects.get(id=self.workflowitems.id)
             workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_A,
                                       to_state=StateChoices.STATUS_ACCEPTED, interim_state=StateChoices.STATUS_ACCEPTED, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party)
@@ -289,6 +296,7 @@ class WorkFlow(object):
             self.workflowitems.interim_state = StateChoices.STATUS_ACCEPTED
             self.workflowitems.final_state = StateChoices.STATUS_ACCEPTED
             self.workflowitems.next_available_transitions = []
+            self.workflowitems.final = "YES"
             ws = workflowitems.objects.get(id=self.workflowitems.id)
             workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_B,
                                       to_state=StateChoices.STATUS_ACCEPTED, interim_state=StateChoices.STATUS_ACCEPTED, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party)
@@ -306,6 +314,7 @@ class WorkFlow(object):
         self.workflowitems.interim_state = StateChoices.STATUS_ACCEPTED
         self.workflowitems.final_state = StateChoices.STATUS_ACCEPTED
         self.workflowitems.action = 'ACCEPT'
+        self.workflowitems.final = "YES"
         ws = workflowitems.objects.get(id=self.workflowitems.id)
         workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_C,
                                   to_state=StateChoices.STATUS_ACCEPTED, interim_state=StateChoices.STATUS_ACCEPTED, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party)

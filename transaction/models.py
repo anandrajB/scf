@@ -11,6 +11,7 @@ from transaction.states import StateChoices
 
 #  MODELS RELATED TO TRANSACTION
 
+
 class submodels(models.Model):
     description = models.CharField(max_length=35)
     api_route = models.CharField(max_length=55)
@@ -51,14 +52,17 @@ class Programs(models.Model):
     ]
 
     party = models.ForeignKey("accounts.Parties", on_delete=models.CASCADE)
-    program_type = models.CharField(choices=program_type, default='*', max_length=10)
-    finance_request_type = models.CharField(choices=finance_request_type, max_length=15, default=None)
+    program_type = models.CharField(
+        choices=program_type, default='*', max_length=10)
+    finance_request_type = models.CharField(
+        choices=finance_request_type, max_length=15, default=None)
     limit_currency = models.CharField(max_length=3)
     total_limit_amount = models.DecimalField(max_digits=7, decimal_places=2)
     finance_currency = models.CharField(max_length=3)
     settlement_currency = models.CharField(max_length=3)
     expiry_date = models.DateField(default=date.today)
-    max_finance_percentage = models.DecimalField(max_digits=5, decimal_places=2)
+    max_finance_percentage = models.DecimalField(
+        max_digits=5, decimal_places=2)
     max_invoice_age_for_funding = models.IntegerField()
     max_age_for_repayment = models.IntegerField()
     minimum_period = models.IntegerField()
@@ -68,11 +72,13 @@ class Programs(models.Model):
     financed_amount = models.DecimalField(max_digits=5, decimal_places=2)
     balance_amount = models.DecimalField(max_digits=5, decimal_places=2)
     grace_period = models.IntegerField()
-    interest_type = models.CharField(choices=interest_choices, default=None, max_length=15)
-    interest_rate_type = models.CharField(choices=interest_rate_type_choices, max_length=15, default=None)
+    interest_type = models.CharField(
+        choices=interest_choices, default=None, max_length=15)
+    interest_rate_type = models.CharField(
+        choices=interest_rate_type_choices, max_length=15, default=None)
     interest_rate = models.DecimalField(max_digits=6, decimal_places=2)
     margin = models.DecimalField(max_digits=5, decimal_places=2)
-  
+
 
 # FUNDING REQUEST MODEL
 
@@ -108,14 +114,20 @@ class Pairings(models.Model):
     ]
 
     program_type = models.ForeignKey(Programs, on_delete=models.DO_NOTHING)
-    counterparty_id = models.ForeignKey("accounts.Parties", on_delete=models.CASCADE)
-    finance_request = models.CharField(choices=finance_request_type, max_length=15, default=None)
-    currency = models.ForeignKey("accounts.Currencies", on_delete=models.DO_NOTHING, related_name='pairingscurrency')
+    counterparty_id = models.ForeignKey(
+        "accounts.Parties", on_delete=models.CASCADE)
+    finance_request = models.CharField(
+        choices=finance_request_type, max_length=15, default=None)
+    currency = models.ForeignKey(
+        "accounts.Currencies", on_delete=models.DO_NOTHING, related_name='pairingscurrency')
     total_limit = models.DecimalField(max_digits=8, decimal_places=2)
-    finance_currency_type = models.ForeignKey("accounts.Currencies", on_delete=models.DO_NOTHING, related_name='financedcurrency')
-    settlement_currency_type = models.ForeignKey("accounts.Currencies", on_delete=models.CASCADE)
+    finance_currency_type = models.ForeignKey(
+        "accounts.Currencies", on_delete=models.DO_NOTHING, related_name='financedcurrency')
+    settlement_currency_type = models.ForeignKey(
+        "accounts.Currencies", on_delete=models.CASCADE)
     expiry_date = models.DateField(default=date.today)
-    max_finance_percentage = models.DecimalField(max_digits=8, decimal_places=2)
+    max_finance_percentage = models.DecimalField(
+        max_digits=8, decimal_places=2)
     max_invoice_age_for_funding = models.IntegerField()
     max_age_for_repayment = models.IntegerField()
     minimum_period = models.IntegerField()
@@ -126,8 +138,10 @@ class Pairings(models.Model):
     financed_amount = models.DecimalField(max_digits=8, decimal_places=2)
     balance_amount = models.DecimalField(max_digits=8, decimal_places=2)
     grace_period = models.IntegerField()
-    interest_type = models.CharField(choices=interest_choices, default=None, max_length=15)
-    interest_rate_type = models.CharField(choices=interest_rate_type_choices, max_length=15, default=None)
+    interest_type = models.CharField(
+        choices=interest_choices, default=None, max_length=15)
+    interest_rate_type = models.CharField(
+        choices=interest_rate_type_choices, max_length=15, default=None)
     interest_rate = models.DecimalField(max_digits=8, decimal_places=2)
     margin = models.DecimalField(max_digits=8, decimal_places=2)
 
@@ -147,17 +161,30 @@ class Actions(models.Model):
 
 class workflowitems(models.Model):
 
+    Final_Check = [
+        ("YES", "Y"),
+        ("NO", "N")
+    ]
+
     created_date = models.DateTimeField(auto_now_add=True)
     program = models.OneToOneField(Programs, on_delete=models.CASCADE)
     stage = models.CharField(max_length=255, choices=StateChoices.choices)
-    initial_state = models.CharField(max_length=50, default=StateChoices.STATUS_DRAFT)
-    interim_state = models.CharField(max_length=50, default=StateChoices.STATUS_DRAFT)
-    final_state = models.CharField(max_length=50, default=StateChoices.STATUS_DRAFT)
-    next_available_transitions = ArrayField(models.CharField(max_length=500,blank=True, null=True),blank=True, null=True)
-    event_users = models.ForeignKey("accounts.User", on_delete=models.CASCADE, related_name='customername')
-    current_from_party = models.ForeignKey("accounts.Parties", on_delete=models.DO_NOTHING, related_name='from_party')
-    current_to_party = models.ForeignKey("accounts.Parties", on_delete=models.DO_NOTHING, related_name='to_party')
+    initial_state = models.CharField(
+        max_length=50, default=StateChoices.STATUS_DRAFT)
+    interim_state = models.CharField(
+        max_length=50, default=StateChoices.STATUS_DRAFT)
+    final_state = models.CharField(
+        max_length=50, default=StateChoices.STATUS_DRAFT)
+    next_available_transitions = ArrayField(models.CharField(
+        max_length=500, blank=True, null=True), blank=True, null=True)
+    event_users = models.ForeignKey(
+        "accounts.User", on_delete=models.CASCADE, related_name='customername')
+    current_from_party = models.ForeignKey(
+        "accounts.Parties", on_delete=models.DO_NOTHING, related_name='from_party')
+    current_to_party = models.ForeignKey(
+        "accounts.Parties", on_delete=models.DO_NOTHING, related_name='to_party')
     action = models.CharField(max_length=25, default='SAVE')
+    final = models.CharField(choices=Final_Check, max_length=25, null=True, blank=True)
     # sign = models.ForeignKey('accounts.signatures',on_delete=models.CASCADE)
 
 
@@ -185,11 +212,15 @@ class Invoices(models.Model):
     invoice_no = models.CharField(null=True, blank=True, max_length=10)
     issue_date = models.DateField(default=date.today)
     due_date = models.DateField(default=date.today)
-    invoice_currency = models.ForeignKey("accounts.Currencies", on_delete=models.CASCADE, related_name='invoicecurrencytype')
+    invoice_currency = models.ForeignKey(
+        "accounts.Currencies", on_delete=models.CASCADE, related_name='invoicecurrencytype')
     amount = models.DecimalField(max_digits=8, decimal_places=2)
-    funding_req_type = models.CharField(choices=finance_request_type, default=None, max_length=15)
-    finance_currency_type = models.ForeignKey("accounts.Currencies", on_delete=models.DO_NOTHING, related_name='financedinvoicecurrency')
-    settlement_currency_type = models.ForeignKey("accounts.Currencies", on_delete=models.CASCADE)
+    funding_req_type = models.CharField(
+        choices=finance_request_type, default=None, max_length=15)
+    finance_currency_type = models.ForeignKey(
+        "accounts.Currencies", on_delete=models.DO_NOTHING, related_name='financedinvoicecurrency')
+    settlement_currency_type = models.ForeignKey(
+        "accounts.Currencies", on_delete=models.CASCADE)
     interest_rate = models.DecimalField(max_digits=6, decimal_places=1)
     financed_amount = models.DecimalField(max_digits=6, decimal_places=1)
     bank_load_id = models.CharField(max_length=55)
@@ -208,7 +239,8 @@ class invoice_uploads(models.Model):
         ('RF', 'RF'),
         ('DF', 'DF')
     ]
-    program_type = models.CharField(choices=program_type, default='*', max_length=15)
+    program_type = models.CharField(
+        choices=program_type, default='*', max_length=15)
     invoices = models.JSONField()
     wf_item_id = models.ForeignKey(workflowitems, on_delete=models.CASCADE)
 
@@ -217,12 +249,15 @@ class invoice_uploads(models.Model):
 
 class workevents(models.Model):
 
-    workitems = models.ForeignKey(workflowitems, on_delete=models.CASCADE, related_name='workflowevent')
+    workitems = models.ForeignKey(
+        workflowitems, on_delete=models.CASCADE, related_name='workflowevent')
     # event_user = models.ForeignKey('accounts.customer',on_delete=models.CASCADE,related_name='customername')
     from_state = models.CharField(max_length=50, default='DRAFT')
     to_state = models.CharField(max_length=50, default='DRAFT')
     interim_state = models.CharField(max_length=50, default='DRAFT')
-    from_party = models.ForeignKey('accounts.Parties', on_delete=models.CASCADE, related_name='from_we_party')
-    to_party = models.ForeignKey('accounts.Parties', on_delete=models.CASCADE, related_name='to_wf_party')
+    from_party = models.ForeignKey(
+        'accounts.Parties', on_delete=models.CASCADE, related_name='from_we_party')
+    to_party = models.ForeignKey(
+        'accounts.Parties', on_delete=models.CASCADE, related_name='to_wf_party')
     # record_datas = models.JSONField()
     created_date = models.DateTimeField(auto_now_add=True)
