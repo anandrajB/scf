@@ -294,3 +294,9 @@ class Userprocessserialzier(serializers.ModelSerializer):
             'sign_b',
             'sign_c'
         ]
+
+
+class userprocesscreateserializer(serializers.ModelSerializer):
+    class Meta:
+        model = userprocessauth
+        fields = '__all__'

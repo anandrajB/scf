@@ -44,6 +44,7 @@ from .serializer import (
     partieserializer,
     signaturecreateserializer,
     signatureslistserializer,
+    userprocesscreateserializer,
 )
 from django.contrib.auth import (
     get_user_model,
@@ -409,12 +410,12 @@ def error_404_view(request, exception):
 
 class UserProcessAuthView(ListCreateAPIView):
     queryset = userprocessauth.objects.all()
-    serializer_class = Userprocessserialzier
+    serializer_class = userprocesscreateserializer
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
         user  =  self.request.user
-        serializer = Userprocessserialzier(data=request.data)
+        serializer = userprocesscreateserializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user = user)
             return Response({"Status": "Success"},status=status.HTTP_201_CREATED)
@@ -430,19 +431,19 @@ class UserProcessAuthView(ListCreateAPIView):
 
 class UserProcessAuthUpdateApiview(RetrieveUpdateDestroyAPIView):
     queryset = userprocessauth.objects.all()
-    serializer_class = Userprocessserialzier
+    serializer_class = userprocesscreateserializer
     permission_classes = [AllowAny]
    
     def retrieve(self, request, pk=None):
         queryset = userprocessauth.objects.all()
         user = get_object_or_404(queryset, pk=pk)
-        serializer = Userprocessserialzier(user)
+        serializer = userprocesscreateserializer(user)
         return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
     def update(self, request, pk=None):
         queryset = userprocessauth.objects.all()
         user = get_object_or_404(queryset, pk=pk)
-        serializer = Userprocessserialzier(user, data=request.data)
+        serializer = userprocesscreateserializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save(user = request.user)
             return Response({"status": "successfully changed", "data": serializer.data}, status=status.HTTP_200_OK)
