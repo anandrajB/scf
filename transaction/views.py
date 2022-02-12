@@ -2,6 +2,8 @@ from accounts.models import signatures, userprocessauth
 from transaction.FSM.program import WorkFlow
 from .models import (
     Actions,
+    Invoices,
+    Pairings,
     Programs,
     submodels,
     workevents,
@@ -20,7 +22,10 @@ from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from .serializer import (
     Actionserializer,
+    InvoiceCreateserializer,
+    InvoiceSerializer,
     Modelserializer,
+    PairingSerializer,
     ProgramListserializer,
     Programcreateserializer,
     Workeventsmessageserializer,
@@ -118,6 +123,68 @@ class WorkEventCreateApiview(CreateAPIView):
             serializer.save()
             return Response({"status": "success"}, status=status.HTTP_201_CREATED)
         return Response({"status": "failure", "data": serializer.errors}, status=status.HTTP_424_FAILED_DEPENDENCY)
+
+
+
+# -----------------------------------------------------------------------------------------------------------------------------
+
+# POLYMORPHIC SETUP - INVOICE'S
+
+# -----------------------------------------------------------------------------------------------------------------------------
+
+
+class InvoiceListApiView(ListAPIView):
+    queryset = Invoices.objects.all()
+    serializer_class = InvoiceSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.party.party_type == "BANK":
+            queryset = Invoices.objects.all()
+        else:
+            queryset = Invoices.objects.all()
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = Invoices.objects.all()
+        serializer = InvoiceSerializer(queryset, many=True)
+        return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+
+
+class InvoiceCreateApiView(CreateAPIView):
+    queryset = Invoices.objects.all()
+    serializer_class = InvoiceCreateserializer
+    permission_classes = [Ismaker]
+
+    def post(self, request):
+        serializer = InvoiceCreateserializer(data=request.data,many=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": "success"}, status=status.HTTP_201_CREATED)
+        return Response({"status": "failure", "data": serializer.errors})
+
+
+class InvoiceUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
+    queryset = Invoices.objects.all()
+    serializer_class = InvoiceSerializer
+    permission_classes = [IsAuthenticated]
+    # metadata_class = APIRootMetadata
+
+    def retrieve(self, request, pk=None):
+        queryset = Invoices.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = InvoiceSerializer(user)
+        return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+
+    def update(self, request, pk=None):
+        queryset = Invoices.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = InvoiceSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"status": "failure", "data": serializer.errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
 # -----------------------------------------------------------------------------------------------------------------------------------------
@@ -527,3 +594,48 @@ class TestApiview(ListAPIView):
         # my object for the party user related 
         return Response({"status": "success", "data": "ok"}, status=status.HTTP_200_OK)
 
+
+
+
+# PAIRING CREATE API VIEW
+
+class PairingApiview(ListCreateAPIView):
+    queryset = Pairings.objects.all()
+    serializer_class = PairingSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = PairingSerializer(data=request.data)
+        if(serializer.is_valid()):
+            serializer.save()
+            return Response({"Status": "Success"}, status=status.HTTP_201_CREATED)
+        return Response({"Status": "Failed", "data": serializer.errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+    def list(self, request):
+        model1 = Pairings.objects.all()
+        serializer = PairingSerializer(model1, many=True)
+        return Response({"data": serializer.data}, status=status.HTTP_200_OK)
+
+
+# PAIRING UPDATE API VIEW
+
+class PairingUpdateapiview(RetrieveUpdateDestroyAPIView):
+    queryset = Pairings.objects.all()
+    serializer_class = PairingSerializer
+    permission_classes = [IsAuthenticated]
+    # metadata_class = APIRootMetadata
+
+    def retrieve(self, request, pk=None):
+        queryset = Pairings.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = PairingSerializer(user)
+        return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+
+    def update(self, request, pk=None):
+        queryset = Pairings.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = PairingSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"status": "failure", "data": serializer.errors}, status=status.HTTP_406_NOT_ACCEPTABLE)

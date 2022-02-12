@@ -1,3 +1,5 @@
+from email.policy import default
+from urllib import request
 from rest_framework import serializers
 from .models import Actions, Invoices, Pairings, Programs, submodels, workflowitems
 from accounts.models import Currencies, User, signatures,  Parties, userprocessauth
@@ -19,6 +21,11 @@ class Actionserializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+
+class PairingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pairings
+        fields = '__all__'
 
 
 # WORKEVENTS SERIALIZER
@@ -42,7 +49,7 @@ class Workeventsserializer(serializers.ModelSerializer):
 
 
 
-#   WORK EVENT FOR MESSAGE SERIALIZER
+#   WORK EVENT FOR MESSAGE SERIALIZER ( INBOX )
 
 class Workeventsmessageserializer(serializers.ModelSerializer):
     from_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
@@ -246,22 +253,37 @@ class Programcreateserializer(serializers.Serializer):
         return program
 
 
+
+# INVOICE CREATE SERIALIZER 
+
 class InvoiceCreateserializer(serializers.Serializer):
+    finance_request_type = [
+        ('AUTOMATIC', 'AUTOMATIC'),
+        ('ON_REQUEST', 'ON_REQUEST')
+    ]
+
+    party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all())
     pairing = serializers.PrimaryKeyRelatedField(queryset = Pairings.objects.all())
     invoice_number = serializers.CharField()
     issue_date = serializers.DateField(format="%d-%m-%Y")
     due_date = serializers.DateField(format="%d-%m-%Y")
     invoice_currency = serializers.PrimaryKeyRelatedField(queryset = Currencies.objects.all())
-    amount = serializers.DecimalField(max_digits=5, decimal_places=2)
-    funding_request_type = serializers.CharField()
+    amount = serializers.DecimalField(max_digits=8, decimal_places=2)
+    funding_request_type = serializers.ChoiceField(choices = finance_request_type,default = None)
     finance_currency_type =  serializers.PrimaryKeyRelatedField(queryset = Currencies.objects.all())
     settlement_currency_type = serializers.PrimaryKeyRelatedField(queryset = Currencies.objects.all())
-    interest_rate = serializers.DecimalField(max_digits=5, decimal_places=2)
-    financed_amount = serializers.DecimalField(max_digits=5, decimal_places=2)
+    interest_rate = serializers.DecimalField(max_digits=8, decimal_places=2)
+    financed_amount = serializers.DecimalField(max_digits=8, decimal_places=2)
     bank_loan_id = serializers.CharField()
+    event_user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    # sign = serializers.PrimaryKeyRelatedField(queryset = signatures.objects.all())
+    # record_datas = serializers.JSONField()
+    from_party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all())
+    to_party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all())
     
     def create(self, validated_data):
         pairing = validated_data.pop('pairing')
+        party = validated_data.pop('party')
         invoice_number = validated_data.pop('invoice_number')
         issue_date = validated_data.pop('issue_date')
         due_date = validated_data.pop('due_date')
@@ -272,6 +294,94 @@ class InvoiceCreateserializer(serializers.Serializer):
         settlement_currency_type = validated_data.pop('settlement_currency_type')
         interest_rate = validated_data.pop('interest_rate')
         financed_amount = validated_data.pop('financed_amount')
-        bank_loan = validated_data.pop('bank_loan')
-        invoice = Invoices.objects.create(pairing = pairing , invoice_no =  invoice_number , issue_date = issue_date ,due_date = due_date , invoice_currency = invoice_currency,amount = amount,funding_req_type = funding_request_type,finance_currency_type = finance_currency_type,settlement_currency_type = settlement_currency_type , interest_rate = interest_rate , financed_amount = financed_amount , bank_loan_id = bank_loan )
+        bank_loan = validated_data.pop('bank_loan_id')
+        from_party = validated_data.pop('from_party')
+        to_party = validated_data.pop('to_party')
+        event_user = validated_data.pop('event_user')
+        invoice = Invoices.objects.create(party = party,pairing = pairing , invoice_no =  invoice_number , issue_date = issue_date ,due_date = due_date , invoice_currency = invoice_currency,amount = amount,funding_req_type = funding_request_type,finance_currency_type = finance_currency_type,settlement_currency_type = settlement_currency_type , interest_rate = interest_rate , financed_amount = financed_amount , bank_loan_id = bank_loan )
         invoice.save()
+        work = workflowitems.objects.create(
+            invoice=invoice, current_from_party=from_party,current_to_party=to_party, event_users=event_user)
+        work.save()
+        event = workevents.objects.create(
+            workitems=work, from_party=from_party, to_party=to_party)
+        event.save()
+
+
+
+
+#--------------------------------------
+
+# INVOICE SERIALIZER SETUP
+
+#-------------------------------------
+
+class WorkeventInvoicesserializer(serializers.ModelSerializer):
+    from_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    to_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
+
+    class Meta:
+        model = workevents
+        fields = [
+            'workitems',
+            'from_state',
+            'to_state',
+            'interim_state',
+            'from_party',
+            'to_party',
+            'final',
+            'created_date'
+        ]
+
+
+class WorkitemInvoiceserializer(serializers.ModelSerializer):
+    workflowevent = WorkeventInvoicesserializer(many=True, read_only=True)
+    current_from_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    current_to_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
+
+    class Meta:
+        model = workflowitems
+        fields = [
+            'invoice',
+            'initial_state',
+            'interim_state',
+            'final_state',
+            'next_available_transitions',
+            'current_from_party',
+            'current_to_party',
+            'event_users',
+            'created_date',
+            'action',
+            'subaction',
+            'workflowevent'
+
+        ]
+        read_only_fields = ['workflowevent']
+
+
+class InvoiceSerializer(serializers.ModelSerializer):
+    workflowitems = WorkitemInvoiceserializer(read_only=True)
+    workevents = WorkeventInvoicesserializer(read_only=True)
+    party = serializers.SlugRelatedField(read_only=True, slug_field='name')
+
+    class Meta:
+        model = Invoices
+        fields = [
+            'id',
+            'party',
+            'pairing',
+            'invoice_no',
+            'issue_date',
+            'due_date',
+            'invoice_currency',
+            'amount',
+            'funding_req_type',
+            'finance_currency_type',
+            'settlement_currency_type',
+            'interest_rate',
+            'financed_amount',
+            'bank_loan_id',
+            'workflowitems',
+            'workevents'
+        ]
+    

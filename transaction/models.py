@@ -142,26 +142,6 @@ class Actions(models.Model):
     customer = models.BooleanField(default=False)
 
 
-# WORKFLOW ITEMS MODEL
-
-class workflowitems(models.Model):
-
-    created_date = models.DateTimeField(auto_now_add=True)
-    program = models.OneToOneField(Programs, on_delete=models.CASCADE)
-    stage = models.CharField(max_length=255, choices=StateChoices.choices)
-    initial_state = models.CharField(max_length=50, default=StateChoices.STATUS_DRAFT)
-    interim_state = models.CharField(max_length=50, default=StateChoices.STATUS_DRAFT)
-    final_state = models.CharField(max_length=50, default=StateChoices.STATUS_DRAFT)
-    next_available_transitions = ArrayField(models.CharField(max_length=500,blank=True, null=True),blank=True, null=True)
-    event_users = models.ForeignKey("accounts.User", on_delete=models.CASCADE, related_name='customername')
-    current_from_party = models.ForeignKey("accounts.Parties", on_delete=models.DO_NOTHING, related_name='from_party')
-    current_to_party = models.ForeignKey("accounts.Parties", on_delete=models.DO_NOTHING, related_name='to_party')
-    action = models.CharField(max_length=25, default='SAVE')
-    subaction = models.CharField(max_length=55 , blank=True, null=True)
-    
-    # sign = models.ForeignKey('accounts.signatures',on_delete=models.CASCADE)
-
-
 # INVOICES MODEL
 
 class Invoices(models.Model):
@@ -181,7 +161,8 @@ class Invoices(models.Model):
         ('EURIBOR', 'EURIBOR'),
         ('SOFOR', 'SOFOR')
     ]
-
+    
+    party = models.ForeignKey("accounts.Parties", on_delete=models.CASCADE)
     pairing = models.ForeignKey(Pairings, on_delete=models.DO_NOTHING)
     invoice_no = models.CharField(null=True, blank=True, max_length=10)
     issue_date = models.DateField(default=date.today)
@@ -191,14 +172,31 @@ class Invoices(models.Model):
     funding_req_type = models.CharField(choices=finance_request_type, default=None, max_length=15)
     finance_currency_type = models.ForeignKey("accounts.Currencies", on_delete=models.DO_NOTHING, related_name='financedinvoicecurrency')
     settlement_currency_type = models.ForeignKey("accounts.Currencies", on_delete=models.CASCADE)
-    interest_rate = models.DecimalField(max_digits=6, decimal_places=1)
-    financed_amount = models.DecimalField(max_digits=6, decimal_places=1)
+    interest_rate = models.DecimalField(max_digits=8, decimal_places=1)
+    financed_amount = models.DecimalField(max_digits=8, decimal_places=1)
     bank_loan_id = models.CharField(max_length=55)
-    wf_item_id = models.ForeignKey(workflowitems, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return "%s - invoice no is %s " % (self.pairing, self.invoice_no)
+    
 
+
+# WORKFLOW ITEMS MODEL
+
+class workflowitems(models.Model):
+
+    created_date = models.DateTimeField(auto_now_add=True)
+    program = models.OneToOneField(Programs, on_delete=models.CASCADE,blank=True, null=True)
+    invoice = models.OneToOneField(Invoices,on_delete=models.CASCADE,blank=True, null=True)
+    stage = models.CharField(max_length=255, choices=StateChoices.choices)
+    initial_state = models.CharField(max_length=50, default=StateChoices.STATUS_DRAFT)
+    interim_state = models.CharField(max_length=50, default=StateChoices.STATUS_DRAFT)
+    final_state = models.CharField(max_length=50, default=StateChoices.STATUS_DRAFT)
+    next_available_transitions = ArrayField(models.CharField(max_length=500,blank=True, null=True),blank=True, null=True)
+    event_users = models.ForeignKey("accounts.User", on_delete=models.CASCADE, related_name='customername')
+    current_from_party = models.ForeignKey("accounts.Parties", on_delete=models.DO_NOTHING, related_name='from_party')
+    current_to_party = models.ForeignKey("accounts.Parties", on_delete=models.DO_NOTHING, related_name='to_party')
+    action = models.CharField(max_length=25, default='SAVE')
+    subaction = models.CharField(max_length=55 , blank=True, null=True)
+    
 
 # INVOICE UPLOADS
 
