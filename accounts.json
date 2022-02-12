@@ -1,21 +1,5 @@
 [
     {
-        "model": "accounts.user",
-        "pk": 1,
-        "fields": {
-            "password": "pbkdf2_sha256$260000$1sc4vCZZNGUVYmfdeaQLPi$fAjHAc1pMpfydWiz6XNLvZOf8SJhgb1XxlULWDnYoQM=",
-            "last_login": "2022-01-13T18:28:00.572Z",
-            "phone": "9677210269",
-            "email": "anand@admin.com",
-            "is_active": true,
-            "is_supervisor": true,
-            "is_administrator": true,
-            "created_date": "2022-01-13T18:07:03.982Z",
-            "groups": [],
-            "user_permissions": []
-        }
-    },
-    {
         "model": "accounts.currencies",
         "pk": 1,
         "fields": {
@@ -34,45 +18,168 @@
         "model": "accounts.parties",
         "pk": 1,
         "fields": {
-            "user": 1,
             "customer_id": "12345",
-            "name": "ANAND RAJ B",
+            "name": "VENZO",
             "base_currency": 1,
-            "address_line_1": "NO:109 , RAJAGOPALAN SALAI , KARUMA",
-            "address_line_2": "dff",
-            "city": "CHENNAI",
-            "state": "TAMILNADU",
-            "zipcode": "600087",
+            "address_line_1": "test",
+            "address_line_2": "test",
+            "city": "chennai",
+            "state": "TN",
+            "zipcode": "400400",
             "country_code": 1,
-            "onboarded": true,
+            "onboarded": false,
             "party_type": "CUSTOMER"
         }
     },
     {
-        "model": "accounts.customer",
+        "model": "accounts.parties",
+        "pk": 2,
+        "fields": {
+            "customer_id": "3124214",
+            "name": "ICICI CORP INDIA",
+            "base_currency": 1,
+            "address_line_1": "test",
+            "address_line_2": "test",
+            "city": "chennai",
+            "state": "TN",
+            "zipcode": "400400",
+            "country_code": 1,
+            "onboarded": false,
+            "party_type": "BANK"
+        }
+    },
+    {
+        "model": "accounts.user",
         "pk": 1,
         "fields": {
-            "first_name": "sheik",
-            "last_name": "mohamed",
-            "display_name": "mohamed sheik ali",
-            "user": 1,
-            "email": "customer2@gmail.com",
-            "phone": "213456y7u",
+            "password": "",
+            "last_login": "2022-02-12T18:17:11.691Z",
+            "phone": "9677210269",
+            "email": "anand98.ar@gmail.com",
             "party": 1,
-            "is_supervisor": true,
-            "is_administrator": false
+            "first_name": "ANAND",
+            "last_name": "B",
+            "display_name": "ANAND RAJ",
+            "is_active": true,
+            "is_supervisor": false,
+            "is_administrator": false,
+            "created_date": "2022-02-12T13:37:47.842Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.user",
+        "pk": 2,
+        "fields": {
+            "password": "",
+            "last_login": "2022-02-12T17:17:43.938Z",
+            "phone": "7418025157",
+            "email": "sheik@gmail.com",
+            "party": 1,
+            "first_name": "sheik",
+            "last_name": "ali",
+            "display_name": "mohamed sheik ali",
+            "is_active": true,
+            "is_supervisor": false,
+            "is_administrator": false,
+            "created_date": "2022-02-12T13:38:04.108Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.user",
+        "pk": 3,
+        "fields": {
+            "password": "",
+            "last_login": "2022-02-12T13:51:25.800Z",
+            "phone": "1234567890",
+            "email": "user@gmail.com",
+            "party": 2,
+            "first_name": "test",
+            "last_name": "testing team",
+            "display_name": "cubindia",
+            "is_active": true,
+            "is_supervisor": false,
+            "is_administrator": true,
+            "created_date": "2022-02-12T13:38:23.838Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.action",
+        "pk": 1,
+        "fields": {
+            "desc": "SUBMIT",
+            "bank": true,
+            "customer": false
+        }
+    },
+    {
+        "model": "accounts.action",
+        "pk": 2,
+        "fields": {
+            "desc": "REJECT",
+            "bank": false,
+            "customer": false
+        }
+    },
+    {
+        "model": "accounts.action",
+        "pk": 3,
+        "fields": {
+            "desc": "ACCEPT",
+            "bank": false,
+            "customer": false
+        }
+    },
+    {
+        "model": "accounts.action",
+        "pk": 4,
+        "fields": {
+            "desc": "FINANCE_REQUESTED",
+            "bank": false,
+            "customer": false
         }
     },
     {
         "model": "accounts.signatures",
         "pk": 1,
         "fields": {
-            "party_belongs": 1,
-            "sign_a": true,
+            "model": "PROGRAM",
+            "action": 1,
+            "party": 1,
+            "sign_a": false,
             "sign_b": true,
-            "sign_c": false,
-            "action": "SUBMIT",
-            "workflowitem": 1
+            "sign_c": true
+        }
+    },
+    {
+        "model": "accounts.userprocessauth",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "model": "PROGRAM",
+            "action": 1,
+            "data_entry": true,
+            "sign_a": false,
+            "sign_b": true,
+            "sign_c": true
+        }
+    },
+    {
+        "model": "accounts.userprocessauth",
+        "pk": 2,
+        "fields": {
+            "user": 2,
+            "model": "PROGRAM",
+            "action": 1,
+            "data_entry": false,
+            "sign_a": true,
+            "sign_b": false,
+            "sign_c": true
         }
     }
 ]
