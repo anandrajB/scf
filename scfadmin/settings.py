@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework_swagger',
     'graphene_django',
-    'debug_toolbar'
+    'debug_toolbar',
+    'silk.apps.SilkAppConfig'
 ]
 
 
@@ -128,6 +129,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'silk.middleware.SilkyMiddleware',
 ]
 
 

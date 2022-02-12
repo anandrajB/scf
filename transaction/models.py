@@ -2,8 +2,7 @@ from random import choices
 from django.db import models
 from datetime import date
 from django.dispatch import receiver
-from django_fsm import FSMField, transition
-from transaction.permission.permission import is_approver, is_uploader
+from transaction.permission.program_permission import is_approver, is_uploader
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 

@@ -1,5 +1,3 @@
-from urllib import request
-from django.contrib.admin.views.decorators import staff_member_required
 from accounts.models import signatures, userprocessauth
 from transaction.FSM.program import WorkFlow
 from .models import (
@@ -10,8 +8,6 @@ from .models import (
     workflowitems
 )
 from django.shortcuts import render
-from rest_framework.exceptions import APIException, PermissionDenied
-from rest_framework import serializers
 from rest_framework.generics import (
     ListAPIView,
     CreateAPIView,
@@ -36,8 +32,17 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework import generics
-from accounts.serializer import GetUserSerilaizer
-from .permission.permission import Is_Rejecter, Is_administrator, IsReject_Sign_A, IsReject_Sign_B, IsReject_Sign_C, Ismaker, IsSign_A , IsSign_B  , Is_Sign_C
+from .permission.program_permission import (
+    Is_Rejecter,
+    Is_administrator, 
+    IsReject_Sign_A, 
+    IsReject_Sign_B, 
+    IsReject_Sign_C, 
+    Ismaker, 
+    IsSign_A , 
+    IsSign_B  , 
+    Is_Sign_C
+)
 
 User = get_user_model()
 
@@ -224,7 +229,7 @@ class SubmitTransitionSign_AApiview(CreateAPIView):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user
         party = obj.program.party
-        signs = signatures.objects.get(party=party, action='SUBMIT', model='PROGRAM')
+        signs = signatures.objects.get(party=party, action__desc__contains='SUBMIT', model='PROGRAM')
         if user.party == party:
             if signs.sign_a == True:
                 flow = WorkFlow(obj)
@@ -249,14 +254,13 @@ class SubmitTransitionSign_BApiview(CreateAPIView):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user
         party = obj.program.party
-        signs = signatures.objects.get(party=party, action='SUBMIT', model='PROGRAM')
-        qs = userprocessauth.objects.get(user=user, action='SUBMIT', model='PROGRAM')
-        if (qs.sign_b | user.is_administrator == True) and (user.party == party):
+        signs = signatures.objects.get(party=party, action__desc__contains='SUBMIT', model='PROGRAM')
+        if user.party == party:
             if signs.sign_b == True:
                 flow = WorkFlow(obj)
                 flow.submit_level_2()
                 obj.save()
-                return Response({"status": "success", "data": "sign_b transition done"})
+                return Response({"status": "success", "data": "sign_a transition done"})
             else:
                 return Response({"data": "can't do this transition"})
         else:
@@ -274,14 +278,13 @@ class SubmitTransitionSign_CApiview(CreateAPIView):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user
         party = obj.program.party
-        signs = signatures.objects.get(party=party, action='SUBMIT', model='PROGRAM')
-        qs = userprocessauth.objects.get(user=user, action='SUBMIT', model='PROGRAM')
-        if (qs.sign_c | user.is_administrator == True) and (user.party == party):
+        signs = signatures.objects.get(party=party, action__desc__contains='SUBMIT', model='PROGRAM')
+        if user.party == party:
             if signs.sign_c == True:
                 flow = WorkFlow(obj)
                 flow.submit_level_3()
                 obj.save()
-                return Response({"status": "success", "data": "sign_c transition done"})
+                return Response({"status": "success", "data": "sign_a transition done"})
             else:
                 return Response({"data": "can't do this transition"})
         else:
@@ -320,9 +323,9 @@ class RejectSign_AApiview(CreateAPIView):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user
         party = obj.program.party
-        signs = signatures.objects.get(party=party, action='REJECT', model='PROGRAM')
+        signs = signatures.objects.get(party=party, action__desc__contains='REJECT', model='PROGRAM')
         try:
-            qs = userprocessauth.objects.get(user=user, action='REJECT', model='PROGRAM')
+            qs = userprocessauth.objects.get(user=user, action__desc__contains='REJECT', model='PROGRAM')
             if (qs.sign_a | user.is_administrator == True) and (user.party == party):
                 if signs.sign_a == True:
                     flow = WorkFlow(obj)

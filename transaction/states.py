@@ -26,3 +26,4 @@ class StateChoices(TextChoices):
     SIGN_C = 'SIGN_C',_('SIGN_C')
     SUBMIT = 'SUBMIT',_('SUBMIT')
     MAKER = 'MAKER',_('MAKER')
+    NONE = 'NONE',_('NONE')

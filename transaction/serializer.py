@@ -23,7 +23,6 @@ class Actionserializer(serializers.ModelSerializer):
 
 # WORKEVENTS SERIALIZER
 
-
 class Workeventsserializer(serializers.ModelSerializer):
     from_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
     to_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
@@ -49,7 +48,8 @@ class Workeventsmessageserializer(serializers.ModelSerializer):
     from_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
     to_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
     program = serializers.PrimaryKeyRelatedField(queryset = workflowitems.objects.all() , source = 'workitems')
-    # action = serializers.SerializerMethodField('get_action')
+    action = serializers.SerializerMethodField()
+    subaction = serializers.SerializerMethodField()
 
     class Meta:
         model = workevents
@@ -61,8 +61,16 @@ class Workeventsmessageserializer(serializers.ModelSerializer):
             'from_party',
             'to_party',
             'final',
+            'action',
+            'subaction',
             'created_date'
         ]
+
+    def get_action(self,obj):
+        return obj.workitems.action
+
+    def get_subaction(self,obj):
+        return obj.workitems.subaction
 
 
 # WORKFLOW-ITEMS SERIALIZER

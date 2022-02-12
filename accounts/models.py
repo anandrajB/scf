@@ -181,8 +181,13 @@ class Action(models.Model):
     bank = models.BooleanField(blank=True, null=True,default=False)
     customer = models.BooleanField(default=False , blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        self.desc = self.desc.upper()
+        return super(Action, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.desc
+    
 
 # SIGNATURE LEVELS
 

@@ -16,7 +16,9 @@ urlpatterns = [
     path('api-auth/',include('accounts.urls')),
     path('api/',include('transaction.urls')),
     path('apidoc/', schema_view),
-    path('__debug__/', include('debug_toolbar.urls'))
+    path('__debug__/', include('debug_toolbar.urls')),
+    path('silk/', include('silk.urls', namespace='silk'))
+
     
 ]
 
