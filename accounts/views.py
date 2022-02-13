@@ -112,6 +112,30 @@ class PartiesSignupApiview(ListCreateAPIView):
             return Response({"status": "success"}, status=status.HTTP_201_CREATED)
         return Response({"status": "failure", "data": serializer.errors})
 
+# PARTY UPDATE API VIEW
+
+class PartyDetailsUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
+    queryset = Parties.objects.all()
+    serializer_class = partieserializer
+    permission_classes = [AllowAny]
+    # metadata_class = APIRootMetadata
+
+    def retrieve(self, request, pk=None):
+        queryset = Parties.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = partieserializer(user)
+        return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+
+    def update(self, request, pk=None):
+        queryset = Parties.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = partieserializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"status": "failure", "data": serializer.errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
 
 # USER SIGNUP API 
 

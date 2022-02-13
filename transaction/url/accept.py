@@ -1,6 +1,6 @@
 from django.urls import path
 from django.urls.conf import include
-from transaction.views import (
+from transaction.api.customertransition import (
    AcceptSign_AApiView,
    AcceptSign_BApiView,
    AcceptSign_CApiView

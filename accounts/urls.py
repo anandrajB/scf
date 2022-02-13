@@ -18,12 +18,14 @@ from .views import (
     SignaturesUpdateDeleteApiview,
     UserProcessAuthView,
     UserProcessAuthUpdateApiview,
-    ActionApiview
+    ActionApiview,
+    PartyDetailsUpdateDeleteApiview
 )
 
 urlpatterns = [
     path('bank/', BankCreateApiview.as_view() ),
     path('party/', PartiesSignupApiview.as_view() ),
+    path('party/<int:pk>/',PartyDetailsUpdateDeleteApiview.as_view()),
     path('signup/', UserSignUpApiView.as_view() ,name='user-signup' ),
     path('login/',UserLoginView.as_view()),
     path('logout/',UserLogoutView.as_view()),

@@ -1,21 +1,23 @@
 from django.urls import path, include
 from accounts.views import index
 from .views import (
-    AcceptTransitionApiview,
     InvoiceListApiView,
     InvoiceUpdateDeleteApiview,
     ProgramListApiView,
     ProgramCreateApiView,
     ProgramUpdateDeleteApiview,
-    SubmitTransitionApiView,
     ActionCreateApiView,
     ModelCreateApiview,
-    RejectTransitionApiView,
-    TransitionDeleteApiview,
     TestApiview,
     PairingApiview,
     PairingUpdateapiview,
     InvoiceCreateApiView
+)
+from transaction.api.customertransition import (
+    AcceptTransitionApiview,
+    TransitionDeleteApiview,
+    RejectTransitionApiView,
+    SubmitTransitionApiView
 )
 from graphene_django.views import GraphQLView
 from .schema import schema

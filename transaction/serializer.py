@@ -306,6 +306,7 @@ class InvoiceCreateserializer(serializers.Serializer):
         event = workevents.objects.create(
             workitems=work, from_party=from_party, to_party=to_party)
         event.save()
+        return invoice
 
 
 

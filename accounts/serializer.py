@@ -286,6 +286,7 @@ class Userprocessserialzier(serializers.ModelSerializer):
     class Meta:
         model = userprocessauth
         fields = [
+            'id',
             'user',
             'model',
             'action',

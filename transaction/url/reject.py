@@ -1,7 +1,7 @@
 from django.urls import path
 from django.urls.conf import include
 from accounts.views import index
-from transaction.views import (
+from transaction.api.customertransition import (
     RejectSign_AApiview,
     RejectSign_BApiview,
     RejectSign_CApiview
