@@ -1,7 +1,7 @@
 from django.test import TestCase , Client
 from rest_framework.test import APITestCase
 from transaction.models import submodels , Programs , workflowitems , workevents
-from accounts.models import Currencies , Countries , Parties,User, userprocessauth
+from accounts.models import Currencies , Countries , Parties,User, userprocessauth , Action
 import datetime
 
 
@@ -20,7 +20,8 @@ class mytestcase(TestCase):
                                        city='CHENNAI', state='TAMILNADU', zipcode='500500', country_code=country, onboarded=False, party_type='CUSTOMER')
         user = User.objects.create(email=email, phone=phone, first_name='test', last_name='tester', party = party,
                                    display_name='tester from xyz', created_date=datetime.datetime.now(), is_administrator=False)
-        userprocess = userprocessauth.objects.create(user = user , action = "SUBMIT",model="PROGRAM",data_entry = True ,sign_a = True , sign_b = False , sign_c = False)
+        action = Action.objects.create(desc = 'SUBMIT')
+        userprocess = userprocessauth.objects.create(user = user , action = action,model="PROGRAM",data_entry = True ,sign_a = True , sign_b = False , sign_c = False)
         user.save()
         ss=  submodels.objects.create(description = "test",api_route = 'test_user')
         ss.save()
