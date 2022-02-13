@@ -27,3 +27,4 @@ class StateChoices(TextChoices):
     SUBMIT = 'SUBMIT',_('SUBMIT')
     MAKER = 'MAKER',_('MAKER')
     NONE = 'NONE',_('NONE')
+    

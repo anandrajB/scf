@@ -692,7 +692,16 @@ class WorkFlow(object):
 
 
 
-#----------------------------
+# --------------------------------------------------------------------------------------------------
+# RETURN TRANSITION
+# --------------------------------------------------------------------------------------------------
 
+    @stage.transition(source=stage.ANY, target=StateChoices.NONE)
+    def returns(self):
+        self.workflowitems.interim_state = StateChoices.NONE
+        self.workflowitems.final_state = StateChoices.NONE
+        self.workflowitems.action = 'DELETE'
+        ws = workflowitems.objects.get(id=self.workflowitems.id)
+        workevents.objects.create(workitems=ws, from_state='STATUS_DELETED', to_state='STATUS_DELETED',
+                                  interim_state='STATUS_DELETED', from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party)
 
-# nani
