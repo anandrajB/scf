@@ -42,4 +42,54 @@ class mytestcase(TestCase):
         event = workevents.objects.create(
             workitems=work, from_party=party2, to_party=party2)
         event.save()
+        print("1")
+        program2 = Programs.objects.create(
+            party=party, program_type="APF", finance_request_type="AUTOMATIC",
+            limit_currency="12", total_limit_amount="12", finance_currency="12",
+            settlement_currency="12", expiry_date="2022-12-12", max_finance_percentage="12",
+            max_invoice_age_for_funding="12", max_age_for_repayment="12",
+            minimum_amount="12", minimum_period="12", maximum_amount="12",
+            maximum_period="12", financed_amount="12", balance_amount="12",
+            grace_period="12", interest_rate="12", interest_rate_type="LIBOR",
+            interest_type="FIXED", margin="12" 
+        )
+        work = workflowitems.objects.create(
+            program=program2, current_from_party=party,current_to_party=party2, event_users=user)
+        work.save()
+        event = workevents.objects.create(
+            workitems=work, from_party=party2, to_party=party2)
+        event.save()
+        print('2')
+        program3 = Programs.objects.create(
+            party=party, program_type="APF", finance_request_type="AUTOMATIC",
+            limit_currency="12", total_limit_amount="12", finance_currency="12",
+            settlement_currency="12", expiry_date="2022-12-12", max_finance_percentage="12",
+            max_invoice_age_for_funding="12", max_age_for_repayment="12",
+            minimum_amount="12", minimum_period="12", maximum_amount="12",
+            maximum_period="12", financed_amount="12", balance_amount="12",
+            grace_period="12", interest_rate="12", interest_rate_type="LIBOR",
+            interest_type="FIXED", margin="12" 
+        )
+        work = workflowitems.objects.create(
+            program=program3, current_from_party=party,current_to_party=party2, event_users=user)
+        work.save()
+        event = workevents.objects.create(
+            workitems=work, from_party=party2, to_party=party2)
+        event.save()
+        program5 = Programs.objects.create(
+            party=party, program_type="APF", finance_request_type="AUTOMATIC",
+            limit_currency="12", total_limit_amount="12", finance_currency="12",
+            settlement_currency="12", expiry_date="2022-12-12", max_finance_percentage="12",
+            max_invoice_age_for_funding="12", max_age_for_repayment="12",
+            minimum_amount="12", minimum_period="12", maximum_amount="12",
+            maximum_period="12", financed_amount="12", balance_amount="12",
+            grace_period="12", interest_rate="12", interest_rate_type="LIBOR",
+            interest_type="FIXED", margin="12" 
+        )
+        work = workflowitems.objects.create(
+            program=program5, current_from_party=party,current_to_party=party2, event_users=user)
+        work.save()
+        event = workevents.objects.create(
+            workitems=work, from_party=party2, to_party=party2)
+        event.save()
         print("-------------- \n CASE 1 : PROGRAM , WORKFLOWITEMS , WORKEVENTS CREATED \n ")
