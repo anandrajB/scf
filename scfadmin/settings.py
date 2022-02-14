@@ -307,6 +307,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated", ],
+    "DATE_INPUT_FORMATS": ["%d-%m-%Y"]
 }
 
 
