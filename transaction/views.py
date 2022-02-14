@@ -24,6 +24,7 @@ from .serializer import (
     PairingSerializer,
     ProgramListserializer,
     Programcreateserializer,
+    WorkeventsCustomermessageserializer,
     Workeventsmessageserializer,
     Workeventsserializer,
 )
@@ -193,7 +194,11 @@ class InboxListApiview(ListAPIView):
 
     def list(self, request, *args, **kwargs):
         var = self.get_queryset()
-        serializer = Workeventsmessageserializer(var, many=True)
+        user = self.request.user
+        if user.party.party_type == "CUSTOMER":
+            serializer = WorkeventsCustomermessageserializer(var, many=True)
+        else:
+            serializer = Workeventsmessageserializer(var,many=True)
         return Response({"data": serializer.data}, status=status.HTTP_200_OK)
 
 
