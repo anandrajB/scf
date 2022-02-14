@@ -31,8 +31,6 @@ INTERNAL_IPS = [
 ]
 
 
-
-
 # COMMENT THIS BEFORE USING TENANT'S
 
 INSTALLED_APPS = [
@@ -133,7 +131,6 @@ MIDDLEWARE = [
 ]
 
 
-
 # WHITENOISE  AND CORS SETTINGS
 
 
@@ -143,7 +140,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'scfadmin.urls'
-
 
 
 # DEFAULT TEMPLATES AND 404
@@ -180,7 +176,6 @@ WSGI_APPLICATION = 'scfadmin.wsgi.application'
 # DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 
-
 # # DATABASE HEROKU ADD - ON
 
 # DATABASES = {
@@ -199,7 +194,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django_tenants.postgresql_backend',
         'NAME': 'scf1',
-        'USER': 'postgres',
+        'USER': 'sheik',
         'PASSWORD': 'root',
         'HOST': 'localhost',
         'PORT': '5432',
@@ -265,7 +260,6 @@ STATICFILES_DIRS = (
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-
 # CUSTOM AUTH BACKEND
 
 AUTHENTICATION_BACKENDS = [
@@ -282,7 +276,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ['EMAIL_ID']
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_APP_PASSWORD']
-
 
 
 # REST FRAMEWORK AUTH TOKEN AND SETTINGS
