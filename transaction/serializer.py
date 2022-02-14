@@ -43,13 +43,12 @@ class Workeventsserializer(serializers.ModelSerializer):
             'interim_state',
             'from_party',
             'to_party',
-            'final',
             'created_date'
         ]
 
 
 
-#   WORK EVENT FOR MESSAGE SERIALIZER ( INBOX )
+#   WORK EVENT FOR MESSAGE SERIALIZER ( INBOX - BANK)
 
 class Workeventsmessageserializer(serializers.ModelSerializer):
     from_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
@@ -68,6 +67,7 @@ class Workeventsmessageserializer(serializers.ModelSerializer):
             'from_party',
             'to_party',
             'final',
+            'c_final',
             'action',
             'subaction',
             'created_date'

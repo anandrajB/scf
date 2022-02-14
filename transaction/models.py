@@ -225,4 +225,5 @@ class workevents(models.Model):
     to_party = models.ForeignKey('accounts.Parties', on_delete=models.CASCADE, related_name='to_wf_party')
     # record_datas = models.JSONField()
     final = models.CharField(max_length=55,blank=True, null=True)
+    c_final = models.CharField(max_length=55,blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
