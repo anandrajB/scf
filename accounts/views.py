@@ -339,7 +339,7 @@ class UserListApiview(ListAPIView):
 class CurrenciesView(ListCreateAPIView):
     queryset = Currencies.objects.all()
     serializer_class = CurrenciesSerializer
-    permission_classes = [Is_Administrator]
+    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = CurrenciesSerializer(data=request.data)
@@ -359,7 +359,7 @@ class CurrenciesView(ListCreateAPIView):
 class CurrenciesUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
     queryset = Currencies.objects.all()
     serializer_class = CurrenciesSerializer
-    permission_classes = [Is_Administrator]
+    permission_classes = [AllowAny]
    
     def retrieve(self, request, pk=None):
         queryset = Currencies.objects.all()
@@ -383,7 +383,7 @@ class CurrenciesUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
 class CountriesApiView(ListCreateAPIView):
     queryset = Countries.objects.all()
     serializer_class = Countriesserializer
-    permission_classes = [Is_Administrator]
+    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = Countriesserializer(data=request.data)

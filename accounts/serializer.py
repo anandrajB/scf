@@ -177,8 +177,12 @@ class UserSignupSerializer(serializers.Serializer):
         party = validated_data.pop('party')
         supervisor = validated_data.pop('supervisor')
         administrator = validated_data.pop('administrator')
-        user = User.objects.create(phone = phone , email = email ,first_name = first_name ,  last_name =last_name ,display_name = display_name , party = party,  is_supervisor = supervisor , is_administrator = administrator )
-        user.save()
+        if party.party_type == "BANK":
+            user = User.objects.create(phone = phone , email = email ,first_name = first_name ,  last_name =last_name ,display_name = display_name , party = party,  is_supervisor = supervisor , is_administrator = True )
+            user.save()
+        else:
+            user = User.objects.create(phone = phone , email = email ,first_name = first_name ,  last_name =last_name ,display_name = display_name , party = party,  is_supervisor = supervisor , is_administrator = administrator )
+            user.save()
         return user
 
     def validate_email(self,value):
