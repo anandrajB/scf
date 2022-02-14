@@ -1,10 +1,8 @@
 from accounts.models import userprocessauth
 from .models import (
-    Actions,
     Invoices,
     Pairings,
     Programs,
-    submodels,
     workevents,
 )
 from django.shortcuts import render
@@ -18,10 +16,8 @@ from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from .serializer import (
-    Actionserializer,
     InvoiceCreateserializer,
     InvoiceSerializer,
-    Modelserializer,
     PairingSerializer,
     ProgramListserializer,
     Programcreateserializer,
@@ -230,44 +226,8 @@ class DraftListApiview(ListAPIView):
 
 
 
-# SUBMODEL CREATE API VIEW
-
-class ModelCreateApiview(ListCreateAPIView):
-    queryset = submodels.objects.all()
-    serializer_class = Modelserializer
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        serializer = Modelserializer(data=request.data)
-        if(serializer.is_valid()):
-            serializer.save()
-            return Response({"Status": "Success"}, status=status.HTTP_201_CREATED)
-        return Response({"Status": "Failed", "data": serializer.errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
-
-    def list(self, request):
-        model1 = submodels.objects.all()
-        serializer = Modelserializer(model1, many=True)
-        return Response({"data": serializer.data}, status=status.HTTP_200_OK)
 
 
-# ACTION CREATE API
-
-class ActionCreateApiView(ListCreateAPIView):
-    queryset = Actions.objects.all()
-    serializer_class = Actionserializer
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        serializer = Actionserializer(data=request.data)
-        if(serializer.is_valid()):
-            serializer.save()
-            return Response({"Status": "Success"}, status=status.HTTP_201_CREATED)
-        return Response({"Status": "Failed", "data": serializer.errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
-
-    def list(self, request):
-        model1 = Actions.objects.all()
-        serializer = Actionserializer(model1, many=True)
-        return Response({"data": serializer.data}, status=status.HTTP_200_OK)
 
 
 # TEST API VIEW 

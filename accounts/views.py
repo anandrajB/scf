@@ -19,13 +19,14 @@ from accounts.models import (
     Action,
     Banks, 
     Countries, 
-    Currencies, 
+    Currencies,
+    Models, 
     Parties, 
     PhoneOTP, 
     signatures, 
     userprocessauth
-) 
-from transaction.models import Programs ,workflowitems
+)
+from accounts.permission import Is_Administrator 
 from .serializer import (
     Actionserializer,
     BankListSerializer,
@@ -33,6 +34,7 @@ from .serializer import (
     Countriesserializer,
     CurrenciesSerializer,
     GetUserSerilaizer,
+    Modelserializer,
     Otpserializer,
     PartiesSignupSerailizer,
     UserSignupSerializer,
@@ -111,6 +113,7 @@ class PartiesSignupApiview(ListCreateAPIView):
             serializer.save()
             return Response({"status": "success"}, status=status.HTTP_201_CREATED)
         return Response({"status": "failure", "data": serializer.errors})
+
 
 # PARTY UPDATE API VIEW
 
@@ -286,7 +289,7 @@ class OtpVerifyLoginApiview(APIView):
 class UserDetailsUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserUpdateSerilaizer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     # metadata_class = APIRootMetadata
 
     def retrieve(self, request, pk=None):
@@ -336,7 +339,7 @@ class UserListApiview(ListAPIView):
 class CurrenciesView(ListCreateAPIView):
     queryset = Currencies.objects.all()
     serializer_class = CurrenciesSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [Is_Administrator]
 
     def post(self, request):
         serializer = CurrenciesSerializer(data=request.data)
@@ -356,7 +359,7 @@ class CurrenciesView(ListCreateAPIView):
 class CurrenciesUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
     queryset = Currencies.objects.all()
     serializer_class = CurrenciesSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [Is_Administrator]
    
     def retrieve(self, request, pk=None):
         queryset = Currencies.objects.all()
@@ -380,7 +383,7 @@ class CurrenciesUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
 class CountriesApiView(ListCreateAPIView):
     queryset = Countries.objects.all()
     serializer_class = Countriesserializer
-    permission_classes = [AllowAny]
+    permission_classes = [Is_Administrator]
 
     def post(self, request):
         serializer = Countriesserializer(data=request.data)
@@ -400,7 +403,7 @@ class CountriesApiView(ListCreateAPIView):
 class CountryUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
     queryset = Countries.objects.all()
     serializer_class = Countriesserializer
-    permission_classes = [AllowAny]
+    permission_classes = [Is_Administrator]
 
     def retrieve(self, request, pk=None):
         queryset = Countries.objects.all()
@@ -550,7 +553,7 @@ class SignaturesUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
 class ActionApiview(ListCreateAPIView):
     queryset = Action.objects.all()
     serializer_class = Actionserializer
-    permission_classes = [AllowAny]
+    permission_classes = [Is_Administrator]
 
     def list(self, request):
         queryset = Action.objects.all()
@@ -564,3 +567,72 @@ class ActionApiview(ListCreateAPIView):
             return Response({"status": "success"}, status=status.HTTP_201_CREATED)
         return Response({"status": "failure", "data": serializer.errors})
 
+
+
+# ACTION UPDATE API VIEW 
+
+class ActionUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
+    queryset = Action.objects.all()
+    serializer_class = Actionserializer
+    permission_classes = [Is_Administrator]
+   
+    def retrieve(self, request, pk=None):
+        queryset = Action.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = Actionserializer(user)
+        return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+
+    def update(self, request, pk=None):
+        queryset = Action.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = Actionserializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": "successfully changed", "data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"status": "failure", "data": serializer.errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
+
+
+
+# MODEL CREATE API VIEW
+
+class ModelApiview(ListCreateAPIView):
+    queryset = Models.objects.all()
+    serializer_class = Modelserializer
+    permission_classes = [Is_Administrator]
+
+    def list(self, request):
+        queryset = Models.objects.all()
+        serializer = Modelserializer(queryset, many=True)
+        return Response({"status": "success", "data": serializer.data})
+
+    def post(self, request):
+        serializer = Modelserializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": "success"}, status=status.HTTP_201_CREATED)
+        return Response({"status": "failure", "data": serializer.errors})
+
+
+# MODEL UPDATE API VIEW 
+
+class ModelUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
+    queryset = Models.objects.all()
+    serializer_class = Modelserializer
+    permission_classes = [Is_Administrator]
+   
+    def retrieve(self, request, pk=None):
+        queryset = Models.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = Modelserializer(user)
+        return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+
+    def update(self, request, pk=None):
+        queryset = Models.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = Modelserializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": "successfully changed", "data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"status": "failure", "data": serializer.errors}, status=status.HTTP_406_NOT_ACCEPTABLE)

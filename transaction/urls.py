@@ -6,8 +6,6 @@ from .views import (
     ProgramListApiView,
     ProgramCreateApiView,
     ProgramUpdateDeleteApiview,
-    ActionCreateApiView,
-    ModelCreateApiview,
     TestApiview,
     PairingApiview,
     PairingUpdateapiview,
@@ -49,8 +47,6 @@ urlpatterns = [
     path('invoice/transition/accept/', include('transaction.url.accept'),name='invoice-transition-accept-ACCEPT'),
     #--
     path('messages/', include('transaction.url.message'),name = 'message-inbox-urls'),
-    path('action/', ActionCreateApiView.as_view()),
-    path('model/', ModelCreateApiview.as_view()),
     path('test/',TestApiview.as_view()),
     path('graphql/', GraphQLView.as_view(graphiql=True, schema=schema),name ='GRAPH_QL URL')
 ]

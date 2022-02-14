@@ -175,6 +175,13 @@ class PhoneOTP(models.Model):
 
 
 
+# MODELS 
+
+class Models(models.Model):
+    desc = models.CharField(max_length=155)
+    api_route = models.CharField(max_length=155)
+
+
 # ACTIONS
 class Action(models.Model):
     desc = models.CharField(max_length=55)

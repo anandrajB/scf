@@ -10,12 +10,6 @@ from transaction.states import StateChoices
 
 #  MODELS RELATED TO TRANSACTION
 
-class submodels(models.Model):
-    description = models.CharField(max_length=35)
-    api_route = models.CharField(max_length=55)
-
-    def __str__(self):
-        return self.description
 
 
 class Transitionpartytype(models.Model):
@@ -133,13 +127,6 @@ class Pairings(models.Model):
     def __str__(self):
         return "%s - %s" % (self.finance_request, self.financed_amount)
 
-
-# ACTIONS
-
-class Actions(models.Model):
-    description = models.CharField(max_length=255)
-    bank = models.BooleanField(default=False)
-    customer = models.BooleanField(default=False)
 
 
 # INVOICES MODEL

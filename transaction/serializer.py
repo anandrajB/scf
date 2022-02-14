@@ -1,7 +1,7 @@
 from email.policy import default
 from urllib import request
 from rest_framework import serializers
-from .models import Actions, Invoices, Pairings, Programs, submodels, workflowitems
+from .models import Invoices, Pairings, Programs, workflowitems
 from accounts.models import Currencies, User, signatures,  Parties, userprocessauth
 from .models import workevents
 from django.contrib.auth import get_user_model
@@ -9,16 +9,6 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class Modelserializer(serializers.ModelSerializer):
-    class Meta:
-        model = submodels
-        fields = '__all__'
-
-
-class Actionserializer(serializers.ModelSerializer):
-    class Meta:
-        model = Actions
-        fields = '__all__'
 
 
 

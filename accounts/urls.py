@@ -1,9 +1,12 @@
 from django.contrib import admin
 from django.urls import path
 from .views import (
+    ActionUpdateDeleteApiview,
     BankCreateApiview,
     CountriesApiView,
     CurrenciesView,
+    ModelApiview,
+    ModelUpdateDeleteApiview,
     SignaturesCreateApiView,
     CurrenciesUpdateDeleteApiview,
     CountryUpdateDeleteApiview,
@@ -41,6 +44,9 @@ urlpatterns = [
     path('userprocess/<int:pk>/',UserProcessAuthUpdateApiview.as_view()),
     path('signatures/<int:pk>/',SignaturesUpdateDeleteApiview.as_view()),
     path('signatures/',SignaturesCreateApiView.as_view()),
-    path('action/',ActionApiview.as_view())
+    path('action/',ActionApiview.as_view()),
+    path('action/<int:pk>/',ActionUpdateDeleteApiview.as_view()),
+    path('models/',ModelApiview.as_view()),
+    path('models/<int:pk>/',ModelUpdateDeleteApiview.as_view())
 ]
 

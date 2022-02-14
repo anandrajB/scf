@@ -1,6 +1,5 @@
 from urllib import request
 from django.contrib.auth import get_user_model
-from transaction.models import submodels
 from .models import (
     Action,
     Banks, 
@@ -9,7 +8,8 @@ from .models import (
     Parties, 
     PhoneOTP, 
     signatures, 
-    userprocessauth
+    userprocessauth,
+    Models
 )  
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
@@ -257,6 +257,12 @@ class Countriesserializer(serializers.ModelSerializer):
 class Actionserializer(serializers.ModelSerializer):
     class Meta:
         model = Action
+        fields = '__all__'
+
+
+class Modelserializer(serializers.ModelSerializer):
+    class Meta:
+        model = Models
         fields = '__all__'
 
 
