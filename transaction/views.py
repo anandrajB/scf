@@ -24,7 +24,6 @@ from .serializer import (
     PairingSerializer,
     ProgramListserializer,
     Programcreateserializer,
-    WorkeventsCustomermessageserializer,
     Workeventsmessageserializer,
     Workeventsserializer,
 )
@@ -187,6 +186,9 @@ class InboxListApiview(ListAPIView):
         if user.party.party_type == "BANK":
             queryset = workevents.objects.all().filter(final='YES')
             print("ok")
+        elif user.party.party_type == "CUSTOMER":
+            queryset = workevents.objects.all().filter(c_final='YES')
+            print("customer final")
         else:
             queryset = workevents.objects.filter(
                 to_party__name__contains=self.request.user.party.name).exclude(from_state='DRAFT')
@@ -194,11 +196,7 @@ class InboxListApiview(ListAPIView):
 
     def list(self, request, *args, **kwargs):
         var = self.get_queryset()
-        user = self.request.user
-        if user.party.party_type == "CUSTOMER":
-            serializer = WorkeventsCustomermessageserializer(var, many=True)
-        else:
-            serializer = Workeventsmessageserializer(var,many=True)
+        serializer = Workeventsmessageserializer(var, many=True)
         return Response({"data": serializer.data}, status=status.HTTP_200_OK)
 
 
