@@ -66,8 +66,6 @@ class Workeventsmessageserializer(serializers.ModelSerializer):
             'interim_state',
             'from_party',
             'to_party',
-            'final',
-            'c_final',
             'action',
             'subaction',
             'created_date'

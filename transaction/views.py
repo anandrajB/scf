@@ -1,3 +1,4 @@
+from accounts.models import userprocessauth
 from .models import (
     Actions,
     Invoices,
@@ -185,7 +186,7 @@ class InboxListApiview(ListAPIView):
         user = self.request.user
         if user.party.party_type == "BANK":
             queryset = workevents.objects.all().filter(final='YES')
-            print("ok")
+            print("bank final")
         elif user.party.party_type == "CUSTOMER":
             queryset = workevents.objects.all().filter(c_final='YES')
             print("customer final")
@@ -275,10 +276,10 @@ class TestApiview(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user = request.user.party.party_type
+        user = request.user
         # print(obj)
-        qs = workevents.objects.get(from_state = 'DRAFT' , to_state = "DRAFT" )
-        print(qs.workitems.action)
+        qs = userprocessauth.objects.get(user = user , model  = 'PROGRAM' , action = 1, )
+        print(qs.data_entry)
         # print(obj.program)
         print(user)
         # my object for the party user related 
