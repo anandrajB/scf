@@ -12,7 +12,7 @@ class WorkFlow(object):
     def __init__(self, workflowitems):
         self.workflowitems = workflowitems
         self.signatures = signatures
-
+        
     @stage.setter()
     def _set_status_stage(self, value):
         self.workflowitems.initial_state = value

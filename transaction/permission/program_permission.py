@@ -47,6 +47,7 @@ class Is_Sign_C(permissions.BasePermission):
         if qs.sign_c == True:
             return True
 
+from urllib import request
 
 
 

@@ -226,7 +226,8 @@ class DraftListApiview(ListAPIView):
 
 
 
-
+def current(request):
+    return request.user
 
 
 
@@ -234,15 +235,13 @@ class DraftListApiview(ListAPIView):
 class TestApiview(ListAPIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-
-        user = request.user
-        # print(obj)
-        print
-        qs = userprocessauth.objects.get(user = user , model  = 'PROGRAM' , action = 1, )
-        print(qs.data_entry)
-        # print(obj.program)
-        print(user)
+    def get(self,request):
+        user = self.request.user
+        users = current(request)
+        print(users.party)
+        cc = User.objects.get(is_administrator = True)
+        print(cc.party.party_type)
+        # print(obj
         # my object for the party user related 
         return Response({"status": "success", "data": "ok"}, status=status.HTTP_200_OK)
 
