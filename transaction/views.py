@@ -236,11 +236,8 @@ class TestApiview(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self,request):
-        user = self.request.user
-        users = current(request)
-        print(users.party)
-        cc = User.objects.get(is_administrator = True)
-        print(cc.party.party_type)
+        bank = User.objects.get(is_administrator = True)
+        print(bank.party)
         # print(obj
         # my object for the party user related 
         return Response({"status": "success", "data": "ok"}, status=status.HTTP_200_OK)
