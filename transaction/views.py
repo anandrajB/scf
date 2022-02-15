@@ -231,13 +231,14 @@ class DraftListApiview(ListAPIView):
 
 
 # TEST API VIEW 
-
 class TestApiview(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+
         user = request.user
         # print(obj)
+        print
         qs = userprocessauth.objects.get(user = user , model  = 'PROGRAM' , action = 1, )
         print(qs.data_entry)
         # print(obj.program)
