@@ -2,6 +2,7 @@
 from urllib import request
 from rest_framework import permissions
 import accounts
+from accounts.models import User
 
 
 def is_uploader(self, user):
@@ -56,9 +57,9 @@ from urllib import request
 
 class Is_Rejecter(permissions.BasePermission):
     def has_permission(self, request, view):
-        user = request.user
-        qs = accounts.models.userprocessauth.objects.get(user = request.user , model = 'PROGRAM', action__desc__contains = "REJECT")
-        if (qs.data_entry == True) and (user.is_administrator == True):
+        user = User.objects.get(is_administrator = True)
+        qs = accounts.models.userprocessauth.objects.get(user = user , model = 'PROGRAM', action__desc__contains = "REJECT")
+        if qs.data_entry == True:
             return True
 
 
