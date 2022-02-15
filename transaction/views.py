@@ -1,4 +1,4 @@
-from accounts.models import userprocessauth
+from accounts.models import Parties, userprocessauth
 from .models import (
     Invoices,
     Pairings,
@@ -236,8 +236,9 @@ class TestApiview(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self,request):
-        bank = User.objects.get(is_administrator = True)
-        print(bank.party)
+        bank = Parties.objects.get(party_type = "BANK")
+        user = self.request.user.party
+        print("tghe name" ,user)
         # print(obj
         # my object for the party user related 
         return Response({"status": "success", "data": "ok"}, status=status.HTTP_200_OK)

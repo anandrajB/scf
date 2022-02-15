@@ -177,10 +177,9 @@ class RejectSign_AApiview(CreateAPIView):
 
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
-        user = self.request.user.party.party_type
-        party = obj.program.party
-        signs = signatures.objects.get(party=party, action__desc__contains='REJECT', model='PROGRAM')
-        if user == "BANK":
+        user = self.request.user.party
+        signs = signatures.objects.get(party=user, action__desc__contains='REJECT', model='PROGRAM')
+        if user.party_type == "BANK":
             if signs.sign_a == True:
                 flow = WorkFlow(obj)
                 flow.reject_level_1()
@@ -203,10 +202,9 @@ class RejectSign_BApiview(CreateAPIView):
 
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
-        user = self.request.user.party.party_type
-        party = obj.program.party
-        signs = signatures.objects.get(party=party, action__desc__contains='REJECT', model='PROGRAM')
-        if user  == "BANK":
+        user = self.request.user.party
+        signs = signatures.objects.get(party=user, action__desc__contains='REJECT', model='PROGRAM')
+        if user.party_type  == "BANK":
             if signs.sign_b == True:
                 flow = WorkFlow(obj)
                 flow.reject_level_2()
@@ -228,10 +226,9 @@ class RejectSign_CApiview(CreateAPIView):
 
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
-        user = self.request.user.party.party_type
-        party = obj.program.party
-        signs = signatures.objects.get(party=party, action__desc__contains='REJECT', model='PROGRAM')
-        if user == "BANK":
+        user = self.request.user.party
+        signs = signatures.objects.get(party=user, action__desc__contains='REJECT', model='PROGRAM')
+        if user.party_type == "BANK":
             if signs.sign_c == True:
                 flow = WorkFlow(obj)
                 flow.reject_level_3()
@@ -274,10 +271,9 @@ class AcceptSign_AApiView(ListAPIView):
 
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
-        user = self.request.user.party.party_type
-        party = obj.program.party
-        signs = signatures.objects.get(party=party, action__desc__contains='ACCEPT', model='PROGRAM')
-        if user == "BANK":
+        user = self.request.user.party
+        signs = signatures.objects.get(party=user, action__desc__contains='ACCEPT', model='PROGRAM')
+        if user.party_type == "BANK":
             if signs.sign_a == True:
                 flow = WorkFlow(obj)
                 flow.accept_level_1()
@@ -297,10 +293,9 @@ class AcceptSign_BApiView(ListAPIView):
 
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
-        user = self.request.user.party.party_type
-        party = obj.program.party
-        signs = signatures.objects.get(party=party, action__desc__contains='ACCEPT', model='PROGRAM')
-        if user == "BANK":
+        user = self.request.user.party
+        signs = signatures.objects.get(party=user, action__desc__contains='ACCEPT', model='PROGRAM')
+        if user.party_type == "BANK":
             if signs.sign_b == True:
                 flow = WorkFlow(obj)
                 flow.accept_level_2()
@@ -320,10 +315,9 @@ class AcceptSign_CApiView(ListAPIView):
 
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
-        user = self.request.user.party.party_type
-        party = obj.program.party
-        signs = signatures.objects.get(party=party, action__desc__contains='ACCEPT', model='PROGRAM')
-        if user == "BANK":
+        user = self.request.user.party
+        signs = signatures.objects.get(party=user, action__desc__contains='ACCEPT', model='PROGRAM')
+        if user.party_type == "BANK":
             if signs.sign_c == True:
                 flow = WorkFlow(obj)
                 flow.accept_level_3()
