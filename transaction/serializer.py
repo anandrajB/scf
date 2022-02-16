@@ -74,11 +74,12 @@ class Workitemserializer(serializers.ModelSerializer):
     workflowevent = Workeventsserializer(many=True, read_only=True)
     current_from_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
     current_to_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    wf_item_id = serializers.SerializerMethodField()
 
     class Meta:
         model = workflowitems
         fields = [
-            'program',
+            'wf_item_id',
             'initial_state',
             'interim_state',
             'final_state',
@@ -93,6 +94,9 @@ class Workitemserializer(serializers.ModelSerializer):
 
         ]
         read_only_fields = ['workflowevent']
+
+    def get_wf_item_id(self,obj):
+        return obj.id
 
 
 
