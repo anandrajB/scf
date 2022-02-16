@@ -1,32 +1,34 @@
 from accounts.permission import Is_Administrator
+from rest_framework.permissions import IsAuthenticated
 from transaction.FSM.program import WorkFlow
 from accounts.models import signatures
-from transaction.models import workflowitems 
+from transaction.FSM.upload import UploadFlow
+from transaction.models import workflowitems
 from transaction.permission.program_permission import (
     Is_Accepter,
     Is_Rejecter,
     Is_administrator,
     IsAccept_Sign_A,
     IsAccept_Sign_B,
-    IsAccept_Sign_C, 
-    IsReject_Sign_A, 
-    IsReject_Sign_B, 
-    IsReject_Sign_C, 
-    Ismaker, 
-    IsSign_A , 
-    IsSign_B  , 
+    IsAccept_Sign_C,
+    IsReject_Sign_A,
+    IsReject_Sign_B,
+    IsReject_Sign_C,
+    Ismaker,
+    IsSign_A,
+    IsSign_B,
     Is_Sign_C
 )
+from transaction.permission.upload_permissions import (Ismaker_upload, IsSign_A_upload, IsSign_B_upload, Is_Sign_C_upload
+                                                       )
 from transaction.serializer import Workitemserializer
 from rest_framework.generics import (
-    ListAPIView ,
+    ListAPIView,
     ListCreateAPIView,
     CreateAPIView
 )
 from rest_framework import generics
 from rest_framework.response import Response
-
-
 
 
 # -----------------------------------------------------------------------------------------------------------------------------------------
@@ -79,13 +81,14 @@ class SubmitTransitionApiView(CreateAPIView):
 class SubmitTransitionSign_AApiview(CreateAPIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
-    permission_classes = [IsSign_A ]
-        
+    permission_classes = [IsSign_A]
+
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user
         party = obj.program.party
-        signs = signatures.objects.get(party=party, action__desc__contains='SUBMIT', model='PROGRAM')
+        signs = signatures.objects.get(
+            party=party, action__desc__contains='SUBMIT', model='PROGRAM')
         if user.party == party:
             if signs.sign_a == True:
                 flow = WorkFlow(obj)
@@ -95,8 +98,7 @@ class SubmitTransitionSign_AApiview(CreateAPIView):
             else:
                 return Response({"data": "can't do this transition"})
         else:
-            return Response({"data":"can't do this transition "})
-        
+            return Response({"data": "can't do this transition "})
 
 
 # UPDATE SIGN_B SUBMIT TRANSITION
@@ -110,7 +112,8 @@ class SubmitTransitionSign_BApiview(CreateAPIView):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user
         party = obj.program.party
-        signs = signatures.objects.get(party=party, action__desc__contains='SUBMIT', model='PROGRAM')
+        signs = signatures.objects.get(
+            party=party, action__desc__contains='SUBMIT', model='PROGRAM')
         if user.party == party:
             if signs.sign_b == True:
                 flow = WorkFlow(obj)
@@ -120,8 +123,8 @@ class SubmitTransitionSign_BApiview(CreateAPIView):
             else:
                 return Response({"data": "can't do this transition"})
         else:
-            return Response({"data":"can't do this transition "})
-        
+            return Response({"data": "can't do this transition "})
+
 
 # UPDATE SIGN_C SUBMIT TRANSITION
 
@@ -134,7 +137,8 @@ class SubmitTransitionSign_CApiview(CreateAPIView):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user
         party = obj.program.party
-        signs = signatures.objects.get(party=party, action__desc__contains='SUBMIT', model='PROGRAM')
+        signs = signatures.objects.get(
+            party=party, action__desc__contains='SUBMIT', model='PROGRAM')
         if user.party == party:
             if signs.sign_c == True:
                 flow = WorkFlow(obj)
@@ -144,8 +148,7 @@ class SubmitTransitionSign_CApiview(CreateAPIView):
             else:
                 return Response({"data": "can't do this transition"})
         else:
-            return Response({"data":"can't do this transition "})
-     
+            return Response({"data": "can't do this transition "})
 
 
 # -----------------------------------------
@@ -178,7 +181,8 @@ class RejectSign_AApiview(CreateAPIView):
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user.party
-        signs = signatures.objects.get(party=user, action__desc__contains='REJECT', model='PROGRAM')
+        signs = signatures.objects.get(
+            party=user, action__desc__contains='REJECT', model='PROGRAM')
         if user.party_type == "BANK":
             if signs.sign_a == True:
                 flow = WorkFlow(obj)
@@ -188,8 +192,7 @@ class RejectSign_AApiview(CreateAPIView):
             else:
                 return Response({"data": "can't do this transition"})
         else:
-            return Response({"data":"can't do this transition "})
-       
+            return Response({"data": "can't do this transition "})
 
 
 # REJECT SIGN_B TRANSITION
@@ -203,8 +206,9 @@ class RejectSign_BApiview(CreateAPIView):
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user.party
-        signs = signatures.objects.get(party=user, action__desc__contains='REJECT', model='PROGRAM')
-        if user.party_type  == "BANK":
+        signs = signatures.objects.get(
+            party=user, action__desc__contains='REJECT', model='PROGRAM')
+        if user.party_type == "BANK":
             if signs.sign_b == True:
                 flow = WorkFlow(obj)
                 flow.reject_level_2()
@@ -213,7 +217,7 @@ class RejectSign_BApiview(CreateAPIView):
             else:
                 return Response({"data": "can't do this transition"})
         else:
-            return Response({"data":"can't do this transition "})
+            return Response({"data": "can't do this transition "})
 
 
 # REJECT SIGN_C TRANSITION
@@ -227,7 +231,8 @@ class RejectSign_CApiview(CreateAPIView):
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user.party
-        signs = signatures.objects.get(party=user, action__desc__contains='REJECT', model='PROGRAM')
+        signs = signatures.objects.get(
+            party=user, action__desc__contains='REJECT', model='PROGRAM')
         if user.party_type == "BANK":
             if signs.sign_c == True:
                 flow = WorkFlow(obj)
@@ -237,7 +242,7 @@ class RejectSign_CApiview(CreateAPIView):
             else:
                 return Response({"data": "can't do this transition"})
         else:
-            return Response({"data":"can't do this transition "})
+            return Response({"data": "can't do this transition "})
 
 
 # -----------------------------------------
@@ -259,7 +264,7 @@ class AcceptTransitionApiview(ListAPIView):
         flow = WorkFlow(obj)
         flow.accept()
         obj.save()
-        return Response({"status": "Success","data":"initial accept"})
+        return Response({"status": "Success", "data": "initial accept"})
 
 
 # ACCEPT SIGN_A TRANSITION API VIEW
@@ -272,7 +277,8 @@ class AcceptSign_AApiView(ListAPIView):
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user.party
-        signs = signatures.objects.get(party=user, action__desc__contains='ACCEPT', model='PROGRAM')
+        signs = signatures.objects.get(
+            party=user, action__desc__contains='ACCEPT', model='PROGRAM')
         if user.party_type == "BANK":
             if signs.sign_a == True:
                 flow = WorkFlow(obj)
@@ -282,9 +288,10 @@ class AcceptSign_AApiView(ListAPIView):
             else:
                 return Response({"data": "can't do this transition"})
         else:
-            return Response({"data":"can't do this transition "})
+            return Response({"data": "can't do this transition "})
 
 # ACCEPT SIGN_B TRANSITION API VIEW
+
 
 class AcceptSign_BApiView(ListAPIView):
     queryset = workflowitems.objects.all()
@@ -294,7 +301,8 @@ class AcceptSign_BApiView(ListAPIView):
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user.party
-        signs = signatures.objects.get(party=user, action__desc__contains='ACCEPT', model='PROGRAM')
+        signs = signatures.objects.get(
+            party=user, action__desc__contains='ACCEPT', model='PROGRAM')
         if user.party_type == "BANK":
             if signs.sign_b == True:
                 flow = WorkFlow(obj)
@@ -304,9 +312,10 @@ class AcceptSign_BApiView(ListAPIView):
             else:
                 return Response({"data": "can't do this transition"})
         else:
-            return Response({"data":"can't do this transition "})
+            return Response({"data": "can't do this transition "})
 
 # ACCEPT SIGN_C TRANSITION API VIEW
+
 
 class AcceptSign_CApiView(ListAPIView):
     queryset = workflowitems.objects.all()
@@ -316,7 +325,8 @@ class AcceptSign_CApiView(ListAPIView):
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user.party
-        signs = signatures.objects.get(party=user, action__desc__contains='ACCEPT', model='PROGRAM')
+        signs = signatures.objects.get(
+            party=user, action__desc__contains='ACCEPT', model='PROGRAM')
         if user.party_type == "BANK":
             if signs.sign_c == True:
                 flow = WorkFlow(obj)
@@ -326,7 +336,7 @@ class AcceptSign_CApiView(ListAPIView):
             else:
                 return Response({"data": "can't do this transition"})
         else:
-            return Response({"data":"can't do this transition "})
+            return Response({"data": "can't do this transition "})
 
 # -----------------------------------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------------------------------
@@ -337,14 +347,98 @@ class AcceptSign_CApiView(ListAPIView):
 # -----------------------------------------------------------------------------------------------------------------------------------------
 
 
-
-
-
 # -----------------------------------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------------------------------
 
-# API'S FOR INVOICE TRANSITION ( CUSTOMER ) 
+# API'S FOR INVOICE TRANSITION ( CUSTOMER )
 
 # -----------------------------------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------------------------------
+# Invoice Uploads Transition Views
+class SubmitTransitionApiView(CreateAPIView):
+    queryset = workflowitems.objects.all()
+    serializer_class = Workitemserializer
+    permission_classes = [IsAuthenticated, Ismaker_upload]
 
+    def get(self, request, pk, *args, **kwargs):
+        obj = generics.get_object_or_404(workflowitems, id=pk)
+        flow = UploadFlow(obj)
+        flow.submit_draft()
+        obj.save()
+        return Response({"status": "success", "data": "DRAFT -> SUBMIT"})
+
+
+# UPDATE SIGN_A SUBMIT TRANSITION -  anand 24 jan
+
+
+class SubmitTransitionSign_AApiview(CreateAPIView):
+    queryset = workflowitems.objects.all()
+    serializer_class = Workitemserializer
+    permission_classes = [IsAuthenticated, IsSign_A_upload]
+
+    def get(self, request, pk, *args, **kwargs):
+        obj = generics.get_object_or_404(workflowitems, id=pk)
+        user = self.request.user
+        party = obj.program.party
+        signs = signatures.objects.get(
+            party=party, action__desc__contains='SUBMIT', model='UPLOAD')
+        if user.party == party:
+            if signs.sign_a == True:
+                flow = UploadFlow(obj)
+                flow.submit_A()
+                obj.save()
+                return Response({"status": "success", "data": "SUBMIT : sign_A transition done"})
+            else:
+                return Response({"data": "can't do this transition"})
+        else:
+            return Response({"data": "can't do this transition "})
+
+
+# UPDATE SIGN_B SUBMIT TRANSITION
+
+class SubmitTransitionSign_BApiview(CreateAPIView):
+    queryset = workflowitems.objects.all()
+    serializer_class = Workitemserializer
+    permission_classes = [IsAuthenticated, IsSign_B_upload]
+
+    def get(self, request, pk, *args, **kwargs):
+        obj = generics.get_object_or_404(workflowitems, id=pk)
+        user = self.request.user
+        party = obj.program.party
+        signs = signatures.objects.get(
+            party=party, action__desc__contains='SUBMIT', model='UPLOAD')
+        if user.party == party:
+            if signs.sign_b == True:
+                flow = UploadFlow(obj)
+                flow.submit_B()
+                obj.save()
+                return Response({"status": "success", "data": "SUBMIT : sign_B transition done"})
+            else:
+                return Response({"data": "can't do this transition"})
+        else:
+            return Response({"data": "can't do this transition "})
+
+
+# UPDATE SIGN_C SUBMIT TRANSITION
+
+class SubmitTransitionSign_CApiview(CreateAPIView):
+    queryset = workflowitems.objects.all()
+    serializer_class = Workitemserializer
+    permission_classes = [IsAuthenticated, Is_Sign_C_upload]
+
+    def get(self, request, pk, *args, **kwargs):
+        obj = generics.get_object_or_404(workflowitems, id=pk)
+        user = self.request.user
+        party = obj.program.party
+        signs = signatures.objects.get(
+            party=party, action__desc__contains='SUBMIT', model='UPLOAD')
+        if user.party == party:
+            if signs.sign_c == True:
+                flow = UploadFlow(obj)
+                flow.submit_C()
+                obj.save()
+                return Response({"status": "success", "data": "SUBMIT : sign_C transition done"})
+            else:
+                return Response({"data": "can't do this transition"})
+        else:
+            return Response({"data": "can't do this transition "})
