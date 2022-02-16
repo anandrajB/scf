@@ -15,7 +15,8 @@ from transaction.api.customertransition import (
     AcceptTransitionApiview,
     TransitionDeleteApiview,
     RejectTransitionApiView,
-    SubmitTransitionApiView
+    SubmitTransitionApiView,
+    UploadSubmitTransitionApiView
 )
 from graphene_django.views import GraphQLView
 from .schema import schema
@@ -45,6 +46,9 @@ urlpatterns = [
     path('invoice/transition/submit/', include('transaction.url.submit'),name='invoice-transition-approvals-SUBMIT'),
     path('invoice/transition/reject/', include('transaction.url.reject'),name='invoice-transition-reject-REJECT'),
     path('invoice/transition/accept/', include('transaction.url.accept'),name='invoice-transition-accept-ACCEPT'),
+    #--
+    path('upload/transition/submit/<int:pk>/',UploadSubmitTransitionApiView.as_view(), name='invoice-upload-submit'),
+    path('upload/transition/submit/', include('transaction.url.upload'),name='upload-transition-approvals-SUBMIT'),
     #--
     path('messages/', include('transaction.url.message'),name = 'message-inbox-urls'),
     path('test/',TestApiview.as_view()),

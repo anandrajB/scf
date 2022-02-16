@@ -1,6 +1,7 @@
 from accounts.permission import Is_Administrator
 from transaction.FSM.program import WorkFlow
 from accounts.models import signatures
+from transaction.FSM.upload import UploadFlow
 from transaction.models import workflowitems 
 from transaction.permission.program_permission import (
     Is_Accepter,
@@ -18,12 +19,9 @@ from transaction.permission.program_permission import (
     Is_Sign_C
 )
 from rest_framework.permissions import IsAuthenticated
+from transaction.permission.upload_permissions import Is_Sign_C_upload, IsSign_A_upload, IsSign_B_upload, Ismaker_upload
 from transaction.serializer import Workitemserializer
-from rest_framework.generics import (
-    ListAPIView ,
-    ListCreateAPIView,
-    CreateAPIView
-)
+from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework.response import Response
 
@@ -41,7 +39,7 @@ from rest_framework.response import Response
 
 # DELETE TRANSITION VIEW
 
-class TransitionDeleteApiview(CreateAPIView):
+class TransitionDeleteApiview(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
     permission_classes = [Ismaker]
@@ -62,7 +60,7 @@ class TransitionDeleteApiview(CreateAPIView):
 
 # INITIAL SUBMIT TRANSITION
 
-class SubmitTransitionApiView(CreateAPIView):
+class SubmitTransitionApiView(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
     permission_classes = [IsAuthenticated,Ismaker]
@@ -77,7 +75,7 @@ class SubmitTransitionApiView(CreateAPIView):
 
 # UPDATE SIGN_A SUBMIT TRANSITION -  anand 24 jan
 
-class SubmitTransitionSign_AApiview(CreateAPIView):
+class SubmitTransitionSign_AApiview(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
     permission_classes = [IsSign_A ]
@@ -102,7 +100,7 @@ class SubmitTransitionSign_AApiview(CreateAPIView):
 
 # UPDATE SIGN_B SUBMIT TRANSITION
 
-class SubmitTransitionSign_BApiview(CreateAPIView):
+class SubmitTransitionSign_BApiview(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
     permission_classes = [IsSign_B]
@@ -126,7 +124,7 @@ class SubmitTransitionSign_BApiview(CreateAPIView):
 
 # UPDATE SIGN_C SUBMIT TRANSITION
 
-class SubmitTransitionSign_CApiview(CreateAPIView):
+class SubmitTransitionSign_CApiview(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
     permission_classes = [Is_Sign_C]
@@ -156,7 +154,7 @@ class SubmitTransitionSign_CApiview(CreateAPIView):
 
 # INITIAL REJECT TRANSITION
 
-class RejectTransitionApiView(CreateAPIView):
+class RejectTransitionApiView(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
     permission_classes = [Is_Administrator]
@@ -171,7 +169,7 @@ class RejectTransitionApiView(CreateAPIView):
 
 # REJECT SIGN_A TRANSITION
 
-class RejectSign_AApiview(CreateAPIView):
+class RejectSign_AApiview(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
     permission_classes = [IsReject_Sign_A]
@@ -196,7 +194,7 @@ class RejectSign_AApiview(CreateAPIView):
 # REJECT SIGN_B TRANSITION
 
 
-class RejectSign_BApiview(CreateAPIView):
+class RejectSign_BApiview(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
     permission_classes = [IsReject_Sign_B]
@@ -220,7 +218,7 @@ class RejectSign_BApiview(CreateAPIView):
 # REJECT SIGN_C TRANSITION
 
 
-class RejectSign_CApiview(CreateAPIView):
+class RejectSign_CApiview(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
     permission_classes = [IsReject_Sign_C]
@@ -250,7 +248,7 @@ class RejectSign_CApiview(CreateAPIView):
 # INITIAL ACCEPT TRANSIION
 
 
-class AcceptTransitionApiview(ListAPIView):
+class AcceptTransitionApiview(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
     permission_classes = [Is_Accepter]
@@ -265,7 +263,7 @@ class AcceptTransitionApiview(ListAPIView):
 
 # ACCEPT SIGN_A TRANSITION API VIEW
 
-class AcceptSign_AApiView(ListAPIView):
+class AcceptSign_AApiView(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
     permission_classes = [IsAccept_Sign_A]
@@ -287,7 +285,7 @@ class AcceptSign_AApiView(ListAPIView):
 
 # ACCEPT SIGN_B TRANSITION API VIEW
 
-class AcceptSign_BApiView(ListAPIView):
+class AcceptSign_BApiView(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
     permission_classes = [IsAccept_Sign_B]
@@ -309,7 +307,7 @@ class AcceptSign_BApiView(ListAPIView):
 
 # ACCEPT SIGN_C TRANSITION API VIEW
 
-class AcceptSign_CApiView(ListAPIView):
+class AcceptSign_CApiView(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
     permission_classes = [IsAccept_Sign_C]
@@ -344,8 +342,96 @@ class AcceptSign_CApiView(ListAPIView):
 # -----------------------------------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------------------------------
 
-# API'S FOR  TRANSITION ( CUSTOMER ) 
+# API'S FOR UPLOAD TRANSITION ( CUSTOMER ) 
 
 # -----------------------------------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------------------------------
 
+# Invoice Uploads Transition Views
+class UploadSubmitTransitionApiView(APIView):
+    queryset = workflowitems.objects.all()
+    serializer_class = Workitemserializer
+    permission_classes = [IsAuthenticated, Ismaker_upload]
+
+    def get(self, request, pk, *args, **kwargs):
+        obj = generics.get_object_or_404(workflowitems, id=pk)
+        flow = UploadFlow(obj)
+        flow.submit_draft()
+        obj.save()
+        return Response({"status": "success", "data": "DRAFT -> SUBMIT"})
+
+
+# UPDATE SIGN_A SUBMIT TRANSITION -  anand 24 jan
+
+
+class UploadSign_AApiview(APIView):
+    queryset = workflowitems.objects.all()
+    serializer_class = Workitemserializer
+    permission_classes = [IsAuthenticated, IsSign_A_upload]
+
+    def get(self, request, pk, *args, **kwargs):
+        obj = generics.get_object_or_404(workflowitems, id=pk)
+        user = self.request.user
+        party = obj.program.party
+        signs = signatures.objects.get(
+            party=party, action__desc__contains='SUBMIT', model='UPLOAD')
+        if user.party == party:
+            if signs.sign_a == True:
+                flow = UploadFlow(obj)
+                flow.submit_A()
+                obj.save()
+                return Response({"status": "success", "data": "SUBMIT : sign_A transition done"})
+            else:
+                return Response({"data": "can't do this transition"})
+        else:
+            return Response({"data": "can't do this transition "})
+
+
+# UPDATE SIGN_B SUBMIT TRANSITION
+
+class UploadSign_BApiview(APIView):
+    queryset = workflowitems.objects.all()
+    serializer_class = Workitemserializer
+    permission_classes = [IsAuthenticated, IsSign_B_upload]
+
+    def get(self, request, pk, *args, **kwargs):
+        obj = generics.get_object_or_404(workflowitems, id=pk)
+        user = self.request.user
+        party = obj.program.party
+        signs = signatures.objects.get(
+            party=party, action__desc__contains='SUBMIT', model='UPLOAD')
+        if user.party == party:
+            if signs.sign_b == True:
+                flow = UploadFlow(obj)
+                flow.submit_B()
+                obj.save()
+                return Response({"status": "success", "data": "SUBMIT : sign_B transition done"})
+            else:
+                return Response({"data": "can't do this transition"})
+        else:
+            return Response({"data": "can't do this transition "})
+
+
+# UPDATE SIGN_C SUBMIT TRANSITION
+
+class UploadSign_CApiview(APIView):
+    queryset = workflowitems.objects.all()
+    serializer_class = Workitemserializer
+    permission_classes = [IsAuthenticated, Is_Sign_C_upload]
+
+    def get(self, request, pk, *args, **kwargs):
+        obj = generics.get_object_or_404(workflowitems, id=pk)
+        user = self.request.user
+        party = obj.program.party
+        signs = signatures.objects.get(
+            party=party, action__desc__contains='SUBMIT', model='UPLOAD')
+        if user.party == party:
+            if signs.sign_c == True:
+                flow = UploadFlow(obj)
+                flow.submit_C()
+                obj.save()
+                return Response({"status": "success", "data": "SUBMIT : sign_C transition done"})
+            else:
+                return Response({"data": "can't do this transition"})
+        else:
+            return Response({"data": "can't do this transition "})

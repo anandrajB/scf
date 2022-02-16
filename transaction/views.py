@@ -67,7 +67,7 @@ class ProgramCreateApiView(APIView):
     def post(self, request):
         serializer = Programcreateserializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(event_user = request.user)
             return Response({"status": "success"}, status=status.HTTP_201_CREATED)
         return Response({"status": "failure", "data": serializer.errors})
 
