@@ -5,6 +5,7 @@ import accounts
 from accounts.models import User
 
 
+
 def is_uploader(self, user):
         return ((not user.is_superuser) and user.is_authenticated)
 

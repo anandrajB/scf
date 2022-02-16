@@ -17,6 +17,7 @@ from transaction.permission.program_permission import (
     IsSign_B  , 
     Is_Sign_C
 )
+from rest_framework.permissions import IsAuthenticated
 from transaction.serializer import Workitemserializer
 from rest_framework.generics import (
     ListAPIView ,
@@ -64,7 +65,7 @@ class TransitionDeleteApiview(CreateAPIView):
 class SubmitTransitionApiView(CreateAPIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
-    permission_classes = [Ismaker]
+    permission_classes = [IsAuthenticated,Ismaker]
 
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
@@ -343,7 +344,7 @@ class AcceptSign_CApiView(ListAPIView):
 # -----------------------------------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------------------------------
 
-# API'S FOR INVOICE TRANSITION ( CUSTOMER ) 
+# API'S FOR  TRANSITION ( CUSTOMER ) 
 
 # -----------------------------------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------------------------------
