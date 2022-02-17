@@ -2,14 +2,14 @@
 import graphene
 from graphene_django import DjangoObjectType
 
-from transaction.models import invoice_uploads
+from transaction.models import Invoiceuploads
 from transaction.models import workflowitems
 from transaction.Schema.choices import ProgramTypeChoices
 
 
 class InvoiceUploadType(DjangoObjectType):
     class Meta:
-        model = invoice_uploads
+        model = Invoiceuploads
         field = '__all__'
 
 
@@ -24,7 +24,7 @@ class create_invoiceUploads(graphene.Mutation):
     def mutate(self, root, program_type, invoices, wf_item_id):
         wf_item = workflowitems.objects.get(id=wf_item_id)
 
-        _invoiceuploads = invoice_uploads.objects.create(
+        _invoiceuploads = Invoiceuploads.objects.create(
             program_type=program_type, invoices=invoices, wf_item=wf_item)
         return create_invoiceUploads(invoiceuploads=_invoiceuploads)
 
@@ -41,7 +41,7 @@ class update_invoiceuploads(graphene.Mutation):
     def mutate(self, root, id, program_type, invoices, wf_item_id):
         wf_item = workflowitems.objects.get(id=wf_item_id)
 
-        _invoiceuploads = invoice_uploads.objects.get(id=id)
+        _invoiceuploads = Invoiceuploads.objects.get(id=id)
         _invoiceuploads.program_type = program_type
         _invoiceuploads.invoices = invoices
         _invoiceuploads.wf_item = wf_item
@@ -56,6 +56,6 @@ class delete_invoiceuploads(graphene.Mutation):
     invoiceuploads = graphene.Field(InvoiceUploadType)
 
     def mutate(self, root, id):
-        _invoiceuploads = invoice_uploads.objects.get(id=id)
+        _invoiceuploads = Invoiceuploads.objects.get(id=id)
         _invoiceuploads.delete()
         return update_invoiceuploads(invoiceuploads=_invoiceuploads)

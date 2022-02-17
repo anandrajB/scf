@@ -1,9 +1,12 @@
 from accounts.models import Parties, userprocessauth
+from transaction.permission.upload_permissions import Ismaker_upload
 from .models import (
     Invoices,
+    Invoiceuploads,
     Pairings,
     Programs,
     workevents,
+    workflowitems,
 )
 from django.shortcuts import render
 from rest_framework.generics import (
@@ -18,6 +21,8 @@ from rest_framework.response import Response
 from .serializer import (
     InvoiceCreateserializer,
     InvoiceSerializer,
+    InvoiceUploadlistserializer,
+    InvoiceUploadserializer,
     PairingSerializer,
     ProgramListserializer,
     Programcreateserializer,
@@ -110,7 +115,7 @@ class WorkEventCreateApiview(CreateAPIView):
 
 # -----------------------------------------------------------------------------------------------------------------------------
 
-# POLYMORPHIC SETUP - INVOICE'S
+# POLYMORPHIC SETUP - INVOICE'S (manual create)
 
 # -----------------------------------------------------------------------------------------------------------------------------
 
@@ -122,10 +127,10 @@ class InvoiceListApiView(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        if user.party.party_type == "BANK":
+        if user.is_administrator == True:
             queryset = Invoices.objects.all()
         else:
-            queryset = Invoices.objects.all()
+            queryset = Invoices.objects.filter(party = user.party)
         return queryset
 
     def list(self, request, *args, **kwargs):
@@ -142,7 +147,7 @@ class InvoiceCreateApiView(APIView):
     def post(self, request):
         serializer = InvoiceCreateserializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(event_user = request.user)
             return Response({"status": "success"}, status=status.HTTP_201_CREATED)
         return Response({"status": "failure", "data": serializer.errors})
 
@@ -167,6 +172,87 @@ class InvoiceUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
             serializer.save()
             return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
         return Response({"status": "failure", "data": serializer.errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
+
+# -----------------------------------------------------------------------------------------------------------------------------
+
+# POLYMORPHIC SETUP - INVOICE UPLOAD
+
+# -----------------------------------------------------------------------------------------------------------------------------
+
+
+class InvoiceUploadListapiview(ListAPIView):
+    queryset = Invoiceuploads.objects.all()
+    serializer_class = InvoiceUploadlistserializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_administrator == True:
+            queryset = Invoiceuploads.objects.all()
+        else:
+            queryset = Invoiceuploads.objects.all()
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = Invoiceuploads.objects.all()
+        serializer = InvoiceUploadlistserializer(queryset, many=True)
+        return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+
+
+class InvoiceUploadCreateApiView(CreateAPIView):
+    queryset = Invoiceuploads.objects.all()
+    serializer_class = InvoiceUploadserializer
+    permission_classes = [Ismaker_upload]
+
+    # def post(self, request):
+    #     user = request.user
+    #     serializer = InvoiceUploadserializer(data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save(from_party = user.party,to_party = user.party,event_user = user)
+    #         return Response({"status": "success"}, status=status.HTTP_201_CREATED)
+    #     return Response({"status": "failure", "data": serializer.errors})
+
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        is_many = isinstance(request.data, list)
+        if not is_many:
+            serializer = InvoiceUploadserializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(from_party = user.party,to_party = user.party,event_user = user)
+                return Response({"status": "success"}, status=status.HTTP_201_CREATED)
+            return Response({"status": "failure", "data": serializer.errors})
+        else:
+            serializer = self.get_serializer(data=request.data, many=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(from_party = user.party,to_party = user.party,event_user = user)
+            self.perform_create(serializer)
+            # headers = self.get_success_headers(serializer.data)
+            return Response({"status": "success"}, status=status.HTTP_201_CREATED)
+
+
+class InvoiceUploadUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
+    queryset = Invoiceuploads.objects.all()
+    serializer_class = InvoiceUploadlistserializer
+    permission_classes = [IsAuthenticated,Ismaker_upload]
+    # metadata_class = APIRootMetadata
+
+    def retrieve(self, request, pk=None):
+        queryset = Invoiceuploads.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = InvoiceUploadlistserializer(user)
+        return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+
+    def update(self, request, pk=None):
+        queryset = Invoiceuploads.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = InvoiceUploadlistserializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"status": "failure", "data": serializer.errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
 
 
 # -----------------------------------------------------------------------------------------------------------------------------------------
@@ -230,16 +316,13 @@ def current(request):
     return request.user
 
 
-
 # TEST API VIEW 
 class TestApiview(ListAPIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self,request):
-        bank = Parties.objects.get(party_type = "BANK")
-        user = self.request.user.party
-        print("tghe name" ,user)
-        # print(obj
+    def get(self, request, pk, *args, **kwargs):
+        obj = generics.get_object_or_404(workflowitems, id=pk)
+        print(obj.invoice.pairing.program_type.program_type)
         # my object for the party user related 
         return Response({"status": "success", "data": "ok"}, status=status.HTTP_200_OK)
 

@@ -166,6 +166,20 @@ class Invoices(models.Model):
     
 
 
+
+# INVOICE UPLOADS
+
+class Invoiceuploads(models.Model):
+    program_type = [
+        ('*', '*'),
+        ('APF', 'APF'),
+        ('RF', 'RF'),
+        ('DF', 'DF')
+    ]
+    program_type = models.CharField(choices=program_type, default='*', max_length=15)
+    invoices = models.JSONField()
+    
+
 # WORKFLOW ITEMS MODEL
 
 class workflowitems(models.Model):
@@ -173,6 +187,7 @@ class workflowitems(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     program = models.OneToOneField(Programs, on_delete=models.CASCADE,blank=True, null=True)
     invoice = models.OneToOneField(Invoices,on_delete=models.CASCADE,blank=True, null=True)
+    uploads = models.OneToOneField(Invoiceuploads,on_delete=models.CASCADE,blank=True, null=True)
     stage = models.CharField(max_length=255, choices=StateChoices.choices)
     initial_state = models.CharField(max_length=50, default=StateChoices.STATUS_DRAFT)
     interim_state = models.CharField(max_length=50, default=StateChoices.STATUS_DRAFT)
@@ -183,21 +198,6 @@ class workflowitems(models.Model):
     current_to_party = models.ForeignKey("accounts.Parties", on_delete=models.DO_NOTHING, related_name='to_party')
     action = models.CharField(max_length=25, default='SAVE')
     subaction = models.CharField(max_length=55 , blank=True, null=True)
-    
-
-# INVOICE UPLOADS
-
-class invoice_uploads(models.Model):
-    program_type = [
-        ('*', '*'),
-        ('APF', 'APF'),
-        ('RF', 'RF'),
-        ('DF', 'DF')
-    ]
-    program_type = models.CharField(choices=program_type, default='*', max_length=15)
-    invoices = models.JSONField()
-    wf_item_id = models.ForeignKey(workflowitems, on_delete=models.CASCADE)
-
 
 # WORKEVENTS
 

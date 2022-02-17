@@ -1,7 +1,8 @@
+from distutils.command.upload import upload
 from email.policy import default
 from urllib import request
 from rest_framework import serializers
-from .models import Invoices, Pairings, Programs, workflowitems
+from .models import Invoices, Invoiceuploads, Pairings, Programs, workflowitems
 from accounts.models import Currencies, User, signatures,  Parties, userprocessauth
 from .models import workevents
 from django.contrib.auth import get_user_model
@@ -106,12 +107,14 @@ class ProgramListserializer(serializers.ModelSerializer):
     workflowitems = Workitemserializer(read_only=True)
     workevents = Workeventsserializer(read_only=True)
     party = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    created_by = serializers.SerializerMethodField()
 
     class Meta:
         model = Programs
         fields = [
             "id",
             "party",
+            'created_by',
             "program_type",
             "finance_request_type",
             "limit_currency",
@@ -135,6 +138,9 @@ class ProgramListserializer(serializers.ModelSerializer):
             'workflowitems',
             'workevents',
         ]
+
+    def get_created_by(self,obj):
+        return obj.workflowitems.event_users.email
 
 
 
@@ -246,6 +252,16 @@ class Programcreateserializer(serializers.Serializer):
 
 
 
+
+
+#------------------------------------------------------
+
+# INVOICE SERIALIZER SETUP
+
+#------------------------------------------------------
+
+
+
 # INVOICE CREATE SERIALIZER 
 
 class InvoiceCreateserializer(serializers.Serializer):
@@ -301,14 +317,6 @@ class InvoiceCreateserializer(serializers.Serializer):
         return invoice
 
 
-
-
-#--------------------------------------
-
-# INVOICE SERIALIZER SETUP
-
-#-------------------------------------
-
 class WorkeventInvoicesserializer(serializers.ModelSerializer):
     from_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
     to_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
@@ -356,12 +364,14 @@ class InvoiceSerializer(serializers.ModelSerializer):
     workflowitems = WorkitemInvoiceserializer(read_only=True)
     workevents = WorkeventInvoicesserializer(read_only=True)
     party = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    created_by = serializers.SerializerMethodField()
 
     class Meta:
         model = Invoices
         fields = [
             'id',
             'party',
+            'created_by',
             'pairing',
             'invoice_no',
             'issue_date',
@@ -378,3 +388,78 @@ class InvoiceSerializer(serializers.ModelSerializer):
             'workevents'
         ]
     
+
+    def get_created_by(self,obj):
+        return obj.workflowitems.event_users.email
+
+
+
+
+#--------------------------------------
+
+# INVOICE UPLOAD  SERIALIZER SETUP
+
+#-------------------------------------
+
+class InvoiceUploadserializer(serializers.Serializer):
+    program_type = [
+        ('*', '*'),
+        ('APF', 'APF'),
+        ('RF', 'RF'),
+        ('DF', 'DF')
+    ]
+
+    program_type = serializers.ChoiceField(choices = program_type)
+    buyer_id = serializers.JSONField()
+    buyer_name = serializers.JSONField()
+    invoice_no = serializers.JSONField()
+    invoice_date = serializers.JSONField()
+    invoice_amount = serializers.JSONField()
+    due_date = serializers.JSONField()
+    financing_currency = serializers.JSONField()
+    settlement_currency = serializers.JSONField()
+    event_user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    from_party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all())
+    to_party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all())
+
+
+    def create(self, validated_data):
+        program_type = validated_data.pop('program_type')
+        buyer_id = validated_data.pop('buyer_id')
+        buyer_name = validated_data.pop('buyer_name')
+        invoice_no = validated_data.pop('invoice_no')
+        invoice_date = validated_data.pop('invoice_date')
+        invoice_amount = validated_data.pop('invoice_amount')
+        due_date = validated_data.pop('due_date')
+        financing_currency = validated_data.pop('financing_currency')
+        settlement_currency = validated_data.pop('settlement_currency')
+        from_party = validated_data.pop('from_party')
+        to_party = validated_data.pop('to_party')
+        event_user = validated_data.pop('event_user')
+
+        invoices = {
+            'buyer_id' : buyer_id,
+            'buyer_name' : buyer_name,
+            'invoice_no' : invoice_no,
+            'invoice_date' : invoice_date,
+            'invoice_amount' : invoice_amount,
+            'due_date' : due_date,
+            'financing_currency' : financing_currency,
+            'settlement_currency' : settlement_currency
+        }
+        uploads = Invoiceuploads.objects.create(program_type = program_type , invoices = invoices)
+        work = workflowitems.objects.create(
+            uploads=uploads, current_from_party=from_party,current_to_party=to_party, event_users=event_user)
+        event = workevents.objects.create(
+            workitems=work, from_party=from_party, to_party=to_party) 
+        uploads.save()
+        work.save()
+        event.save()
+        return uploads
+
+
+
+class InvoiceUploadlistserializer(serializers.ModelSerializer):
+    class Meta:
+        model = Invoiceuploads
+        fields = '__all__'

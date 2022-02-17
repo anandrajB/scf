@@ -3,7 +3,7 @@ from urllib import request
 from rest_framework import permissions
 import accounts
 from accounts.models import User
-
+# from rest_framework
 
 
 def is_uploader(self, user):
@@ -25,10 +25,14 @@ class Is_administrator(permissions.BasePermission):
 
 class Ismaker(permissions.BasePermission):
     def has_permission(self, request, view):
-        qs = accounts.models.userprocessauth.objects.get(user = request.user ,model = 'PROGRAM',  action__desc__contains = 'SUBMIT')
-        if qs.data_entry == True:
-            return True
-
+        try : 
+            qs = accounts.models.userprocessauth.objects.get(user = request.user ,model = 'PROGRAM',  action__desc__contains = 'SUBMIT')
+            if qs.data_entry == True:
+                return True
+        except:
+            print("user has no permisions")
+            return None
+    
 
 class IsSign_A(permissions.BasePermission):
     def has_permission(self, request, view):
