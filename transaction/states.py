@@ -2,7 +2,6 @@ from django.db.models import TextChoices
 from django.utils.translation import gettext_lazy as _
 
 
-
 # STATES FOR FSM FIELDS
 
 class StateChoices(TextChoices):
@@ -21,11 +20,15 @@ class StateChoices(TextChoices):
     STATUS_AWAITING_SIGN_B = 'AWAITING_SIGN_B', _('AWAITING_SIGN_B')
     STATUS_AWAITING_SIGN_C = 'AWAITING_SIGN_C', _('AWAITING_SIGN_C')
     STATUS_DELETED = 'DELETED', _('DELETED')
-    SIGN_A = 'SIGN_A',_('SIGN_A')
-    SIGN_B = 'SIGN_B',_('SIGN_B')
-    SIGN_C = 'SIGN_C',_('SIGN_C')
-    SUBMIT = 'SUBMIT',_('SUBMIT')
-    MAKER = 'MAKER',_('MAKER')
-    NONE = 'NONE',_('NONE')
+    SIGN_A = 'SIGN_A', _('SIGN_A')
+    SIGN_B = 'SIGN_B', _('SIGN_B')
+    SIGN_C = 'SIGN_C', _('SIGN_C')
+    SUBMIT = 'SUBMIT', _('SUBMIT')
+    MAKER = 'MAKER', _('MAKER')
+    NONE = 'NONE', _('NONE')
     STATUS_COMPLETED = 'COMPLETED', _('COMPLETED')
-    
+    STATUS_APPROVED_BY_BUYER = 'APPROVED BY BUYER', _('APPROVED BY BUYER')
+    STATUS_AWAITING_BUYER_APPROVAL = 'AWAITING BUYER APPROVAL', _(
+        'AWAITING BUYER APPROVAL')
+    STATUS_REJECTED_BY_BUYER = 'REJECTED BY BUYER', _('REJECTED BY BUYER')
+    STATUS_ARCHIVED = 'ARCHIVED', _('ARCHIVED')
