@@ -46,7 +46,7 @@ urlpatterns = [
     path('', include(router.urls),name='invoice-upload-create-apiview'),
     # path('invoiceupload/', InvoiceUploadCreateApiView.as_view(), name='invoice-upload-create-api'),
     path('invoiceupload/<int:pk>/', InvoiceUploadUpdateDeleteApiview.as_view(),name='invoiceupload-update'),
-    path('invoiceupload-list/', InvoiceUploadListapiview.as_view(), name='invoice-upload-list'),
+    path('invoiceupload/', InvoiceUploadListapiview.as_view(), name='invoice-upload-list'),
     path('pairing/',PairingApiview.as_view(),name='pairing-create-list'),
     path('pairing/<int:pk>/',PairingUpdateapiview.as_view(),name='pairing-update'),
 
