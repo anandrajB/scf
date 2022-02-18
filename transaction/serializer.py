@@ -411,13 +411,13 @@ class InvoiceUploadserializer(serializers.Serializer):
 
     program_type = serializers.ChoiceField(choices = program_type)
     buyer_id = serializers.JSONField()
-    buyer_name = serializers.JSONField()
+    buyer_name = serializers.CharField()
     invoice_no = serializers.JSONField()
     invoice_date = serializers.JSONField()
     invoice_amount = serializers.JSONField()
     due_date = serializers.JSONField()
-    financing_currency = serializers.JSONField()
-    settlement_currency = serializers.JSONField()
+    financing_currency = serializers.PrimaryKeyRelatedField(queryset = Currencies.objects.all())
+    settlement_currency = serializers.PrimaryKeyRelatedField(queryset = Currencies.objects.all())
     event_user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     from_party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all())
     to_party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all())
@@ -444,10 +444,10 @@ class InvoiceUploadserializer(serializers.Serializer):
             'invoice_date' : invoice_date,
             'invoice_amount' : invoice_amount,
             'due_date' : due_date,
-            'financing_currency' : financing_currency,
-            'settlement_currency' : settlement_currency
+            'financing_currency' : str(financing_currency),
+            'settlement_currency' : str(settlement_currency)
         }
-        uploads = Invoiceuploads.objects.create(program_type = program_type , invoices = invoices)
+        uploads = Invoiceuploads.objects.create(program_type = program_type , invoices = invoices ,**validated_data)
         work = workflowitems.objects.create(
             uploads=uploads, current_from_party=from_party,current_to_party=to_party, event_users=event_user)
         event = workevents.objects.create(
@@ -459,7 +459,70 @@ class InvoiceUploadserializer(serializers.Serializer):
 
 
 
+
+class WorkeventInvoiceUploadsserializer(serializers.ModelSerializer):
+    from_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    to_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
+
+    class Meta:
+        model = workevents
+        fields = [
+            'workitems',
+            'from_state',
+            'to_state',
+            'interim_state',
+            'from_party',
+            'to_party',
+            'final',
+            'created_date'
+        ]
+
+
+class WorkitemInvoiceUploadserializer(serializers.ModelSerializer):
+    workflowevent = WorkeventInvoiceUploadsserializer(many=True, read_only=True)
+    current_from_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    current_to_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    wf_item_id = serializers.SerializerMethodField()
+    class Meta:
+        model = workflowitems
+        fields = [
+            'wf_item_id',
+            'uploads',
+            'initial_state',
+            'interim_state',
+            'final_state',
+            'next_available_transitions',
+            'current_from_party',
+            'current_to_party',
+            'event_users',
+            'created_date',
+            'action',
+            'subaction',
+            'workflowevent'
+
+        ]
+        read_only_fields = ['workflowevent']
+    
+    def get_wf_item_id(self,obj):
+        return obj.id
+
+
 class InvoiceUploadlistserializer(serializers.ModelSerializer):
+    workflowitems = WorkitemInvoiceUploadserializer(read_only=True)
+    workevents = WorkeventInvoiceUploadsserializer(read_only=True)
+    created_by = serializers.SerializerMethodField()
+
     class Meta:
         model = Invoiceuploads
-        fields = '__all__'
+        fields = [
+            'id',
+            'program_type',
+            'created_by',
+            'invoices',
+            'workflowitems',
+            'workevents'
+        ]
+    
+
+    def get_created_by(self,obj):
+        return obj.workflowitems.event_users.email

@@ -5,6 +5,7 @@ from .views import (
     InvoiceUpdateDeleteApiview,
     InvoiceUploadCreateApiView,
     InvoiceUploadListapiview,
+    InvoiceUploadUpdateDeleteApiview,
     ProgramListApiView,
     ProgramCreateApiView,
     ProgramUpdateDeleteApiview,
@@ -37,7 +38,7 @@ urlpatterns = [
 
     #--INVOICE UPLOAD URLS
     path('invoiceupload/', InvoiceUploadCreateApiView.as_view(), name='invoice-upload-create-api'),
-    path('invoiceupload/<int:pk>/', InvoiceUpdateDeleteApiview.as_view(),name='invoiceupload-update'),
+    path('invoiceupload/<int:pk>/', InvoiceUploadUpdateDeleteApiview.as_view(),name='invoiceupload-update'),
     path('invoiceupload-list/', InvoiceUploadListapiview.as_view(), name='invoice-upload-list'),
     path('pairing/',PairingApiview.as_view(),name='pairing-create-list'),
     path('pairing/<int:pk>/',PairingUpdateapiview.as_view(),name='pairing-update'),
