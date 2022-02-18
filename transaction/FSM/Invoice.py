@@ -630,10 +630,9 @@ class InvoiceFlow(object):
             workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_C, to_state=StateChoices.STATUS_ARCHIVED,
                                       interim_state=StateChoices.STATUS_ARCHIVED, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party, final="YES")
 
-#
-
 
 # <------------------------------------|RF and DF FLOW|--------------------------------------------->
+
 
     @stage.transition(source=StateChoices.STATUS_DRAFT, target=StateChoices.STATUS_AWAITING_SIGN_A)
     def submit__draft(self):
@@ -761,4 +760,16 @@ class InvoiceFlow(object):
             self.workflowitems.next_available_transitions = []
             ws = workflowitems.objects.get(id=self.workflowitems.id)
             workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_C, to_state=StateChoices.STATUS_FINANCE_REQUESTED,
-                                      interim_state=StateChoices.STATUS_FINANCE_REQUESTED, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party)
+                                      interim_state=StateChoices.STATUS_FINANCE_REQUESTED, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party, final="YES")
+
+# RETURN TRANSITION
+
+    @stage.transition(source=StateChoices.STATUS_AWAITING_SIGN_C, target=StateChoices.STATUS_INITIAL_STATE)
+    def Return_Invoice(self):
+
+        self.workflowitems.interim_state = StateChoices.STATUS_INITIAL_STATE
+        self.workflowitems.final_state = StateChoices.STATUS_INITIAL_STATE
+        self.workflowitems.action = "RETURN"
+        ws = workflowitems.objects.get(id=self.workflowitems.id)
+        workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_C, to_state=StateChoices.STATUS_INITIAL_STATE,
+                                  interim_state=StateChoices.STATUS_INITIAL_STATE, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party)
