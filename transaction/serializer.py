@@ -410,12 +410,12 @@ class InvoiceUploadserializer(serializers.Serializer):
     ]
 
     program_type = serializers.ChoiceField(choices = program_type)
-    buyer_id = serializers.JSONField()
+    buyer_id = serializers.IntegerField()
     buyer_name = serializers.CharField()
-    invoice_no = serializers.JSONField()
-    invoice_date = serializers.JSONField()
+    invoice_no = serializers.IntegerField()
+    invoice_date = serializers.DateField(format="%d-%m-%Y")
     invoice_amount = serializers.JSONField()
-    due_date = serializers.JSONField()
+    due_date = serializers.DateField(format="%d-%m-%Y")
     financing_currency = serializers.PrimaryKeyRelatedField(queryset = Currencies.objects.all())
     settlement_currency = serializers.PrimaryKeyRelatedField(queryset = Currencies.objects.all())
     event_user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())

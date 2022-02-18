@@ -1,5 +1,6 @@
 from django.urls import path, include
 from accounts.views import index
+from rest_framework import routers
 from .views import (
     InvoiceListApiView,
     InvoiceUpdateDeleteApiview,
@@ -24,6 +25,11 @@ from transaction.api.customertransition import (
 from graphene_django.views import GraphQLView
 from .schema import schema
 
+
+
+router = routers.DefaultRouter()
+router.register(r'upload',InvoiceUploadCreateApiView),
+
 urlpatterns = [
     
     #-- PROGRAM URLS
@@ -37,7 +43,8 @@ urlpatterns = [
     path('invoice-list/', InvoiceListApiView.as_view(), name='invoice-list'),
 
     #--INVOICE UPLOAD URLS
-    path('invoiceupload/', InvoiceUploadCreateApiView.as_view(), name='invoice-upload-create-api'),
+    path('', include(router.urls),name='invoice-upload-create-apiview'),
+    # path('invoiceupload/', InvoiceUploadCreateApiView.as_view(), name='invoice-upload-create-api'),
     path('invoiceupload/<int:pk>/', InvoiceUploadUpdateDeleteApiview.as_view(),name='invoiceupload-update'),
     path('invoiceupload-list/', InvoiceUploadListapiview.as_view(), name='invoice-upload-list'),
     path('pairing/',PairingApiview.as_view(),name='pairing-create-list'),

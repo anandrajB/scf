@@ -1,5 +1,6 @@
 from accounts.models import Parties, userprocessauth
 from transaction.permission.upload_permissions import Ismaker_upload
+from rest_framework.viewsets import GenericViewSet
 from .models import (
     Invoices,
     Invoiceuploads,
@@ -201,35 +202,35 @@ class InvoiceUploadListapiview(ListAPIView):
         return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
 
-class InvoiceUploadCreateApiView(CreateAPIView):
+class InvoiceUploadCreateApiView(GenericViewSet):
     queryset = Invoiceuploads.objects.all()
     serializer_class = InvoiceUploadserializer
     permission_classes = [IsAuthenticated,Ismaker_upload]
 
-    def post(self, request):
-        user = request.user
-        serializer = InvoiceUploadserializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(from_party = user.party,to_party = user.party,event_user = user)
-            return Response({"status": "success"}, status=status.HTTP_201_CREATED)
-        return Response({"status": "failure", "data": serializer.errors})
-
-    # def create(self, request, *args, **kwargs):
+    # def post(self, request):
     #     user = request.user
-    #     is_many = isinstance(request.data, list)
-    #     if not is_many:
-    #         serializer = InvoiceUploadserializer(data=request.data)
-    #         if serializer.is_valid():
-    #             serializer.save(from_party = user.party,to_party = user.party,event_user = user)
-    #             return Response({"status": "success"}, status=status.HTTP_201_CREATED)
-    #         return Response({"status": "failure", "data": serializer.errors})
-    #     else:
-    #         serializer = self.get_serializer(data=request.data, many=True)
-    #         serializer.is_valid(raise_exception=True)
+    #     serializer = InvoiceUploadserializer(data=request.data)
+    #     if serializer.is_valid():
     #         serializer.save(from_party = user.party,to_party = user.party,event_user = user)
-    #         self.perform_create(serializer)
-    #         # headers = self.get_success_headers(serializer.data)
     #         return Response({"status": "success"}, status=status.HTTP_201_CREATED)
+    #     return Response({"status": "failure", "data": serializer.errors})
+
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        is_many = isinstance(request.data, list)
+        if not is_many:
+            serializer = InvoiceUploadserializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(from_party = user.party,to_party = user.party,event_user = user)
+                return Response({"status": "success"}, status=status.HTTP_201_CREATED)
+            return Response({"status": "failure", "data": serializer.errors})
+        else:
+            serializer = self.get_serializer(data=request.data, many=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(from_party = user.party,to_party = user.party,event_user = user)
+            self.perform_create(serializer)
+            # headers = self.get_success_headers(serializer.data)
+            return Response({"status": "success"}, status=status.HTTP_201_CREATED)
 
 
 class InvoiceUploadUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
