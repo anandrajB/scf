@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from accounts.models import Parties, userprocessauth
 from transaction.permission.upload_permissions import Ismaker_upload
 from rest_framework.viewsets import GenericViewSet
@@ -35,7 +36,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework import generics
-from .permission.program_permission import Ismaker
+from .permission.program_permission import Is_administrator, Ismaker
 
 User = get_user_model()
 
@@ -45,11 +46,10 @@ User = get_user_model()
 
 # -----------------------------------------------------------------------------------------------------------------------------
 
-
-class ProgramListApiView(ListAPIView):
+class ProgramCreateApiView(ListCreateAPIView):
     queryset = Programs.objects.all()
-    serializer_class = ProgramListserializer
-    permission_classes = [IsAuthenticated]
+    serializer_class = Programcreateserializer
+    permission_classes = [IsAuthenticated, Ismaker]
 
     def get_queryset(self):
         user = self.request.user
@@ -58,25 +58,19 @@ class ProgramListApiView(ListAPIView):
         else:
             queryset = Programs.objects.filter(party=user.party)
         return queryset
-
+    
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = ProgramListserializer(queryset,many=True)
         return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
 
-class ProgramCreateApiView(APIView):
-    queryset = Programs.objects.all()
-    serializer_class = Programcreateserializer
-    permission_classes = [IsAuthenticated, Ismaker]
-
     def post(self, request):
         serializer = Programcreateserializer(data=request.data)
         if serializer.is_valid():
             serializer.save(event_user = request.user)
-            return Response({"status": "success"}, status=status.HTTP_201_CREATED)
-        return Response({"status": "failure", "data": serializer.errors})
-
+        return Response({"status": "success"}, status=status.HTTP_201_CREATED)
+       
 
 class ProgramUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
     queryset = Programs.objects.all()
@@ -100,20 +94,6 @@ class ProgramUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
         return Response({"status": "failure", "data": serializer.errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
-class WorkEventCreateApiview(CreateAPIView):
-    queryset = workevents.objects.all()
-    serializer_class = Workeventsserializer
-    permission_classes = [AllowAny]
-
-    def post(self, request):
-        serializer = Workeventsserializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"status": "success"}, status=status.HTTP_201_CREATED)
-        return Response({"status": "failure", "data": serializer.errors}, status=status.HTTP_424_FAILED_DEPENDENCY)
-
-
-
 # -----------------------------------------------------------------------------------------------------------------------------
 
 # POLYMORPHIC SETUP - INVOICE'S (manual create)
@@ -121,10 +101,10 @@ class WorkEventCreateApiview(CreateAPIView):
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
-class InvoiceListApiView(ListAPIView):
+class InvoiceCreateApiView(ListCreateAPIView):
     queryset = Invoices.objects.all()
-    serializer_class = InvoiceSerializer
-    permission_classes = [IsAuthenticated]
+    serializer_class = InvoiceCreateserializer
+    permission_classes = [IsAuthenticated,Ismaker]
 
     def get_queryset(self):
         user = self.request.user
@@ -139,12 +119,7 @@ class InvoiceListApiView(ListAPIView):
         serializer = InvoiceSerializer(queryset, many=True)
         return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
-
-class InvoiceCreateApiView(APIView):
-    queryset = Invoices.objects.all()
-    serializer_class = InvoiceCreateserializer
-    permission_classes = [IsAuthenticated,Ismaker]
-
+    
     def post(self, request):
         serializer = InvoiceCreateserializer(data=request.data)
         if serializer.is_valid():
@@ -207,13 +182,10 @@ class InvoiceUploadCreateApiView(GenericViewSet):
     serializer_class = InvoiceUploadserializer
     permission_classes = [IsAuthenticated,Ismaker_upload]
 
-    # def post(self, request):
-    #     user = request.user
-    #     serializer = InvoiceUploadserializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save(from_party = user.party,to_party = user.party,event_user = user)
-    #         return Response({"status": "success"}, status=status.HTTP_201_CREATED)
-    #     return Response({"status": "failure", "data": serializer.errors})
+    def list(self, request, *args, **kwargs):
+        queryset = Invoiceuploads.objects.all()
+        serializer = InvoiceUploadlistserializer(queryset, many=True)
+        return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         user = request.user

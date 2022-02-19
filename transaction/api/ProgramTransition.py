@@ -5,11 +5,15 @@ from transaction.FSM.upload import UploadFlow
 from transaction.models import workflowitems 
 from transaction.permission.program_permission import (
     Is_Accepter,
+    Is_Approve,
     Is_Rejecter,
     Is_administrator,
     IsAccept_Sign_A,
     IsAccept_Sign_B,
-    IsAccept_Sign_C, 
+    IsAccept_Sign_C,
+    IsApprove_Sign_A,
+    IsApprove_Sign_B,
+    IsApprove_Sign_C, 
     IsReject_Sign_A, 
     IsReject_Sign_B, 
     IsReject_Sign_C, 
@@ -78,7 +82,7 @@ class SubmitTransitionApiView(APIView):
 class SubmitTransitionSign_AApiview(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
-    permission_classes = [IsSign_A ]
+    permission_classes = [IsAuthenticated,IsSign_A ]
         
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
@@ -103,7 +107,7 @@ class SubmitTransitionSign_AApiview(APIView):
 class SubmitTransitionSign_BApiview(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
-    permission_classes = [IsSign_B]
+    permission_classes = [IsAuthenticated,IsSign_B]
 
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
@@ -127,7 +131,7 @@ class SubmitTransitionSign_BApiview(APIView):
 class SubmitTransitionSign_CApiview(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
-    permission_classes = [Is_Sign_C]
+    permission_classes = [IsAuthenticated,Is_Sign_C]
 
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
@@ -157,7 +161,7 @@ class SubmitTransitionSign_CApiview(APIView):
 class RejectTransitionApiView(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
-    permission_classes = [Is_Administrator]
+    permission_classes = [IsAuthenticated,Is_Administrator]
 
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
@@ -172,7 +176,7 @@ class RejectTransitionApiView(APIView):
 class RejectSign_AApiview(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
-    permission_classes = [IsReject_Sign_A]
+    permission_classes = [IsAuthenticated,IsReject_Sign_A]
 
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
@@ -197,7 +201,7 @@ class RejectSign_AApiview(APIView):
 class RejectSign_BApiview(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
-    permission_classes = [IsReject_Sign_B]
+    permission_classes = [IsAuthenticated,IsReject_Sign_B]
 
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
@@ -221,7 +225,7 @@ class RejectSign_BApiview(APIView):
 class RejectSign_CApiview(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
-    permission_classes = [IsReject_Sign_C]
+    permission_classes = [IsAuthenticated,IsReject_Sign_C]
 
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
@@ -251,7 +255,7 @@ class RejectSign_CApiview(APIView):
 class AcceptTransitionApiview(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
-    permission_classes = [Is_Accepter]
+    permission_classes = [IsAuthenticated,Is_Accepter]
 
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
@@ -266,7 +270,7 @@ class AcceptTransitionApiview(APIView):
 class AcceptSign_AApiView(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
-    permission_classes = [IsAccept_Sign_A]
+    permission_classes = [IsAuthenticated,IsAccept_Sign_A]
 
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
@@ -288,7 +292,7 @@ class AcceptSign_AApiView(APIView):
 class AcceptSign_BApiView(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
-    permission_classes = [IsAccept_Sign_B]
+    permission_classes = [IsAuthenticated,IsAccept_Sign_B]
 
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
@@ -310,7 +314,7 @@ class AcceptSign_BApiView(APIView):
 class AcceptSign_CApiView(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
-    permission_classes = [IsAccept_Sign_C]
+    permission_classes = [IsAuthenticated,IsAccept_Sign_C]
 
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
@@ -327,10 +331,104 @@ class AcceptSign_CApiView(APIView):
         else:
             return Response({"data":"can't do this transition "})
 
+
+
+# -----------------------------------------
+
+# APPROVE TRANSITIONS
+# ----------------------------------------
+
+
+# INITIAL ACCEPT TRANSIION
+
+
+class ApproveTransitionApiview(APIView):
+    queryset = workflowitems.objects.all()
+    serializer_class = Workitemserializer
+    permission_classes = [IsAuthenticated,Is_Approve]
+
+    def get(self, request, pk, *args, **kwargs):
+        obj = generics.get_object_or_404(workflowitems, id=pk)
+        flow = WorkFlow(obj)
+        flow.approve()
+        obj.save()
+        return Response({"status": "Success","data":"initial accept"})
+
+
+# ACCEPT SIGN_A TRANSITION API VIEW
+
+class ApproveSign_AApiView(APIView):
+    queryset = workflowitems.objects.all()
+    serializer_class = Workitemserializer
+    permission_classes = [IsAuthenticated,IsApprove_Sign_A]
+
+    def get(self, request, pk, *args, **kwargs):
+        obj = generics.get_object_or_404(workflowitems, id=pk)
+        user = self.request.user.party
+        signs = signatures.objects.get(party=user, action__desc__contains='ACCEPT', model='PROGRAM')
+        if user.party_type == "BANK":
+            if signs.sign_a == True:
+                flow = WorkFlow(obj)
+                flow.approve_signA()
+                obj.save()
+                return Response({"status": "success", "data": "ACCEPT : sign_A transition done"})
+            else:
+                return Response({"data": "can't do this transition"})
+        else:
+            return Response({"data":"can't do this transition "})
+
+# ACCEPT SIGN_B TRANSITION API VIEW
+
+class ApproveSign_BApiView(APIView):
+    queryset = workflowitems.objects.all()
+    serializer_class = Workitemserializer
+    permission_classes = [IsAuthenticated,IsApprove_Sign_B]
+
+    def get(self, request, pk, *args, **kwargs):
+        obj = generics.get_object_or_404(workflowitems, id=pk)
+        user = self.request.user.party
+        signs = signatures.objects.get(party=user, action__desc__contains='ACCEPT', model='PROGRAM')
+        if user.party_type == "BANK":
+            if signs.sign_b == True:
+                flow = WorkFlow(obj)
+                flow.approve_signB()
+                obj.save()
+                return Response({"status": "success", "data": "ACCEPT : sign_B transition done"})
+            else:
+                return Response({"data": "can't do this transition"})
+        else:
+            return Response({"data":"can't do this transition "})
+
+# ACCEPT SIGN_C TRANSITION API VIEW
+
+class ApproveSign_CApiView(APIView):
+    queryset = workflowitems.objects.all()
+    serializer_class = Workitemserializer
+    permission_classes = [IsAuthenticated,IsApprove_Sign_C]
+
+    def get(self, request, pk, *args, **kwargs):
+        obj = generics.get_object_or_404(workflowitems, id=pk)
+        user = self.request.user.party
+        signs = signatures.objects.get(party=user, action__desc__contains='ACCEPT', model='PROGRAM')
+        if user.party_type == "BANK":
+            if signs.sign_c == True:
+                flow = WorkFlow(obj)
+                flow.approve_signC()
+                obj.save()
+                return Response({"status": "success", "data": "ACCEPT : sign_C transition done"})
+            else:
+                return Response({"data": "can't do this transition"})
+        else:
+            return Response({"data":"can't do this transition "})
+
+
+
+
+
 # -----------------------------------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------------------------------
 
-# END OF PROGRAM (CUSTOMER ) TRANSITION API'S
+# END OF PROGRAM (CUSTOMER & BANK ) TRANSITION API'S
 
 # -----------------------------------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------------------------------
@@ -342,7 +440,7 @@ class AcceptSign_CApiView(APIView):
 # -----------------------------------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------------------------------
 
-# API'S FOR UPLOAD TRANSITION ( CUSTOMER ) 
+# API'S FOR UPLOAD TRANSITION ( ONLY WITHIN - CUSTOMER ) 
 
 # -----------------------------------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------------------------------

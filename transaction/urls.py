@@ -2,12 +2,10 @@ from django.urls import path, include
 from accounts.views import index
 from rest_framework import routers
 from .views import (
-    InvoiceListApiView,
     InvoiceUpdateDeleteApiview,
     InvoiceUploadCreateApiView,
     InvoiceUploadListapiview,
     InvoiceUploadUpdateDeleteApiview,
-    ProgramListApiView,
     ProgramCreateApiView,
     ProgramUpdateDeleteApiview,
     TestApiview,
@@ -15,7 +13,7 @@ from .views import (
     PairingUpdateapiview,
     InvoiceCreateApiView
 )
-from transaction.api.customertransition import (
+from transaction.api.ProgramTransition import (
     AcceptTransitionApiview,
     TransitionDeleteApiview,
     RejectTransitionApiView,
@@ -28,25 +26,23 @@ from .schema import schema
 
 
 router = routers.DefaultRouter()
-router.register(r'upload',InvoiceUploadCreateApiView),
+router.register(r'invoiceupload',InvoiceUploadCreateApiView),
 
 urlpatterns = [
     
     #-- PROGRAM URLS
     path('program/', ProgramCreateApiView.as_view(), name='program-create-api'),
     path('program/<int:pk>/', ProgramUpdateDeleteApiview.as_view(),name='program-update'),
-    path('program-list/', ProgramListApiView.as_view(), name='program-list'),
     
     #--INVOICE URLS
     path('invoice/', InvoiceCreateApiView.as_view(), name='invoice-manual-create-api'),
     path('invoice/<int:pk>/', InvoiceUpdateDeleteApiview.as_view(),name='invoice-update'),
-    path('invoice-list/', InvoiceListApiView.as_view(), name='invoice-list'),
-
+    
     #--INVOICE UPLOAD URLS
     path('', include(router.urls),name='invoice-upload-create-apiview'),
-    # path('invoiceupload/', InvoiceUploadCreateApiView.as_view(), name='invoice-upload-create-api'),
     path('invoiceupload/<int:pk>/', InvoiceUploadUpdateDeleteApiview.as_view(),name='invoiceupload-update'),
-    path('invoiceupload/', InvoiceUploadListapiview.as_view(), name='invoice-upload-list'),
+    
+    #--PAIRING'S 
     path('pairing/',PairingApiview.as_view(),name='pairing-create-list'),
     path('pairing/<int:pk>/',PairingUpdateapiview.as_view(),name='pairing-update'),
 

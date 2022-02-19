@@ -1,7 +1,7 @@
 from django.urls import path
 from django.urls.conf import include
 from accounts.views import index
-from transaction.api.customertransition import (
+from transaction.api.ProgramTransition import (
    UploadSign_AApiview,
    UploadSign_BApiview,
    UploadSign_CApiview

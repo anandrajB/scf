@@ -414,7 +414,7 @@ class InvoiceUploadserializer(serializers.Serializer):
     buyer_name = serializers.CharField()
     invoice_no = serializers.IntegerField()
     invoice_date = serializers.DateField(format="%d/%m/%Y")
-    invoice_amount = serializers.JSONField()
+    invoice_amount = serializers.IntegerField()
     due_date = serializers.DateField(format="%d/%m/%Y")
     financing_currency = serializers.PrimaryKeyRelatedField(queryset = Currencies.objects.all())
     settlement_currency = serializers.PrimaryKeyRelatedField(queryset = Currencies.objects.all())
@@ -441,9 +441,9 @@ class InvoiceUploadserializer(serializers.Serializer):
             'buyer_id' : buyer_id,
             'buyer_name' : buyer_name,
             'invoice_no' : invoice_no,
-            'invoice_date' : invoice_date,
+            'invoice_date' : str(invoice_date),
             'invoice_amount' : invoice_amount,
-            'due_date' : due_date,
+            'due_date' : str(due_date),
             'financing_currency' : str(financing_currency),
             'settlement_currency' : str(settlement_currency)
         }

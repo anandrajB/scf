@@ -92,7 +92,7 @@ class IsReject_Sign_C(permissions.BasePermission):
             return True
 
 
-# APPROVE PERMISSIONS
+# ACCEPT PERMISSIONS
 
 class Is_Accepter(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -122,5 +122,40 @@ class IsAccept_Sign_C(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user
         qs = accounts.models.userprocessauth.objects.get(user = request.user , model = 'PROGRAM', action__desc__contains = "ACCEPT")
+        if qs.sign_c == True and user.is_administrator == True:
+            return True
+
+
+
+# APPROVE PERMISSIONS
+
+class Is_Approve(permissions.BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+        qs = accounts.models.userprocessauth.objects.get(user = request.user , model = 'PROGRAM', action__desc__contains = "APPROVE")
+        if qs.data_entry == True and user.is_administrator == True:
+            return True
+
+
+class IsApprove_Sign_A(permissions.BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+        qs = accounts.models.userprocessauth.objects.get(user = request.user , model = 'PROGRAM', action__desc__contains = "APPROVE")
+        if qs.sign_a == True and user.is_administrator == True:
+            return True
+
+
+class IsApprove_Sign_B(permissions.BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+        qs = accounts.models.userprocessauth.objects.get(user = request.user ,  model = 'PROGRAM',action__desc__contains = "APPROVE")
+        if qs.sign_b == True and user.is_administrator == True:
+            return True
+
+
+class IsApprove_Sign_C(permissions.BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+        qs = accounts.models.userprocessauth.objects.get(user = request.user , model = 'PROGRAM', action__desc__contains = "APPROVE")
         if qs.sign_c == True and user.is_administrator == True:
             return True
