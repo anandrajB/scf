@@ -442,6 +442,7 @@ class InvoiceUploadserializer(serializers.Serializer):
         from_party = validated_data.pop('from_party')
         to_party = validated_data.pop('to_party')
         event_user = validated_data.pop('event_user')
+        
 
         invoices = {
             'buyer_id' : buyer_id,

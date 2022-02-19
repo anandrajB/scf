@@ -214,6 +214,7 @@ class InvoiceUploadUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
     def retrieve(self, request, pk=None):
         queryset = Invoiceuploads.objects.all()
         user = get_object_or_404(queryset, pk=pk)
+        print(user.invoices['due_date'])
         serializer = InvoiceUploadlistserializer(user)
         return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
