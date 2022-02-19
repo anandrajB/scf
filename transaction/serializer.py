@@ -108,11 +108,13 @@ class ProgramListserializer(serializers.ModelSerializer):
     workevents = Workeventsserializer(read_only=True)
     party = serializers.SlugRelatedField(read_only=True, slug_field='name')
     created_by = serializers.SerializerMethodField()
+    wf_item_id = serializers.SerializerMethodField()
 
     class Meta:
         model = Programs
         fields = [
             "id",
+            "wf_item_id",
             "party",
             'created_by',
             "program_type",
@@ -141,6 +143,10 @@ class ProgramListserializer(serializers.ModelSerializer):
 
     def get_created_by(self,obj):
         return obj.workflowitems.event_users.email
+
+    def get_wf_item_id(self,obj):
+        return obj.workflowitems.id
+
 
 
 

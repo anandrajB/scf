@@ -64,8 +64,8 @@ urlpatterns = [
     path('invoice/transition/reject/', include('transaction.url.reject'),name='invoice-transition-reject-REJECT'),
     path('invoice/transition/accept/', include('transaction.url.accept'),name='invoice-transition-accept-ACCEPT'),
     #--
-    path('upload/transition/submit/<int:pk>/',UploadSubmitTransitionApiView.as_view(), name='invoice-upload-submit'),
-    path('upload/transition/submit/', include('transaction.url.upload'),name='upload-transition-approvals-SUBMIT'),
+    path('invoiceupload/transition/submit/<int:pk>/',UploadSubmitTransitionApiView.as_view(), name='invoice-upload-submit'),
+    path('invoiceupload/transition/submit/', include('transaction.url.upload'),name='upload-transition-approvals-SUBMIT'),
     
     #--MESSAGE INBOX
     path('messages/', include('transaction.url.message'),name = 'message-inbox-urls'),

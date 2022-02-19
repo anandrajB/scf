@@ -453,6 +453,7 @@ class UploadSubmitTransitionApiView(APIView):
 
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
+        print(obj.uploads)
         flow = UploadFlow(obj)
         flow.submit_draft()
         obj.save()
@@ -473,16 +474,19 @@ class UploadSign_AApiview(APIView):
         party = obj.program.party
         signs = signatures.objects.get(
             party=party, action__desc__contains='SUBMIT', model='UPLOAD')
-        if user.party == party:
-            if signs.sign_a == True:
-                flow = UploadFlow(obj)
-                flow.submit_A()
-                obj.save()
-                return Response({"status": "success", "data": "SUBMIT : sign_A transition done"})
+        try:
+            if user.party == party:
+                if signs.sign_a == True:
+                    flow = UploadFlow(obj)
+                    flow.submit_A()
+                    obj.save()
+                    return Response({"status": "success", "data": "SUBMIT : sign_A transition done"})
+                else:
+                    return Response({"data": "can't do this transition"})
             else:
-                return Response({"data": "can't do this transition"})
-        else:
-            return Response({"data": "can't do this transition "})
+                return Response({"data": "can't do this transition "})
+        except:
+            return Response({"ok da "})
 
 
 # UPDATE SIGN_B SUBMIT TRANSITION
