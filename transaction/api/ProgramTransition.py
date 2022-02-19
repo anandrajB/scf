@@ -471,7 +471,7 @@ class UploadSign_AApiview(APIView):
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user
-        party = obj.program.party
+        party = self.request.user.party
         signs = signatures.objects.get(
             party=party, action__desc__contains='SUBMIT', model='UPLOAD')
         try:
@@ -499,7 +499,7 @@ class UploadSign_BApiview(APIView):
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user
-        party = obj.program.party
+        party = self.request.user.party
         signs = signatures.objects.get(
             party=party, action__desc__contains='SUBMIT', model='UPLOAD')
         if user.party == party:
@@ -524,7 +524,7 @@ class UploadSign_CApiview(APIView):
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user
-        party = obj.program.party
+        party = self.request.user.party
         signs = signatures.objects.get(
             party=party, action__desc__contains='SUBMIT', model='UPLOAD')
         if user.party == party:
