@@ -1,5 +1,5 @@
-from django.http import HttpResponse
 from accounts.models import Parties, userprocessauth
+from accounts.permission import Is_Administrator
 from transaction.permission.upload_permissions import Ismaker_upload
 from rest_framework.viewsets import GenericViewSet
 from .models import (
@@ -10,6 +10,8 @@ from .models import (
     workevents,
     workflowitems,
 )
+from transaction.permission.program_permission import *
+from transaction.permission.upload_permissions import *
 from django.shortcuts import render
 from rest_framework.generics import (
     ListAPIView,
@@ -36,7 +38,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework import generics
-from .permission.program_permission import Is_administrator, Ismaker
+
 
 User = get_user_model()
 
@@ -49,11 +51,11 @@ User = get_user_model()
 class ProgramCreateApiView(ListCreateAPIView):
     queryset = Programs.objects.all()
     serializer_class = Programcreateserializer
-    permission_classes = [IsAuthenticated, Ismaker]
+    permission_classes = [IsAuthenticated & Ismaker | IsAuthenticated & Is_Administrator]
 
     def get_queryset(self):
         user = self.request.user
-        if user.party.party_type == "BANK" and user.is_administrator == True:
+        if user.is_administrator == True:
             queryset = Programs.objects.all()
         else:
             queryset = Programs.objects.filter(party=user.party)
@@ -66,9 +68,10 @@ class ProgramCreateApiView(ListCreateAPIView):
 
 
     def post(self, request):
+        user = request.user
         serializer = Programcreateserializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(event_user = request.user)
+            serializer.save(event_user = user,from_party = user.party , to_party = user.party)
         return Response({"status": "success"}, status=status.HTTP_201_CREATED)
        
 
@@ -284,21 +287,21 @@ class DraftListApiview(ListAPIView):
         serializer = Workeventsmessageserializer(var, many=True)
         return Response({"data": serializer.data}, status=status.HTTP_200_OK)
 
-
-
-def current(request):
+# current user 
+def currentuser(request):
     return request.user
+
 
 
 # TEST API VIEW 
 class TestApiview(ListAPIView):
+    # permission_classes = [IsAuthenticated & Ismaker | IsAuthenticated & Is_administrator]
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        # obj = generics.get_object_or_404(workflowitems, id=pk)
-        # print(obj.invoice.pairing.program_type.program_type)
-        print(current(request))
-        # my object for the party user related 
+    def get(self, request,pk,*args,**kwargs ):
+        obj = generics.get_object_or_404(workflowitems, id=pk)
+        print(obj.program)
+        # print(request.user.party)
         return Response({"status": "success", "data": "ok"}, status=status.HTTP_200_OK)
 
 

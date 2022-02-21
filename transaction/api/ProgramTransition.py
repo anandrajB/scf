@@ -7,7 +7,6 @@ from transaction.permission.program_permission import (
     Is_Accepter,
     Is_Approve,
     Is_Rejecter,
-    Is_administrator,
     IsAccept_Sign_A,
     IsAccept_Sign_B,
     IsAccept_Sign_C,
@@ -72,7 +71,7 @@ class SubmitTransitionApiView(APIView):
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         flow = WorkFlow(obj)
-        flow.submit()
+        flow.submit(request)
         obj.save()
         return Response({"status": "success", "data": "DRAFT -> SUBMIT"})
 
@@ -345,7 +344,7 @@ class AcceptSign_CApiView(APIView):
 class ApproveTransitionApiview(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
-    permission_classes = [IsAuthenticated,Is_Approve]
+    permission_classes = [IsAuthenticated & Is_Approve | Is_Administrator]
 
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
