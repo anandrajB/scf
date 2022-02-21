@@ -3,6 +3,7 @@ from transaction.states import StateChoices
 from transaction.models import workevents, workflowitems
 from viewflow import fsm
 from accounts.models import Parties, User,  signatures
+from transaction.views import current
 
 
 class WorkFlow(object):
@@ -25,10 +26,11 @@ class WorkFlow(object):
 # --------------------------------------------------------------------------------------------------
 # SUBMIT TRANSITION
 # --------------------------------------------------------------------------------------------------
-
+    
 
     @stage.transition(source=[StateChoices.STATUS_DRAFT, StateChoices.STATUS_AW_ACCEPT], target=StateChoices.STATUS_AWAITING_SIGN_A)
     def submit(self):
+        
         user = self.workflowitems.event_users
         obj = signatures.objects.get(
             party=user.party, action__desc__contains="SUBMIT", model="PROGRAM")
@@ -619,7 +621,7 @@ class WorkFlow(object):
         self.workflowitems.action = 'DELETE'
         ws = workflowitems.objects.get(id=self.workflowitems.id)
         workevents.objects.create(workitems=ws, from_state='STATUS_DELETED', to_state='STATUS_DELETED',
-                                  interim_state='STATUS_DELETED', from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party)
+                                  interim_state='STATUS_DELETED', from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party,c_final = "YES")
 
 
 # --------------------------------------------------------------------------------------------------
@@ -633,4 +635,4 @@ class WorkFlow(object):
         self.workflowitems.action = 'RETURN'
         ws = workflowitems.objects.get(id=self.workflowitems.id)
         workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AW_ACCEPT, to_state=StateChoices.STATUS_INITIAL,
-                                  interim_state=StateChoices.STATUS_INITIAL, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party)
+                                  interim_state=StateChoices.STATUS_INITIAL, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party,c_final = "YES")

@@ -69,6 +69,6 @@ urlpatterns = [
     
     #--MESSAGE INBOX
     path('messages/', include('transaction.url.message'),name = 'message-inbox-urls'),
-    path('test/<int:pk>/',TestApiview.as_view()),
+    path('test/',TestApiview.as_view()),
     path('graphql/', GraphQLView.as_view(graphiql=True, schema=schema),name ='GRAPH_QL URL')
 ]

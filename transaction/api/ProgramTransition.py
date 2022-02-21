@@ -377,6 +377,7 @@ class ApproveSign_AApiView(APIView):
         else:
             return Response({"data":"can't do this transition "})
 
+
 # ACCEPT SIGN_B TRANSITION API VIEW
 
 class ApproveSign_BApiView(APIView):
@@ -398,6 +399,7 @@ class ApproveSign_BApiView(APIView):
                 return Response({"data": "can't do this transition"})
         else:
             return Response({"data":"can't do this transition "})
+
 
 # ACCEPT SIGN_C TRANSITION API VIEW
 

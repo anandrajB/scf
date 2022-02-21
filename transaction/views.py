@@ -294,9 +294,10 @@ def current(request):
 class TestApiview(ListAPIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, pk, *args, **kwargs):
-        obj = generics.get_object_or_404(workflowitems, id=pk)
-        print(obj.invoice.pairing.program_type.program_type)
+    def get(self, request):
+        # obj = generics.get_object_or_404(workflowitems, id=pk)
+        # print(obj.invoice.pairing.program_type.program_type)
+        print(current(request))
         # my object for the party user related 
         return Response({"status": "success", "data": "ok"}, status=status.HTTP_200_OK)
 
