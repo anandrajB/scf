@@ -24,10 +24,12 @@ class PairingSerializer(serializers.ModelSerializer):
 class Workeventsserializer(serializers.ModelSerializer):
     from_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
     to_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    name = serializers.SerializerMethodField()
 
     class Meta:
         model = workevents
         fields = [
+            'id',
             'workitems',
             'from_state',
             'to_state',
@@ -35,9 +37,13 @@ class Workeventsserializer(serializers.ModelSerializer):
             'from_party',
             'to_party',
             'user',
+            'name',
             'record_datas',
             'created_date'
         ]
+
+    def get_name(self,obj):
+        return "anand"
 
 
 
@@ -98,7 +104,7 @@ class Workitemserializer(serializers.ModelSerializer):
             'workflowevent'
 
         ]
-        read_only_fields = ['workflowevent']
+        # read_only_fields = ['workflowevent']
 
     def get_wf_item_id(self,obj):
         return obj.id

@@ -7,6 +7,7 @@ from .models import (
     Invoiceuploads,
     Pairings,
     Programs,
+    Transitionpartytype,
     workevents,
     workflowitems,
 )
@@ -244,14 +245,14 @@ class InboxListApiview(ListAPIView):
     def get_queryset(self):
         user = self.request.user
         if user.party.party_type == "BANK":
-            queryset = workevents.objects.all().filter(final='YES')
+            queryset = workevents.objects.all().filter(final='YES').order_by('created_date')
             print("bank final")
         elif user.party.party_type == "CUSTOMER":
-            queryset = workevents.objects.all().filter(c_final='YES')
+            queryset = workevents.objects.all().filter(c_final='YES').order_by('created_date')
             print("customer final")
         else:
             queryset = workevents.objects.filter(
-                to_party__name__contains=self.request.user.party.name).exclude(from_state='DRAFT')
+                to_party__name__contains=self.request.user.party.name).exclude(from_state='DRAFT').order_by('created_date')
         return queryset
 
     def list(self, request, *args, **kwargs):
@@ -299,8 +300,18 @@ class TestApiview(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request,pk,*args,**kwargs ):
-        obj = generics.get_object_or_404(workflowitems, id=pk)
-        print(obj.program)
+        obj = generics.get_object_or_404(Programs, id=pk)
+        # print(obj.initial_state)
+        # li = []
+        # cc = obj.workflowevent.last()
+        # print(cc.user.phone)
+        # cs = obj.workflowitems.workflowevent.last()
+        # cs. interim_state = "USERS"
+        # cs.save()
+        # print(cs.from_state)
+        # print(cs.to_state)
+        
+        
         # print(request.user.party)
         return Response({"status": "success", "data": "ok"}, status=status.HTTP_200_OK)
 

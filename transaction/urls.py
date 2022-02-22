@@ -15,6 +15,7 @@ from .views import (
 )
 from transaction.api.ProgramTransition import (
     AcceptTransitionApiview,
+    ReturnTransitionview,
     TransitionDeleteApiview,
     RejectTransitionApiView,
     SubmitTransitionApiView,
@@ -54,6 +55,7 @@ urlpatterns = [
     path('program/transition/submit/', include('transaction.url.submit'),name='program-transition-approvals-SUBMIT'),
     path('program/transition/reject/', include('transaction.url.reject'),name='program-transition-reject-REJECT'),
     path('program/transition/accept/', include('transaction.url.accept'),name='program-transition-accept-ACCEPT'),
+    path('program/transition/return/<int:pk>/',ReturnTransitionview.as_view() , name = 'program-return'),
 
     #---INVOICE TRANSITIONS
     path('invoice/transition/delete/<int:pk>/',TransitionDeleteApiview.as_view(), name='delete-transition'),

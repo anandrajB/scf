@@ -39,6 +39,21 @@ from rest_framework.response import Response
 # -----------------------------------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------------------------------
 
+# RETURN TRANSITION VIEW
+
+class ReturnTransitionview(APIView):
+    queryset = workflowitems.objects.all()
+    serializer_class = Workitemserializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk, *args, **kwargs):
+        obj = generics.get_object_or_404(workflowitems, id=pk)
+        flow = WorkFlow(obj)
+        flow.returns(request)
+        obj.save()
+        return Response({"data": "Success", "action": "RETURN"})
+
+
 
 # DELETE TRANSITION VIEW
 
@@ -91,7 +106,7 @@ class SubmitTransitionSign_AApiview(APIView):
         if user.party == party:
             if signs.sign_a == True:
                 flow = WorkFlow(obj)
-                flow.submit_level_1()
+                flow.submit_level_1(request)
                 obj.save()
                 return Response({"status": "success", "data": "SUBMIT : sign_A transition done"})
             else:
