@@ -167,7 +167,7 @@ class SubmitTransitionSign_CApiview(APIView):
 
 # -----------------------------------------
 
-# REJECT TRANSITIONS
+# REJECT TRANSITIONS EITHER CUSTOMER / BANK 
 # -----------------------------------------
 
 # INITIAL REJECT TRANSITION
@@ -196,16 +196,14 @@ class RejectSign_AApiview(APIView):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user.party
         signs = signatures.objects.get(party=user, action__desc__contains='REJECT', model='PROGRAM')
-        if user.party_type == "BANK":
-            if signs.sign_a == True:
-                flow = WorkFlow(obj)
-                flow.reject_level_1(request)
-                obj.save()
-                return Response({"status": "success", "data": "SUBMIT : sign_A transition done"})
-            else:
-                return Response({"data": "can't do this transition"})
+        if signs.sign_a == True:
+            flow = WorkFlow(obj)
+            flow.reject_level_1(request)
+            obj.save()
+            return Response({"status": "success", "data": "SUBMIT : sign_A transition done"})
         else:
-            return Response({"data":"can't do this transition "})
+            return Response({"data": "can't do this transition"})
+        
        
 
 
@@ -221,16 +219,14 @@ class RejectSign_BApiview(APIView):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user.party
         signs = signatures.objects.get(party=user, action__desc__contains='REJECT', model='PROGRAM')
-        if user.party_type  == "BANK":
-            if signs.sign_b == True:
-                flow = WorkFlow(obj)
-                flow.reject_level_2(request)
-                obj.save()
-                return Response({"status": "success", "data": "SUBMIT : sign_B transition done"})
-            else:
-                return Response({"data": "can't do this transition"})
+        if signs.sign_b == True:
+            flow = WorkFlow(obj)
+            flow.reject_level_2(request)
+            obj.save()
+            return Response({"status": "success", "data": "SUBMIT : sign_B transition done"})
         else:
-            return Response({"data":"can't do this transition "})
+            return Response({"data": "can't do this transition"})
+       
 
 
 # REJECT SIGN_C TRANSITION
@@ -245,17 +241,14 @@ class RejectSign_CApiview(APIView):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user.party
         signs = signatures.objects.get(party=user, action__desc__contains='REJECT', model='PROGRAM')
-        if user.party_type == "BANK":
-            if signs.sign_c == True:
-                flow = WorkFlow(obj)
-                flow.reject_level_3(request)
-                obj.save()
-                return Response({"status": "success", "data": "SUBMIT : sign_C transition done"})
-            else:
-                return Response({"data": "can't do this transition"})
+        if signs.sign_c == True:
+            flow = WorkFlow(obj)
+            flow.reject_level_3(request)
+            obj.save()
+            return Response({"status": "success", "data": "SUBMIT : sign_C transition done"})
         else:
-            return Response({"data":"can't do this transition "})
-
+            return Response({"data": "can't do this transition"})
+        
 
 # -----------------------------------------
 

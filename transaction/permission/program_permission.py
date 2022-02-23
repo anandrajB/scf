@@ -60,8 +60,7 @@ class Is_Sign_C(permissions.BasePermission):
 
 class Is_Rejecter(permissions.BasePermission):
     def has_permission(self, request, view):
-        user = User.objects.get(is_administrator = True)
-        qs = accounts.models.userprocessauth.objects.get(user = user , model = 'PROGRAM', action__desc__contains = "REJECT")
+        qs = accounts.models.userprocessauth.objects.get(user = request.user , model = 'PROGRAM', action__desc__contains = "REJECT")
         if qs.data_entry == True:
             return True
 
@@ -69,7 +68,7 @@ class Is_Rejecter(permissions.BasePermission):
 class IsReject_Sign_A(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user
-        qs = accounts.models.userprocessauth.objects.get(user = request.user ,model = 'PROGRAM',  action__desc__contains = "REJECT")
+        qs = accounts.models.userprocessauth.objects.get(user = user ,model = 'PROGRAM',  action__desc__contains = "REJECT")
         if qs.sign_a == True | user.is_administrator == True:
             return True
 
@@ -77,7 +76,7 @@ class IsReject_Sign_A(permissions.BasePermission):
 class IsReject_Sign_B(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user
-        qs = accounts.models.userprocessauth.objects.get(user = request.user , model = 'PROGRAM', action__desc__contains = "REJECT")
+        qs = accounts.models.userprocessauth.objects.get(user = user  , model = 'PROGRAM', action__desc__contains = "REJECT")
         if qs.sign_b == True | user.is_administrator == True:
             return True
 
@@ -85,7 +84,7 @@ class IsReject_Sign_B(permissions.BasePermission):
 class IsReject_Sign_C(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user
-        qs = accounts.models.userprocessauth.objects.get(user = request.user ,model = 'PROGRAM',  action__desc__contains = "REJECT")
+        qs = accounts.models.userprocessauth.objects.get(user = user  ,model = 'PROGRAM',  action__desc__contains = "REJECT")
         if qs.sign_c == True and user.is_administrator == True:
             return True
 
@@ -95,7 +94,7 @@ class IsReject_Sign_C(permissions.BasePermission):
 class Is_Accepter(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user
-        qs = accounts.models.userprocessauth.objects.get(user = request.user , model = 'PROGRAM', action__desc__contains = "ACCEPT")
+        qs = accounts.models.userprocessauth.objects.get(user = user  , model = 'PROGRAM', action__desc__contains = "ACCEPT")
         if qs.data_entry == True :
             return True
 
@@ -103,7 +102,7 @@ class Is_Accepter(permissions.BasePermission):
 class IsAccept_Sign_A(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user
-        qs = accounts.models.userprocessauth.objects.get(user = request.user , model = 'PROGRAM', action__desc__contains = "ACCEPT")
+        qs = accounts.models.userprocessauth.objects.get(user = user  , model = 'PROGRAM', action__desc__contains = "ACCEPT")
         if qs.sign_a == True :
             return True
 
@@ -111,7 +110,7 @@ class IsAccept_Sign_A(permissions.BasePermission):
 class IsAccept_Sign_B(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user
-        qs = accounts.models.userprocessauth.objects.get(user = request.user ,  model = 'PROGRAM',action__desc__contains = "ACCEPT")
+        qs = accounts.models.userprocessauth.objects.get(user = user  ,  model = 'PROGRAM',action__desc__contains = "ACCEPT")
         if qs.sign_b == True :
             return True
 
@@ -119,18 +118,18 @@ class IsAccept_Sign_B(permissions.BasePermission):
 class IsAccept_Sign_C(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user
-        qs = accounts.models.userprocessauth.objects.get(user = request.user , model = 'PROGRAM', action__desc__contains = "ACCEPT")
+        qs = accounts.models.userprocessauth.objects.get(user = user  , model = 'PROGRAM', action__desc__contains = "ACCEPT")
         if qs.sign_c == True :
             return True
 
 
 
-# APPROVE PERMISSIONS
+# APPROVE PERMISSIONS 
 
 class Is_Approve(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user
-        qs = accounts.models.userprocessauth.objects.get(user = request.user , model = 'PROGRAM', action__desc__contains = "APPROVE")
+        qs = accounts.models.userprocessauth.objects.get(user = user  , model = 'PROGRAM', action__desc__contains = "APPROVE")
         if qs.data_entry == True and user.is_administrator == True:
             return True
 
@@ -138,7 +137,7 @@ class Is_Approve(permissions.BasePermission):
 class IsApprove_Sign_A(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user
-        qs = accounts.models.userprocessauth.objects.get(user = request.user , model = 'PROGRAM', action__desc__contains = "APPROVE")
+        qs = accounts.models.userprocessauth.objects.get(user = user  , model = 'PROGRAM', action__desc__contains = "APPROVE")
         if qs.sign_a == True and user.is_administrator == True:
             return True
 
@@ -146,7 +145,7 @@ class IsApprove_Sign_A(permissions.BasePermission):
 class IsApprove_Sign_B(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user
-        qs = accounts.models.userprocessauth.objects.get(user = request.user ,  model = 'PROGRAM',action__desc__contains = "APPROVE")
+        qs = accounts.models.userprocessauth.objects.get(user = user  ,  model = 'PROGRAM',action__desc__contains = "APPROVE")
         if qs.sign_b == True and user.is_administrator == True:
             return True
 
@@ -154,6 +153,6 @@ class IsApprove_Sign_B(permissions.BasePermission):
 class IsApprove_Sign_C(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user
-        qs = accounts.models.userprocessauth.objects.get(user = request.user , model = 'PROGRAM', action__desc__contains = "APPROVE")
+        qs = accounts.models.userprocessauth.objects.get(user = user  , model = 'PROGRAM', action__desc__contains = "APPROVE")
         if qs.sign_c == True and user.is_administrator == True:
             return True
