@@ -131,7 +131,7 @@ class SubmitTransitionSign_BApiview(APIView):
         if user.party == party:
             if signs.sign_b == True:
                 flow = WorkFlow(obj)
-                flow.submit_level_2()
+                flow.submit_level_2(request)
                 obj.save()
                 return Response({"status": "success", "data": "SUBMIT : sign_B transition done"})
             else:
@@ -180,7 +180,7 @@ class RejectTransitionApiView(APIView):
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         flow = WorkFlow(obj)
-        flow.reject()
+        flow.reject(request)
         obj.save()
         return Response({"ok changed => REJECT"})
 
@@ -199,7 +199,7 @@ class RejectSign_AApiview(APIView):
         if user.party_type == "BANK":
             if signs.sign_a == True:
                 flow = WorkFlow(obj)
-                flow.reject_level_1()
+                flow.reject_level_1(request)
                 obj.save()
                 return Response({"status": "success", "data": "SUBMIT : sign_A transition done"})
             else:
@@ -224,7 +224,7 @@ class RejectSign_BApiview(APIView):
         if user.party_type  == "BANK":
             if signs.sign_b == True:
                 flow = WorkFlow(obj)
-                flow.reject_level_2()
+                flow.reject_level_2(request)
                 obj.save()
                 return Response({"status": "success", "data": "SUBMIT : sign_B transition done"})
             else:
@@ -248,7 +248,7 @@ class RejectSign_CApiview(APIView):
         if user.party_type == "BANK":
             if signs.sign_c == True:
                 flow = WorkFlow(obj)
-                flow.reject_level_3()
+                flow.reject_level_3(request)
                 obj.save()
                 return Response({"status": "success", "data": "SUBMIT : sign_C transition done"})
             else:

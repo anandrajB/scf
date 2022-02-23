@@ -507,7 +507,7 @@ class SignaturesCreateApiView(ListCreateAPIView):
     def get_queryset(self):
         user = self.request.user
         if user.is_administrator:
-            return signatures.objects.all().filter(party = user.party).order_by('id',)
+            return signatures.objects.all().order_by('id',)
         return signatures.objects.filter(party=user.party).order_by('id',)
 
                 

@@ -1,4 +1,4 @@
-from accounts.models import Parties, userprocessauth
+from accounts.models import Parties, signatures, userprocessauth
 from accounts.permission import Is_Administrator
 from transaction.permission.upload_permissions import Ismaker_upload
 from rest_framework.viewsets import GenericViewSet
@@ -72,7 +72,7 @@ class ProgramCreateApiView(ListCreateAPIView):
         user = request.user
         serializer = Programcreateserializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(event_user = user,from_party = user.party , to_party = user.party)
+            serializer.save(party = user.party, event_user = user,from_party = user.party , to_party = user.party)
         return Response({"status": "success"}, status=status.HTTP_201_CREATED)
        
 
@@ -293,6 +293,19 @@ def currentuser(request):
     return request.user
 
 
+def myfun(request):
+    user = request.user
+    bank = Parties.objects.get(party_type="BANK")
+    if user.is_administrator == True:
+        obj = signatures.objects.get(
+                party=bank, action__desc__contains="REJECT", model="PROGRAM")
+        
+    else :
+        obj = signatures.objects.get(
+                party=user.party, action__desc__contains="REJECT", model="PROGRAM")
+    
+    return obj
+
 
 # TEST API VIEW 
 class TestApiview(ListAPIView):
@@ -310,7 +323,9 @@ class TestApiview(ListAPIView):
         # cs.save()
         # print(cs.from_state)
         # print(cs.to_state)
-        
+        cc = myfun(request)
+        print(cc)
+        print(myfun(request))
         
         # print(request.user.party)
         return Response({"status": "success", "data": "ok"}, status=status.HTTP_200_OK)
