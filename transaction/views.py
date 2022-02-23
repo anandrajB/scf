@@ -1,5 +1,5 @@
-from django.http import HttpResponse
-from accounts.models import Parties, userprocessauth
+from accounts.models import Parties, signatures, userprocessauth
+from accounts.permission import Is_Administrator
 from transaction.permission.upload_permissions import Ismaker_upload
 from rest_framework.viewsets import GenericViewSet
 from .models import (
@@ -7,9 +7,12 @@ from .models import (
     Invoiceuploads,
     Pairings,
     Programs,
+    Transitionpartytype,
     workevents,
     workflowitems,
 )
+from transaction.permission.program_permission import *
+from transaction.permission.upload_permissions import *
 from django.shortcuts import render
 from rest_framework.generics import (
     ListAPIView,
@@ -36,7 +39,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework import generics
-from .permission.program_permission import Is_administrator, Ismaker
+
 
 User = get_user_model()
 
@@ -49,11 +52,11 @@ User = get_user_model()
 class ProgramCreateApiView(ListCreateAPIView):
     queryset = Programs.objects.all()
     serializer_class = Programcreateserializer
-    permission_classes = [IsAuthenticated, Ismaker]
+    permission_classes = [IsAuthenticated & Ismaker | IsAuthenticated & Is_Administrator]
 
     def get_queryset(self):
         user = self.request.user
-        if user.party.party_type == "BANK" and user.is_administrator == True:
+        if user.is_administrator == True:
             queryset = Programs.objects.all()
         else:
             queryset = Programs.objects.filter(party=user.party)
@@ -66,9 +69,10 @@ class ProgramCreateApiView(ListCreateAPIView):
 
 
     def post(self, request):
+        user = request.user
         serializer = Programcreateserializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(event_user = request.user)
+            serializer.save(party = user.party, event_user = user,from_party = user.party , to_party = user.party)
         return Response({"status": "success"}, status=status.HTTP_201_CREATED)
        
 
@@ -241,14 +245,14 @@ class InboxListApiview(ListAPIView):
     def get_queryset(self):
         user = self.request.user
         if user.party.party_type == "BANK":
-            queryset = workevents.objects.all().filter(final='YES')
+            queryset = workevents.objects.all().filter(final='YES').order_by('created_date')
             print("bank final")
         elif user.party.party_type == "CUSTOMER":
-            queryset = workevents.objects.all().filter(c_final='YES')
+            queryset = workevents.objects.all().filter(c_final='YES').order_by('created_date')
             print("customer final")
         else:
             queryset = workevents.objects.filter(
-                to_party__name__contains=self.request.user.party.name).exclude(from_state='DRAFT')
+                to_party__name__contains=self.request.user.party.name).exclude(from_state='DRAFT').order_by('created_date')
         return queryset
 
     def list(self, request, *args, **kwargs):
@@ -284,21 +288,46 @@ class DraftListApiview(ListAPIView):
         serializer = Workeventsmessageserializer(var, many=True)
         return Response({"data": serializer.data}, status=status.HTTP_200_OK)
 
-
-
-def current(request):
+# current user 
+def currentuser(request):
     return request.user
+
+
+def myfun(request):
+    user = request.user
+    bank = Parties.objects.get(party_type="BANK")
+    if user.is_administrator == True:
+        obj = signatures.objects.get(
+                party=bank, action__desc__contains="REJECT", model="PROGRAM")
+        
+    else :
+        obj = signatures.objects.get(
+                party=user.party, action__desc__contains="REJECT", model="PROGRAM")
+    
+    return obj
 
 
 # TEST API VIEW 
 class TestApiview(ListAPIView):
+    # permission_classes = [IsAuthenticated & Ismaker | IsAuthenticated & Is_administrator]
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        # obj = generics.get_object_or_404(workflowitems, id=pk)
-        # print(obj.invoice.pairing.program_type.program_type)
-        print(current(request))
-        # my object for the party user related 
+    def get(self, request,pk,*args,**kwargs ):
+        obj = generics.get_object_or_404(Programs, id=pk)
+        # print(obj.initial_state)
+        # li = []
+        # cc = obj.workflowevent.last()
+        # print(cc.user.phone)
+        # cs = obj.workflowitems.workflowevent.last()
+        # cs. interim_state = "USERS"
+        # cs.save()
+        # print(cs.from_state)
+        # print(cs.to_state)
+        cc = myfun(request)
+        print(cc)
+        print(myfun(request))
+        
+        # print(request.user.party)
         return Response({"status": "success", "data": "ok"}, status=status.HTTP_200_OK)
 
 

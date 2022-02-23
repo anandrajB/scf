@@ -507,7 +507,7 @@ class SignaturesCreateApiView(ListCreateAPIView):
     def get_queryset(self):
         user = self.request.user
         if user.is_administrator:
-            return signatures.objects.all().filter(party = user.party).order_by('id',)
+            return signatures.objects.all().order_by('id',)
         return signatures.objects.filter(party=user.party).order_by('id',)
 
                 
@@ -553,7 +553,7 @@ class SignaturesUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
 class ActionApiview(ListCreateAPIView):
     queryset = Action.objects.all()
     serializer_class = Actionserializer
-    permission_classes = [IsAuthenticated,Is_Administrator]
+    permission_classes = [IsAuthenticated]
 
     def list(self, request):
         queryset = Action.objects.all()
@@ -574,7 +574,7 @@ class ActionApiview(ListCreateAPIView):
 class ActionUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
     queryset = Action.objects.all()
     serializer_class = Actionserializer
-    permission_classes = [Is_Administrator]
+    permission_classes = [IsAuthenticated]
    
     def retrieve(self, request, pk=None):
         queryset = Action.objects.all()

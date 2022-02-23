@@ -24,18 +24,26 @@ class PairingSerializer(serializers.ModelSerializer):
 class Workeventsserializer(serializers.ModelSerializer):
     from_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
     to_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    name = serializers.SerializerMethodField()
 
     class Meta:
         model = workevents
         fields = [
+            'id',
             'workitems',
             'from_state',
             'to_state',
             'interim_state',
             'from_party',
             'to_party',
+            'user',
+            'name',
+            'record_datas',
             'created_date'
         ]
+
+    def get_name(self,obj):
+        return "anand"
 
 
 
@@ -54,6 +62,8 @@ class Workeventsmessageserializer(serializers.ModelSerializer):
             'program',
             'from_state',
             'to_state',
+            'record_datas',
+            'user',
             'interim_state',
             'from_party',
             'to_party',
@@ -94,7 +104,7 @@ class Workitemserializer(serializers.ModelSerializer):
             'workflowevent'
 
         ]
-        read_only_fields = ['workflowevent']
+        # read_only_fields = ['workflowevent']
 
     def get_wf_item_id(self,obj):
         return obj.id
@@ -108,6 +118,7 @@ class ProgramListserializer(serializers.ModelSerializer):
     workevents = Workeventsserializer(read_only=True)
     party = serializers.SlugRelatedField(read_only=True, slug_field='name')
     created_by = serializers.SerializerMethodField()
+    created_date = serializers.SerializerMethodField()
     wf_item_id = serializers.SerializerMethodField()
 
     class Meta:
@@ -117,6 +128,7 @@ class ProgramListserializer(serializers.ModelSerializer):
             "wf_item_id",
             "party",
             'created_by',
+            'created_date',
             "program_type",
             "finance_request_type",
             "limit_currency",
@@ -147,6 +159,8 @@ class ProgramListserializer(serializers.ModelSerializer):
     def get_wf_item_id(self,obj):
         return obj.workflowitems.id
 
+    def get_created_date(self,obj):
+        return obj.workflowitems.created_date
 
 
 
@@ -251,11 +265,28 @@ class Programcreateserializer(serializers.Serializer):
         work = workflowitems.objects.create(
             program=program, current_from_party=from_party,current_to_party=to_party, event_users=event_user)
         work.save()
-        event = workevents.objects.create(
-            workitems=work, from_party=from_party, to_party=to_party)
+        event = workevents.objects.create( user = event_user ,workitems=work, from_party=from_party, to_party=to_party)
         event.save()
         return program
 
+    def update(self, instance, validated_data):
+        instance.party = validated_data.get('party',instance.party)
+        instance.program_type = validated_data.get('program_type',instance.program_type)
+        instance.finance_request_type = validated_data.get('finance_request_type',instance.finance_request_type)
+        instance.limit_currency = validated_data.get('limit_currency',instance.limit_currency)
+        instance.total_limit_amount = validated_data.get('total_limit_amount',instance.total_limit_amount)
+        instance.finance_currency = validated_data.get('finance_currency',instance.finance_currency)
+        instance.settlement_currency = validated_data.get('settlement_currency',instance.settlement_currency)
+        instance.max_finance_percentage = validated_data.get('max_finance_percentage',instance.max_finance_percentage)
+        instance.max_invoice_age_for_funding = validated_data.get('max_invoice_age_for_funding',instance.max_invoice_age_for_funding)
+        instance.max_age_for_repayment = validated_data.get('max_age_for_repayment',instance.max_age_for_repayment)
+        instance.minimum_period = validated_data.get('minimum_period',instance.minimum_period)
+        instance.maximum_period = validated_data.get('maximum_period',instance.maximum_period)
+        instance.save()
+        return instance
+
+    # def update(self, instance, validated_data):
+    #     return super().update(instance, validated_data)
 
 
 
@@ -371,12 +402,14 @@ class InvoiceSerializer(serializers.ModelSerializer):
     workevents = WorkeventInvoicesserializer(read_only=True)
     party = serializers.SlugRelatedField(read_only=True, slug_field='name')
     created_by = serializers.SerializerMethodField()
+    wf_item_id = serializers.SerializerMethodField()
 
     class Meta:
         model = Invoices
         fields = [
             'id',
             'party',
+            'wf_item_id',
             'created_by',
             'pairing',
             'invoice_no',
@@ -398,7 +431,8 @@ class InvoiceSerializer(serializers.ModelSerializer):
     def get_created_by(self,obj):
         return obj.workflowitems.event_users.email
 
-
+    def get_wf_item_id(self,obj):
+        return obj.workflowitems.id
 
 
 #--------------------------------------
@@ -517,11 +551,13 @@ class InvoiceUploadlistserializer(serializers.ModelSerializer):
     workflowitems = WorkitemInvoiceUploadserializer(read_only=True)
     workevents = WorkeventInvoiceUploadsserializer(read_only=True)
     created_by = serializers.SerializerMethodField()
+    wf_item_id = serializers.SerializerMethodField()
 
     class Meta:
         model = Invoiceuploads
         fields = [
             'id',
+            'wf_item_id',
             'program_type',
             'created_by',
             'invoices',
@@ -532,3 +568,6 @@ class InvoiceUploadlistserializer(serializers.ModelSerializer):
 
     def get_created_by(self,obj):
         return obj.workflowitems.event_users.email
+
+    def get_wf_item_id(self,obj):
+        return obj.workflowitems.id

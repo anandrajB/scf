@@ -1,3 +1,4 @@
+from ast import arg
 from random import choices
 from django.db import models
 from datetime import date
@@ -5,8 +6,8 @@ from django.dispatch import receiver
 from transaction.permission.program_permission import is_approver, is_uploader
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
-
 from transaction.states import StateChoices
+
 
 #  MODELS RELATED TO TRANSACTION
 
@@ -197,19 +198,23 @@ class workflowitems(models.Model):
     current_to_party = models.ForeignKey("accounts.Parties", on_delete=models.DO_NOTHING, related_name='to_party')
     action = models.CharField(max_length=25, default='SAVE')
     subaction = models.CharField(max_length=55 , blank=True, null=True)
+    event = models.ForeignKey('workevents',on_delete=models.CASCADE,blank=True, null=True)
+
+        
 
 # WORKEVENTS
 
 class workevents(models.Model):
 
     workitems = models.ForeignKey(workflowitems, on_delete=models.CASCADE, related_name='workflowevent')
-    # event_user = models.ForeignKey('accounts.customer',on_delete=models.CASCADE,related_name='customername')
+    user = models.ForeignKey('accounts.User',on_delete=models.CASCADE)
     from_state = models.CharField(max_length=50, default='DRAFT')
     to_state = models.CharField(max_length=50, default='DRAFT')
     interim_state = models.CharField(max_length=50, default='DRAFT')
     from_party = models.ForeignKey('accounts.Parties', on_delete=models.CASCADE, related_name='from_we_party')
     to_party = models.ForeignKey('accounts.Parties', on_delete=models.CASCADE, related_name='to_wf_party')
-    # record_datas = models.JSONField(required = False)
+    record_datas = models.JSONField(blank=True, null=True)
+    end = models.CharField(max_length=55,blank=True, null=True)
     final = models.CharField(max_length=55,blank=True, null=True)
     c_final = models.CharField(max_length=55,blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)

@@ -14,11 +14,11 @@ def is_approver(self, user):
     return (user.is_superuser and user.is_authenticated)
 
 
-# SUPERUSER / ADMIN 
-class Is_administrator(permissions.BasePermission):
-    def has_permission(self, request, view):
-        if request.user.is_administrator == True:
-            return True
+# # SUPERUSER / ADMIN 
+# class Is_administrator(permissions.BasePermission):
+#     def has_permission(self, request, view):
+#         if request.user.is_administrator == True:
+#             return True
 
 
 #MAKER AND SUBMIT SIGN PERMISSIONS 
@@ -30,8 +30,7 @@ class Ismaker(permissions.BasePermission):
             if qs.data_entry == True:
                 return True
         except:
-            print("user has no permisions")
-            return None
+            return False
     
 
 class IsSign_A(permissions.BasePermission):
@@ -53,7 +52,6 @@ class Is_Sign_C(permissions.BasePermission):
         if qs.sign_c == True:
             return True
 
-from urllib import request
 
 
 
@@ -62,9 +60,9 @@ from urllib import request
 
 class Is_Rejecter(permissions.BasePermission):
     def has_permission(self, request, view):
-        user = request.user
+        user = User.objects.get(is_administrator = True)
         qs = accounts.models.userprocessauth.objects.get(user = user , model = 'PROGRAM', action__desc__contains = "REJECT")
-        if qs.data_entry == True | user.is_administrator == True:
+        if qs.data_entry == True:
             return True
 
 

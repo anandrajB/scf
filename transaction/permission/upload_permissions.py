@@ -4,10 +4,13 @@ from rest_framework import permissions
 
 class Ismaker_upload(permissions.BasePermission):
     def has_permission(self, request, view):
-        qs = accounts.models.userprocessauth.objects.get(
-            user=request.user, model='UPLOAD',  action__desc__contains='SUBMIT')
+        try:
+            qs = accounts.models.userprocessauth.objects.get(user=request.user, model='UPLOAD',  action__desc__contains='SUBMIT')
+        except:
+            return None
         if qs.data_entry == True:
             return True
+        
 
 
 class IsSign_A_upload(permissions.BasePermission):
