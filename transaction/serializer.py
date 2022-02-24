@@ -269,26 +269,57 @@ class Programcreateserializer(serializers.Serializer):
         event.save()
         return program
 
-    def update(self, instance, validated_data):
-        instance.party = validated_data.get('party',instance.party)
-        instance.program_type = validated_data.get('program_type',instance.program_type)
-        instance.finance_request_type = validated_data.get('finance_request_type',instance.finance_request_type)
-        instance.limit_currency = validated_data.get('limit_currency',instance.limit_currency)
-        instance.total_limit_amount = validated_data.get('total_limit_amount',instance.total_limit_amount)
-        instance.finance_currency = validated_data.get('finance_currency',instance.finance_currency)
-        instance.settlement_currency = validated_data.get('settlement_currency',instance.settlement_currency)
-        instance.max_finance_percentage = validated_data.get('max_finance_percentage',instance.max_finance_percentage)
-        instance.max_invoice_age_for_funding = validated_data.get('max_invoice_age_for_funding',instance.max_invoice_age_for_funding)
-        instance.max_age_for_repayment = validated_data.get('max_age_for_repayment',instance.max_age_for_repayment)
-        instance.minimum_period = validated_data.get('minimum_period',instance.minimum_period)
-        instance.maximum_period = validated_data.get('maximum_period',instance.maximum_period)
-        instance.save()
-        return instance
+    
 
     # def update(self, instance, validated_data):
     #     return super().update(instance, validated_data)
 
 
+class programupdateserilizer(serializers.ModelSerializer):
+    class Meta:
+        model = Programs
+        fields = [
+            "id",
+            "party",
+            'created_by',
+            'created_date',
+            "program_type",
+            "finance_request_type",
+            "limit_currency",
+            "total_limit_amount",
+            "finance_currency",
+            "settlement_currency",
+            "expiry_date",
+            "max_finance_percentage",
+            'max_invoice_age_for_funding',
+            "max_age_for_repayment",
+            "minimum_period",
+            "maximum_period",
+            "maximum_amount",
+            "minimum_amount",
+            "financed_amount",
+            "grace_period",
+            "interest_type",
+            'interest_rate_type',
+            'interest_rate',
+            'margin',
+        ]
+
+    def update(self, instance, validated_data):
+        # instance.party = validated_data.get('party',instance.party)
+        # instance.program_type = validated_data.get('program_type',instance.program_type)
+        # instance.finance_request_type = validated_data.get('finance_request_type',instance.finance_request_type)
+        instance.limit_currency = validated_data.get('limit_currency',instance.limit_currency)
+        # instance.total_limit_amount = validated_data.get('total_limit_amount',instance.total_limit_amount)
+        # instance.finance_currency = validated_data.get('finance_currency',instance.finance_currency)
+        # instance.settlement_currency = validated_data.get('settlement_currency',instance.settlement_currency)
+        # instance.max_finance_percentage = validated_data.get('max_finance_percentage',instance.max_finance_percentage)
+        # instance.max_invoice_age_for_funding = validated_data.get('max_invoice_age_for_funding',instance.max_invoice_age_for_funding)
+        # instance.max_age_for_repayment = validated_data.get('max_age_for_repayment',instance.max_age_for_repayment)
+        # instance.minimum_period = validated_data.get('minimum_period',instance.minimum_period)
+        # instance.maximum_period = validated_data.get('maximum_period',instance.maximum_period)
+        instance.save()
+        return instance
 
 
 #------------------------------------------------------

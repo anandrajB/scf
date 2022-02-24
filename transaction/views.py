@@ -1,3 +1,5 @@
+from django.http import Http404
+from numpy import delete
 from accounts.models import Parties, signatures, userprocessauth
 from accounts.permission import Is_Administrator
 from transaction.permission.upload_permissions import Ismaker_upload
@@ -33,6 +35,7 @@ from .serializer import (
     Programcreateserializer,
     Workeventsmessageserializer,
     Workeventsserializer,
+    programupdateserilizer,
 )
 from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -76,26 +79,37 @@ class ProgramCreateApiView(ListCreateAPIView):
         return Response({"status": "success"}, status=status.HTTP_201_CREATED)
        
 
-class ProgramUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
+class ProgramUpdateDeleteApiview(APIView):
     queryset = Programs.objects.all()
     serializer_class = ProgramListserializer
     permission_classes = [IsAuthenticated]
     # metadata_class = APIRootMetadata
 
-    def retrieve(self, request, pk=None):
+    def get(self, request, pk=None):
         queryset = Programs.objects.all()
         user = get_object_or_404(queryset, pk=pk)
         serializer = ProgramListserializer(user)
         return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
-    def update(self, request, pk=None):
-        queryset = Programs.objects.all()
-        user = get_object_or_404(queryset, pk=pk)
-        serializer = ProgramListserializer(user, data=request.data)
+    def get_object(self, pk):
+        try:
+            return Programs.objects.get(pk=pk)
+        except Programs.DoesNotExist:
+            raise Http404
+
+    def patch(self, request, pk , format = None):
+        # queryset = Programs.objects.all()
+        user = self.get_object(pk)
+        serializer = programupdateserilizer(user,  request.data,partial = True)
         if serializer.is_valid():
             serializer.save()
             return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
         return Response({"status": "failure", "data": serializer.errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+    # def delete(self, request, pk, format=None):
+    #     program = get_object_or_404(pk=pk)
+    #     program.delete()
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # -----------------------------------------------------------------------------------------------------------------------------
