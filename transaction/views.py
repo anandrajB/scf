@@ -107,11 +107,10 @@ class ProgramUpdateDeleteApiview(APIView):
             type = {
                 "comment" : []
             }
-            pros = workevents.objects.filter(id = data.id)
-            for pros in mydata:
+            for i in type:
                 type["comment"].append(mydata)
-                pros.record_datas = type
-                pros.save()
+                data.record_datas = type
+                data.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -342,13 +341,7 @@ class TestApiview(ListAPIView):
         # cc = obj.workflowevent.last()
         # print(cc.user.phone)
         cs = obj.workflowitems.workflowevent.last()
-        # cs. interim_state = "USERS"
-        # cs.record_datas = type
-        # cs.save()
-        # print(cs.record_datas)
-        data = workevents.objects.filter(id = cs.id)
-        print(data)
-        # print(request.user.party)
+        print(cs.record_datas)
         return Response({"status": "success", "data": "ok"}, status=status.HTTP_200_OK)
 
 
