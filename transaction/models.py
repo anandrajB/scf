@@ -66,7 +66,7 @@ class Programs(models.Model):
     interest_rate_type = models.CharField(choices=interest_rate_type_choices, max_length=15, default=None)
     interest_rate = models.DecimalField(max_digits=8, decimal_places=2)
     margin = models.DecimalField(max_digits=8, decimal_places=2)
-  
+    comments = models.CharField(max_length=155)
 
 # FUNDING REQUEST MODEL
 

@@ -217,6 +217,7 @@ class Programcreateserializer(serializers.Serializer):
     interest_rate = serializers.DecimalField(max_digits=8, decimal_places=2)
     margin = serializers.DecimalField(max_digits=8, decimal_places=2)
     event_user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    comments = serializers.CharField(required = False)
     # sign = serializers.PrimaryKeyRelatedField(queryset = signatures.objects.all())
     # record_datas = serializers.JSONField()
     from_party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all())
@@ -247,6 +248,7 @@ class Programcreateserializer(serializers.Serializer):
         interest_rate_type = validated_data.pop('interest_rate_type')
         interest_rate = validated_data.pop('interest_rate')
         margin = validated_data.pop('margin')
+        comments = validated_data.pop('comments')
         event_user = validated_data.pop('event_user')
         # sign = validated_data.pop('sign')
         # record_datas = validated_data.pop('record_datas')
@@ -259,7 +261,7 @@ class Programcreateserializer(serializers.Serializer):
             minimum_amount=minimum_amount, minimum_period=minimum_period, maximum_amount=maximum_amount,
             maximum_period=maximum_period, financed_amount=financed_amount, balance_amount=balance_amount,
             grace_period=grace_period, interest_rate=interest_rate, interest_rate_type=interest_rate_type,
-            interest_type=interest_type, margin=margin 
+            interest_type=interest_type, margin=margin , comments = comments
         )
         program.save()
         work = workflowitems.objects.create(
@@ -319,6 +321,7 @@ class programupdateserilizer(serializers.Serializer):
     interest_rate_type = serializers.ChoiceField(choices=interest_rate_type,required = False)
     interest_rate = serializers.DecimalField(max_digits=8, decimal_places=2,required = False)
     margin = serializers.DecimalField(max_digits=8, decimal_places=2,required = False)
+    comments = serializers.CharField()
 
     def update(self, instance, validated_data):
         instance.party = validated_data.get('party',instance.party)
@@ -333,6 +336,16 @@ class programupdateserilizer(serializers.Serializer):
         instance.max_age_for_repayment = validated_data.get('max_age_for_repayment',instance.max_age_for_repayment)
         instance.minimum_period = validated_data.get('minimum_period',instance.minimum_period)
         instance.maximum_period = validated_data.get('maximum_period',instance.maximum_period)
+        instance.maximum_amount = validated_data.get('maximum_amount',instance.maximum_amount)
+        instance.minimum_amount = validated_data.get('minimum_amount',instance.minimum_amount)
+        instance.financed_amount = validated_data.get('financed_amount',instance.financed_amount)
+        instance.balance_amount = validated_data.get('balance_amount',instance.balance_amount)
+        instance.grace_period = validated_data.get('grace_period',instance.grace_period)
+        instance.interest_type = validated_data.get('interest_type',instance.interest_type)
+        instance.interest_rate_type = validated_data.get('interest_rate_type',instance.interest_rate_type)
+        instance.interest_rate = validated_data.get('interest_rate',instance.interest_rate)
+        instance.margin = validated_data.get('margin',instance.margin)
+        instance.comments = validated_data.get('comments',instance.comments)
         instance.save()
         return instance
 
@@ -536,7 +549,7 @@ class InvoiceUploadserializer(serializers.Serializer):
         uploads = Invoiceuploads.objects.create(program_type = program_type , invoices = invoices ,**validated_data)
         work = workflowitems.objects.create(
             uploads=uploads, current_from_party=from_party,current_to_party=to_party, event_users=event_user)
-        event = workevents.objects.create(
+        event = workevents.objects.create( user = event_user ,
             workitems=work, from_party=from_party, to_party=to_party) 
         uploads.save()
         work.save()

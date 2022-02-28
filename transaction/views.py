@@ -80,7 +80,7 @@ class ProgramCreateApiView(ListCreateAPIView):
 
 
 class ProgramUpdateDeleteApiview(APIView):
-    serializer_class = ProgramListserializer
+    serializer_class = programupdateserilizer
     # permission_classes = [IsAuthenticated]
     # metadata_class = APIRootMetadata
 
@@ -90,17 +90,28 @@ class ProgramUpdateDeleteApiview(APIView):
         serializer = ProgramListserializer(user)
         return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
-    def get_object(self, pk):
-        try:
-            return Programs.objects.get(pk=pk)
-        except Programs.DoesNotExist:
-            raise Http404
+    # def get_object(self, pk):
+    #     try:
+    #         return Programs.objects.get(pk=pk)
+    #     except Programs.DoesNotExist:
+    #         raise Http404
 
     def put(self, request, pk, *args, **kwargs):
-        patient = self.get_object(pk)
-        serializer = programupdateserilizer(patient, request.data)
+        queryset = Programs.objects.all()
+        program = get_object_or_404(queryset, pk=pk)
+        serializer = programupdateserilizer(program, request.data)
         if serializer.is_valid():
             serializer.save()
+            mydata = serializer.data['comments']
+            data = program.workflowitems.workflowevent.last()
+            type = {
+                "comment" : []
+            }
+            pros = workevents.objects.filter(id = data.id)
+            for pros in mydata:
+                type["comment"].append(mydata)
+                pros.record_datas = type
+                pros.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -196,7 +207,7 @@ class InvoiceUploadListapiview(ListAPIView):
 class InvoiceUploadCreateApiView(GenericViewSet):
     queryset = Invoiceuploads.objects.all()
     serializer_class = InvoiceUploadserializer
-    permission_classes = [IsAuthenticated,Ismaker_upload]
+    permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
         queryset = Invoiceuploads.objects.all()
@@ -330,15 +341,13 @@ class TestApiview(ListAPIView):
         # li = []
         # cc = obj.workflowevent.last()
         # print(cc.user.phone)
-        # cs = obj.workflowitems.workflowevent.last()
+        cs = obj.workflowitems.workflowevent.last()
         # cs. interim_state = "USERS"
+        # cs.record_datas = type
         # cs.save()
-        # print(cs.from_state)
-        # print(cs.to_state)
-        cc = myfun(request)
-        print(cc)
-        print(myfun(request))
-        
+        # print(cs.record_datas)
+        data = workevents.objects.filter(id = cs.id)
+        print(data)
         # print(request.user.party)
         return Response({"status": "success", "data": "ok"}, status=status.HTTP_200_OK)
 
