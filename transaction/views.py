@@ -35,7 +35,7 @@ from .serializer import (
     Programcreateserializer,
     Workeventsmessageserializer,
     Workeventsserializer,
-    programupdateserilizer,
+    programupdateserilizer
 )
 from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -72,17 +72,16 @@ class ProgramCreateApiView(ListCreateAPIView):
 
 
     def post(self, request):
-        user = request.user
         serializer = Programcreateserializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(party = user.party, event_user = user,from_party = user.party , to_party = user.party)
-        return Response({"status": "success"}, status=status.HTTP_201_CREATED)
-       
+            serializer.save(event_user = request.user)
+            return Response({"status": "success"}, status=status.HTTP_201_CREATED)
+        return Response({"status": "failure", "data": serializer.errors})
+
 
 class ProgramUpdateDeleteApiview(APIView):
-    queryset = Programs.objects.all()
     serializer_class = ProgramListserializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     # metadata_class = APIRootMetadata
 
     def get(self, request, pk=None):
@@ -97,14 +96,13 @@ class ProgramUpdateDeleteApiview(APIView):
         except Programs.DoesNotExist:
             raise Http404
 
-    def patch(self, request, pk , format = None):
-        # queryset = Programs.objects.all()
-        user = self.get_object(pk)
-        serializer = programupdateserilizer(user,  request.data,partial = True)
+    def put(self, request, pk, *args, **kwargs):
+        patient = self.get_object(pk)
+        serializer = programupdateserilizer(patient, request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
-        return Response({"status": "failure", "data": serializer.errors}, status=status.HTTP_406_NOT_ACCEPTABLE)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # def delete(self, request, pk, format=None):
     #     program = get_object_or_404(pk=pk)
