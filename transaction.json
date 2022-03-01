@@ -1,0 +1,392 @@
+[
+    {
+        "model": "transaction.programs",
+        "pk": 1,
+        "fields": {
+            "party": 1,
+            "program_type": "ALL",
+            "finance_request_type": "AUTOMATIC",
+            "limit_currency": "12",
+            "total_limit_amount": "12.00",
+            "finance_currency": "12",
+            "settlement_currency": "12",
+            "expiry_date": "2022-02-12",
+            "max_finance_percentage": "12.00",
+            "max_invoice_age_for_funding": 12,
+            "max_age_for_repayment": 12,
+            "minimum_period": 12,
+            "maximum_period": 12,
+            "maximum_amount": "21.00",
+            "minimum_amount": "12.00",
+            "financed_amount": "12.00",
+            "balance_amount": "12.00",
+            "grace_period": 12,
+            "interest_type": "FIXED",
+            "interest_rate_type": "LIBOR",
+            "interest_rate": "12.00",
+            "margin": "12.00"
+        }
+    },
+    {
+        "model": "transaction.programs",
+        "pk": 2,
+        "fields": {
+            "party": 1,
+            "program_type": "ALL",
+            "finance_request_type": "AUTOMATIC",
+            "limit_currency": "12",
+            "total_limit_amount": "12.00",
+            "finance_currency": "12",
+            "settlement_currency": "12",
+            "expiry_date": "2022-02-12",
+            "max_finance_percentage": "12.00",
+            "max_invoice_age_for_funding": 1,
+            "max_age_for_repayment": 12,
+            "minimum_period": 12,
+            "maximum_period": 12,
+            "maximum_amount": "12.00",
+            "minimum_amount": "12.00",
+            "financed_amount": "12.00",
+            "balance_amount": "12.00",
+            "grace_period": 12,
+            "interest_type": "FIXED",
+            "interest_rate_type": "LIBOR",
+            "interest_rate": "12.00",
+            "margin": "12.00"
+        }
+    },
+    {
+        "model": "transaction.programs",
+        "pk": 3,
+        "fields": {
+            "party": 1,
+            "program_type": "ALL",
+            "finance_request_type": "AUTOMATIC",
+            "limit_currency": "12",
+            "total_limit_amount": "12.00",
+            "finance_currency": "12",
+            "settlement_currency": "12",
+            "expiry_date": "2022-02-12",
+            "max_finance_percentage": "12.00",
+            "max_invoice_age_for_funding": 121,
+            "max_age_for_repayment": 12,
+            "minimum_period": 12,
+            "maximum_period": 12,
+            "maximum_amount": "12.00",
+            "minimum_amount": "12.00",
+            "financed_amount": "12.00",
+            "balance_amount": "12.00",
+            "grace_period": 12,
+            "interest_type": "FIXED",
+            "interest_rate_type": "LIBOR",
+            "interest_rate": "12.00",
+            "margin": "12.00"
+        }
+    },
+    {
+        "model": "transaction.pairings",
+        "pk": 1,
+        "fields": {
+            "program_type": 1,
+            "counterparty_id": 1,
+            "finance_request": "AUTOMATIC",
+            "currency": 1,
+            "total_limit": "12.00",
+            "finance_currency_type": 1,
+            "settlement_currency_type": 1,
+            "expiry_date": "2022-02-12",
+            "max_finance_percentage": "12.00",
+            "max_invoice_age_for_funding": 12,
+            "max_age_for_repayment": 12,
+            "minimum_period": 12,
+            "maximum_period": 12,
+            "minimum_amount_currency": "1",
+            "minimum_amount": "12.00",
+            "maximum_amount": "12.00",
+            "financed_amount": "12.00",
+            "balance_amount": "12.00",
+            "grace_period": 12,
+            "interest_type": "FIXED",
+            "interest_rate_type": "LIBOR",
+            "interest_rate": "12.00",
+            "margin": "12.00"
+        }
+    },
+    {
+        "model": "transaction.invoices",
+        "pk": 1,
+        "fields": {
+            "party": 1,
+            "pairing": 1,
+            "invoice_no": "123",
+            "issue_date": "2022-02-12",
+            "due_date": "2022-02-12",
+            "invoice_currency": 1,
+            "amount": "12.00",
+            "funding_req_type": "AUTOMATIC",
+            "finance_currency_type": 1,
+            "settlement_currency_type": 1,
+            "interest_rate": "12.0",
+            "financed_amount": "12.0",
+            "bank_loan_id": "12"
+        }
+    },
+    {
+        "model": "transaction.workflowitems",
+        "pk": 1,
+        "fields": {
+            "created_date": "2022-02-12T13:41:24.737Z",
+            "program": 1,
+            "invoice": null,
+            "stage": "",
+            "initial_state": "AWAITING_ACCEPTANCE",
+            "interim_state": "AWAITING_APPROVAL",
+            "final_state": "AWAITING_APPROVAL",
+            "next_available_transitions": "[]",
+            "event_users": 1,
+            "current_from_party": 1,
+            "current_to_party": 2,
+            "action": "SUBMIT",
+            "subaction": "SIGN_B"
+        }
+    },
+    {
+        "model": "transaction.workflowitems",
+        "pk": 2,
+        "fields": {
+            "created_date": "2022-02-12T14:50:57.536Z",
+            "program": 2,
+            "invoice": null,
+            "stage": "",
+            "initial_state": "AWAITING_ACCEPTANCE",
+            "interim_state": "AWAITING_APPROVAL",
+            "final_state": "AWAITING_APPROVAL",
+            "next_available_transitions": "[]",
+            "event_users": 1,
+            "current_from_party": 1,
+            "current_to_party": 1,
+            "action": "SUBMIT",
+            "subaction": "SIGN_C"
+        }
+    },
+    {
+        "model": "transaction.workflowitems",
+        "pk": 3,
+        "fields": {
+            "created_date": "2022-02-12T14:52:06.426Z",
+            "program": 3,
+            "invoice": null,
+            "stage": "",
+            "initial_state": "AWAITING_ACCEPTANCE",
+            "interim_state": "AWAITING_APPROVAL",
+            "final_state": "AWAITING_APPROVAL",
+            "next_available_transitions": "[]",
+            "event_users": 1,
+            "current_from_party": 1,
+            "current_to_party": 2,
+            "action": "SUBMIT",
+            "subaction": "SIGN_C"
+        }
+    },
+    {
+        "model": "transaction.workflowitems",
+        "pk": 4,
+        "fields": {
+            "created_date": "2022-02-12T18:29:09.051Z",
+            "program": null,
+            "invoice": 1,
+            "stage": "",
+            "initial_state": "DRAFT",
+            "interim_state": "DRAFT",
+            "final_state": "DRAFT",
+            "next_available_transitions": null,
+            "event_users": 1,
+            "current_from_party": 1,
+            "current_to_party": 2,
+            "action": "SAVE",
+            "subaction": null
+        }
+    },
+    {
+        "model": "transaction.workevents",
+        "pk": 1,
+        "fields": {
+            "workitems": 1,
+            "from_state": "DRAFT",
+            "to_state": "DRAFT",
+            "interim_state": "DRAFT",
+            "from_party": 1,
+            "to_party": 2,
+            "final": null,
+            "created_date": "2022-02-12T13:41:24.750Z"
+        }
+    },
+    {
+        "model": "transaction.workevents",
+        "pk": 2,
+        "fields": {
+            "workitems": 1,
+            "from_state": "DRAFT",
+            "to_state": "AWAITING_APPROVAL",
+            "interim_state": "AWAITING_SIGN_A",
+            "from_party": 1,
+            "to_party": 2,
+            "final": null,
+            "created_date": "2022-02-12T13:44:26.790Z"
+        }
+    },
+    {
+        "model": "transaction.workevents",
+        "pk": 3,
+        "fields": {
+            "workitems": 1,
+            "from_state": "AWAITING_SIGN_A",
+            "to_state": "AWAITING_APPROVAL",
+            "interim_state": "AWAITING_SIGN_B",
+            "from_party": 1,
+            "to_party": 2,
+            "final": null,
+            "created_date": "2022-02-12T13:49:02.797Z"
+        }
+    },
+    {
+        "model": "transaction.workevents",
+        "pk": 4,
+        "fields": {
+            "workitems": 1,
+            "from_state": "AWAITING_SIGN_B",
+            "to_state": "AWAITING_APPROVAL",
+            "interim_state": "AWAITING_APPROVAL",
+            "from_party": 1,
+            "to_party": 2,
+            "final": "YES",
+            "created_date": "2022-02-12T13:49:42.453Z"
+        }
+    },
+    {
+        "model": "transaction.workevents",
+        "pk": 5,
+        "fields": {
+            "workitems": 2,
+            "from_state": "DRAFT",
+            "to_state": "DRAFT",
+            "interim_state": "DRAFT",
+            "from_party": 1,
+            "to_party": 1,
+            "final": null,
+            "created_date": "2022-02-12T14:50:57.547Z"
+        }
+    },
+    {
+        "model": "transaction.workevents",
+        "pk": 6,
+        "fields": {
+            "workitems": 2,
+            "from_state": "DRAFT",
+            "to_state": "AWAITING_APPROVAL",
+            "interim_state": "AWAITING_SIGN_B",
+            "from_party": 1,
+            "to_party": 1,
+            "final": null,
+            "created_date": "2022-02-12T14:51:02.546Z"
+        }
+    },
+    {
+        "model": "transaction.workevents",
+        "pk": 7,
+        "fields": {
+            "workitems": 2,
+            "from_state": "AWAITING_SIGN_B",
+            "to_state": "AWAITING_APPROVAL",
+            "interim_state": "AWAITING_APPROVAL",
+            "from_party": 1,
+            "to_party": 1,
+            "final": "YES",
+            "created_date": "2022-02-12T14:51:19.675Z"
+        }
+    },
+    {
+        "model": "transaction.workevents",
+        "pk": 8,
+        "fields": {
+            "workitems": 2,
+            "from_state": "AWAITING_SIGN_C",
+            "to_state": "AWAITING_APPROVAL",
+            "interim_state": "AWAITING_APPROVAL",
+            "from_party": 1,
+            "to_party": 1,
+            "final": "YES",
+            "created_date": "2022-02-12T14:51:32.901Z"
+        }
+    },
+    {
+        "model": "transaction.workevents",
+        "pk": 9,
+        "fields": {
+            "workitems": 3,
+            "from_state": "DRAFT",
+            "to_state": "DRAFT",
+            "interim_state": "DRAFT",
+            "from_party": 1,
+            "to_party": 2,
+            "final": null,
+            "created_date": "2022-02-12T14:52:06.440Z"
+        }
+    },
+    {
+        "model": "transaction.workevents",
+        "pk": 10,
+        "fields": {
+            "workitems": 3,
+            "from_state": "DRAFT",
+            "to_state": "AWAITING_APPROVAL",
+            "interim_state": "AWAITING_SIGN_B",
+            "from_party": 1,
+            "to_party": 2,
+            "final": null,
+            "created_date": "2022-02-12T14:52:12.139Z"
+        }
+    },
+    {
+        "model": "transaction.workevents",
+        "pk": 11,
+        "fields": {
+            "workitems": 3,
+            "from_state": "AWAITING_SIGN_B",
+            "to_state": "AWAITING_APPROVAL",
+            "interim_state": "AWAITING_APPROVAL",
+            "from_party": 1,
+            "to_party": 2,
+            "final": "YES",
+            "created_date": "2022-02-12T14:52:29.639Z"
+        }
+    },
+    {
+        "model": "transaction.workevents",
+        "pk": 12,
+        "fields": {
+            "workitems": 3,
+            "from_state": "AWAITING_SIGN_C",
+            "to_state": "AWAITING_APPROVAL",
+            "interim_state": "AWAITING_APPROVAL",
+            "from_party": 1,
+            "to_party": 2,
+            "final": "YES",
+            "created_date": "2022-02-12T14:52:47.467Z"
+        }
+    },
+    {
+        "model": "transaction.workevents",
+        "pk": 13,
+        "fields": {
+            "workitems": 4,
+            "from_state": "DRAFT",
+            "to_state": "DRAFT",
+            "interim_state": "DRAFT",
+            "from_party": 1,
+            "to_party": 2,
+            "final": null,
+            "created_date": "2022-02-12T18:29:09.070Z"
+        }
+    }
+]
