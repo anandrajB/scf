@@ -9,7 +9,108 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 
-# ---------------------------------SUBMIT---------------------------------
+# SUBMIT TRANSITION API VIEWS
+
+
+class SubmitTransitionApiView_APF(APIView):
+    queryset = workflowitems.objects.all()
+    serializer_class = Workitemserializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk, *args, **kwargs):
+        obj = generics.get_object_or_404(workflowitems, id=pk)
+        flow = InvoiceFlow(obj)
+        type = obj.invoice.program_type
+        if type == "APF":
+            flow.Submit_APF()
+            obj.save()
+        else:
+            flow.submit__draft()
+            obj.save()
+        return Response({"status": "success", "data": " SUBMIT"})
+
+
+class SubmitTransitionSign_AApiview_APF(APIView):
+    queryset = workflowitems.objects.all()
+    serializer_class = Workitemserializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk, *args, **kwargs):
+        obj = generics.get_object_or_404(workflowitems, id=pk)
+        user = self.request.user
+        party = obj.invoice.party
+        type = obj.invoice.program_type
+        signs = signatures.objects.get(party=party, action__desc__contains='SUBMIT', model='INVOICE')
+        if signs.sign_a == True and user.party == party :
+            if type == "APF":
+                flow = InvoiceFlow(obj)
+                flow.Submit_APF_SignA()
+                obj.save()
+                return Response({"status": "success", "data": "SUBMIT : sign_A transition done"})
+            else:
+                flow = InvoiceFlow(obj)
+                flow.submit__SignA()
+                obj.save()
+                return Response({"status": "success", "data": "SUBMIT : sign_A transition done"})
+        else:
+            return Response({"data": "can't do this transition"})
+        
+
+
+class SubmitTransitionSign_BApiview_APF(APIView):
+    queryset = workflowitems.objects.all()
+    serializer_class = Workitemserializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk, *args, **kwargs):
+        obj = generics.get_object_or_404(workflowitems, id=pk)
+        user = self.request.user
+        party = obj.invoice.party
+        type = obj.invoice.program_type
+        signs = signatures.objects.get(party=party, action__desc__contains='SUBMIT', model='INVOICE')
+        if signs.sign_b == True and user.party == party :
+            if type == "APF":
+                flow = InvoiceFlow(obj)
+                flow.Submit_APF_SignB()
+                obj.save()
+                return Response({"status": "success", "data": "SUBMIT : sign_B transition done"})
+            else:
+                flow = InvoiceFlow(obj)
+                flow.submit__SignB()
+                obj.save()
+                return Response({"status": "success", "data": "SUBMIT : sign_B transition done"})
+        else:
+            return Response({"data": "can't do this transition"})
+
+
+class SubmitTransitionSign_CApiview_APF(APIView):
+    queryset = workflowitems.objects.all()
+    serializer_class = Workitemserializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk, *args, **kwargs):
+        obj = generics.get_object_or_404(workflowitems, id=pk)
+        user = self.request.user
+        party = obj.invoice.party
+        type = obj.invoice.program_type
+        signs = signatures.objects.get(party=party, action__desc__contains='SUBMIT', model='INVOICE')
+        if signs.sign_c == True and user.party == party :
+            if type == "APF":
+                flow = InvoiceFlow(obj)
+                flow.Submit_APF_SignC()
+                obj.save()
+                return Response({"status": "success", "data": "SUBMIT : sign_C transition done"})
+            else:
+                flow = InvoiceFlow(obj)
+                flow.submit__SignC()
+                obj.save()
+                return Response({"status": "success", "data": "SUBMIT : sign_C transition done"})
+        else:
+            return Response({"data": "can't do this transition"})
+
+
+# APPROVE TRANSITION VIEWSETS
+
 class ApproveTransitionApiView(APIView):
     queryset = workflowitems.objects.all()
     serializer_class = Workitemserializer
@@ -32,8 +133,7 @@ class ApproveTransiton_SignA_APF(APIView):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         user = self.request.user
         party = obj.program.party
-        signs = signatures.objects.get(
-            party=party, action__desc__contains='APPROVE', model='INVOICE')
+        signs = signatures.objects.get(party=party, action__desc__contains='APPROVE', model='INVOICE')
         if user.party == party:
             if signs.sign_a == True:
                 flow = InvoiceFlow(obj)
@@ -91,7 +191,9 @@ class ApproveTransiton_SignC_APF(APIView):
         else:
             return Response({"data": "can't do this transition "})
 
-# ---------------------------------REJECT---------------------------------
+
+
+# REJECT TRANSITION VIEWSETS
 
 
 class RejectTransitionApiView_APF(APIView):
@@ -171,6 +273,7 @@ class RejectSign_CApiview_APF(APIView):
                 return Response({"data": "can't do this transition"})
         else:
             return Response({"data": "can't do this transition "})
+
 
 # ---------------------------------------REQUEST FINANCE--------------------------------------
 
@@ -253,89 +356,7 @@ class REQ_FIN_SignC_APF(APIView):
         else:
             return Response({"data": "can't do this transition "})
 
-# ------------------------------------SUBMIT------------------------------------------------
 
-
-class SubmitTransitionApiView_APF(APIView):
-    queryset = workflowitems.objects.all()
-    serializer_class = Workitemserializer
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, pk, *args, **kwargs):
-        obj = generics.get_object_or_404(workflowitems, id=pk)
-        flow = InvoiceFlow(obj)
-        flow.Submit_APF()
-        obj.save()
-        return Response({"status": "success", "data": "REJECTED BY BUYER -> SUBMIT"})
-
-
-class SubmitTransitionSign_AApiview_APF(APIView):
-    queryset = workflowitems.objects.all()
-    serializer_class = Workitemserializer
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, pk, *args, **kwargs):
-        obj = generics.get_object_or_404(workflowitems, id=pk)
-        user = self.request.user
-        party = obj.program.party
-        signs = signatures.objects.get(
-            party=party, action__desc__contains='SUBMIT', model='INVOICE')
-        if user.party == party:
-            if signs.sign_a == True:
-                flow = InvoiceFlow(obj)
-                flow.Submit_APF_SignA()
-                obj.save()
-                return Response({"status": "success", "data": "SUBMIT : sign_A transition done"})
-            else:
-                return Response({"data": "can't do this transition"})
-        else:
-            return Response({"data": "can't do this transition "})
-
-
-class SubmitTransitionSign_BApiview_APF(APIView):
-    queryset = workflowitems.objects.all()
-    serializer_class = Workitemserializer
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, pk, *args, **kwargs):
-        obj = generics.get_object_or_404(workflowitems, id=pk)
-        user = self.request.user
-        party = obj.program.party
-        signs = signatures.objects.get(
-            party=party, action__desc__contains='SUBMIT', model='INVOICE')
-        if user.party == party:
-            if signs.sign_a == True:
-                flow = InvoiceFlow(obj)
-                flow.Submit_APF_SignB()
-                obj.save()
-                return Response({"status": "success", "data": "SUBMIT : sign_B transition done"})
-            else:
-                return Response({"data": "can't do this transition"})
-        else:
-            return Response({"data": "can't do this transition "})
-
-
-class SubmitTransitionSign_CApiview_APF(APIView):
-    queryset = workflowitems.objects.all()
-    serializer_class = Workitemserializer
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, pk, *args, **kwargs):
-        obj = generics.get_object_or_404(workflowitems, id=pk)
-        user = self.request.user
-        party = obj.program.party
-        signs = signatures.objects.get(
-            party=party, action__desc__contains='SUBMIT', model='INVOICE')
-        if user.party == party:
-            if signs.sign_a == True:
-                flow = InvoiceFlow(obj)
-                flow.Submit_APF_SignC()
-                obj.save()
-                return Response({"status": "success", "data": "SUBMIT : sign_C transition done"})
-            else:
-                return Response({"data": "can't do this transition"})
-        else:
-            return Response({"data": "can't do this transition "})
 
 # -----------------------------------ARCHIVE-----------------------------------
 
@@ -421,86 +442,77 @@ class ArchiveTransition_APF_SignC(APIView):
         else:
             return Response({"data": "can't do this transition "})
 
-# ------------------------------------SUBMIT|RF and DF----------------------------------------------
 
 
-# class SubmitTransitionApiView_APF(APIView):
+
+# # -----SUBMIT TRANSITION API FOR RF AND DF TYPE--------------------------------------
+
+
+
+# class SubmitTransitionSign_AApiview_RFDF(APIView):
 #     queryset = workflowitems.objects.all()
 #     serializer_class = Workitemserializer
 #     permission_classes = [IsAuthenticated]
 
 #     def get(self, request, pk, *args, **kwargs):
 #         obj = generics.get_object_or_404(workflowitems, id=pk)
-#         flow = InvoiceFlow(obj)
-#         flow.submit__draft()
-#         obj.save()
-#         return Response({"status": "success", "data": "REJECTED BY BUYER -> SUBMIT"})
+#         user = self.request.user
+#         party = obj.program.party
+#         signs = signatures.objects.get(
+#             party=party, action__desc__contains='SUBMIT', model='INVOICE')
+#         if user.party == party:
+#             if signs.sign_a == True:
+#                 flow = InvoiceFlow(obj)
+#                 flow.submit__SignA()
+#                 obj.save()
+#                 return Response({"status": "success", "data": "SUBMIT : sign_A transition done"})
+#             else:
+#                 return Response({"data": "can't do this transition"})
+#         else:
+#             return Response({"data": "can't do this transition "})
 
 
-class SubmitTransitionSign_AApiview_RFDF(APIView):
-    queryset = workflowitems.objects.all()
-    serializer_class = Workitemserializer
-    permission_classes = [IsAuthenticated]
+# class SubmitTransitionSign_BApiview_RFDF(APIView):
+#     queryset = workflowitems.objects.all()
+#     serializer_class = Workitemserializer
+#     permission_classes = [IsAuthenticated]
 
-    def get(self, request, pk, *args, **kwargs):
-        obj = generics.get_object_or_404(workflowitems, id=pk)
-        user = self.request.user
-        party = obj.program.party
-        signs = signatures.objects.get(
-            party=party, action__desc__contains='SUBMIT', model='INVOICE')
-        if user.party == party:
-            if signs.sign_a == True:
-                flow = InvoiceFlow(obj)
-                flow.submit__SignA()
-                obj.save()
-                return Response({"status": "success", "data": "SUBMIT : sign_A transition done"})
-            else:
-                return Response({"data": "can't do this transition"})
-        else:
-            return Response({"data": "can't do this transition "})
-
-
-class SubmitTransitionSign_BApiview_RFDF(APIView):
-    queryset = workflowitems.objects.all()
-    serializer_class = Workitemserializer
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, pk, *args, **kwargs):
-        obj = generics.get_object_or_404(workflowitems, id=pk)
-        user = self.request.user
-        party = obj.program.party
-        signs = signatures.objects.get(
-            party=party, action__desc__contains='SUBMIT', model='INVOICE')
-        if user.party == party:
-            if signs.sign_a == True:
-                flow = InvoiceFlow(obj)
-                flow.submit__SignB()
-                obj.save()
-                return Response({"status": "success", "data": "SUBMIT : sign_B transition done"})
-            else:
-                return Response({"data": "can't do this transition"})
-        else:
-            return Response({"data": "can't do this transition "})
+#     def get(self, request, pk, *args, **kwargs):
+#         obj = generics.get_object_or_404(workflowitems, id=pk)
+#         user = self.request.user
+#         party = obj.program.party
+#         signs = signatures.objects.get(
+#             party=party, action__desc__contains='SUBMIT', model='INVOICE')
+#         if user.party == party:
+#             if signs.sign_a == True:
+#                 flow = InvoiceFlow(obj)
+#                 flow.submit__SignB()
+#                 obj.save()
+#                 return Response({"status": "success", "data": "SUBMIT : sign_B transition done"})
+#             else:
+#                 return Response({"data": "can't do this transition"})
+#         else:
+#             return Response({"data": "can't do this transition "})
 
 
-class SubmitTransitionSign_CApiview_RFDF(APIView):
-    queryset = workflowitems.objects.all()
-    serializer_class = Workitemserializer
-    permission_classes = [IsAuthenticated]
+# class SubmitTransitionSign_CApiview_RFDF(APIView):
+#     queryset = workflowitems.objects.all()
+#     serializer_class = Workitemserializer
+#     permission_classes = [IsAuthenticated]
 
-    def get(self, request, pk, *args, **kwargs):
-        obj = generics.get_object_or_404(workflowitems, id=pk)
-        user = self.request.user
-        party = obj.program.party
-        signs = signatures.objects.get(
-            party=party, action__desc__contains='SUBMIT', model='INVOICE')
-        if user.party == party:
-            if signs.sign_a == True:
-                flow = InvoiceFlow(obj)
-                flow.submit__SignC()
-                obj.save()
-                return Response({"status": "success", "data": "SUBMIT : sign_C transition done"})
-            else:
-                return Response({"data": "can't do this transition"})
-        else:
-            return Response({"data": "can't do this transition "})
+#     def get(self, request, pk, *args, **kwargs):
+#         obj = generics.get_object_or_404(workflowitems, id=pk)
+#         user = self.request.user
+#         party = obj.program.party
+#         signs = signatures.objects.get(
+#             party=party, action__desc__contains='SUBMIT', model='INVOICE')
+#         if user.party == party:
+#             if signs.sign_a == True:
+#                 flow = InvoiceFlow(obj)
+#                 flow.submit__SignC()
+#                 obj.save()
+#                 return Response({"status": "success", "data": "SUBMIT : sign_C transition done"})
+#             else:
+#                 return Response({"data": "can't do this transition"})
+#         else:
+#             return Response({"data": "can't do this transition "})

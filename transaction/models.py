@@ -151,6 +151,7 @@ class Invoices(models.Model):
     ]
     
     party = models.ForeignKey("accounts.Parties", on_delete=models.CASCADE,blank=True, null=True)
+    program_type = models.CharField(max_length=255,blank=True, null=True)
     pairing = models.ForeignKey(Pairings, on_delete=models.DO_NOTHING,blank=True, null=True)
     invoice_no = models.CharField(null=True, blank=True, max_length=10)
     issue_date = models.DateField(default=date.today,blank=True, null=True)

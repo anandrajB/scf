@@ -33,6 +33,7 @@ class UploadFlow(object):
             self.workflowitems.interim_state = StateChoices.STATUS_AWAITING_SIGN_A
             self.workflowitems.final_state = StateChoices.STATUS_COMPLETED
             self.workflowitems.action = "SUBMIT"
+            
             self.workflowitems.next_available_transitions = [
                 StateChoices.STATUS_AWAITING_SIGN_A]
             ws = workflowitems.objects.get(id=self.workflowitems.id)
@@ -79,7 +80,7 @@ class UploadFlow(object):
             cc = self.workflowitems.uploads.program_type
             gs = self.workflowitems.uploads.invoices
             if cc == "APF":
-                invoice = Invoices.objects.create(party = gs.get('buyer_name'),invoice_no = gs.get('invoice_no'),due_date = gs.get('due_date'),amount =  gs.get('invoice_amount'),finance_currency_type = currency , settlement_currency_type = currency )
+                invoice = Invoices.objects.create(party = gs.get('buyer_name'),invoice_no = gs.get('invoice_no'),program_type = cc , due_date = gs.get('due_date'),amount =  gs.get('invoice_amount'),finance_currency_type = currency , settlement_currency_type = currency )
                 work = workflowitems.objects.create(
                 invoice=invoice, current_from_party=from_parties ,current_to_party=to_parties , event_users=user,interim_state = "AWAITING BUYER APPROVAL",final_state = "AWAITING BUYER APPROVAL")
                 work.save()
@@ -87,7 +88,7 @@ class UploadFlow(object):
                     workitems=work, from_party=gs.get('buyer_name'), to_party=gs.get('buyer_name'),user = user ,type = "INVOICE",interim_state = "AWAITING BUYER APPROVAL",to_state = "AWAITING BUYER APPROVAL")
                 event.save()
             else:
-                invoice = Invoices.objects.create(party = gs.get('buyer_name'),invoice_no = gs.get('invoice_no'),due_date = gs.get('due_date'),amount =  gs.get('invoice_amount'),finance_currency_type = currency , settlement_currency_type = currency )
+                invoice = Invoices.objects.create(party = gs.get('buyer_name'),invoice_no = gs.get('invoice_no'),due_date = gs.get('due_date'), program_type = cc , amount =  gs.get('invoice_amount'),finance_currency_type = currency , settlement_currency_type = currency )
                 work = workflowitems.objects.create(
                 invoice=invoice, current_from_party=from_parties ,current_to_party=to_parties , event_users=user , interim_state = "FINANCE REQUESTED" , final_state = "FINANCE REQUESTED")
                 work.save()
@@ -140,7 +141,7 @@ class UploadFlow(object):
             cc = self.workflowitems.uploads.program_type
             gs = self.workflowitems.uploads.invoices
             if cc == "APF":
-                invoice = Invoices.objects.create(party = from_parties,invoice_no = gs.get('invoice_no'),due_date = gs.get('due_date'),amount =  gs.get('invoice_amount'),finance_currency_type = currency , settlement_currency_type = currency )
+                invoice = Invoices.objects.create(party = from_parties,invoice_no = gs.get('invoice_no'),program_type = cc , due_date = gs.get('due_date'),amount =  gs.get('invoice_amount'),finance_currency_type = currency , settlement_currency_type = currency )
                 work = workflowitems.objects.create(
                 invoice=invoice, current_from_party=from_parties ,current_to_party=to_parties , event_users=user,interim_state = "AWAITING BUYER APPROVAL",final_state = "AWAITING BUYER APPROVAL")
                 work.save()
@@ -148,7 +149,7 @@ class UploadFlow(object):
                     workitems=work, from_party=from_parties, to_party=to_parties,user = user ,type = "INVOICE",interim_state = "AWAITING BUYER APPROVAL",to_state = "AWAITING BUYER APPROVAL")
                 event.save()
             else:
-                invoice = Invoices.objects.create(party = from_parties,invoice_no = gs.get('invoice_no'),due_date = gs.get('due_date'),amount =  gs.get('invoice_amount'),finance_currency_type = currency , settlement_currency_type = currency )
+                invoice = Invoices.objects.create(party = from_parties,invoice_no = gs.get('invoice_no'),program_type = cc , due_date = gs.get('due_date'),amount =  gs.get('invoice_amount'),finance_currency_type = currency , settlement_currency_type = currency )
                 work = workflowitems.objects.create(
                 invoice=invoice, current_from_party=from_parties ,current_to_party=to_parties , event_users=user , interim_state = "FINANCE REQUESTED" , final_state = "FINANCE REQUESTED")
                 work.save()
@@ -183,7 +184,7 @@ class UploadFlow(object):
         cc = self.workflowitems.uploads.program_type
         gs = self.workflowitems.uploads.invoices
         if cc == "APF":
-            invoice = Invoices.objects.create(party = from_parties,invoice_no = gs.get('invoice_no'),due_date = gs.get('due_date'),amount =  gs.get('invoice_amount'),finance_currency_type = currency , settlement_currency_type = currency )
+            invoice = Invoices.objects.create(party = from_parties,invoice_no = gs.get('invoice_no'),due_date = gs.get('due_date'),program_type = cc , amount =  gs.get('invoice_amount'),finance_currency_type = currency , settlement_currency_type = currency )
             work = workflowitems.objects.create(
             invoice=invoice, current_from_party=from_parties ,current_to_party=to_parties , event_users=user,interim_state = "AWAITING BUYER APPROVAL",final_state = "AWAITING BUYER APPROVAL")
             work.save()
@@ -191,7 +192,7 @@ class UploadFlow(object):
                 workitems=work, from_party=from_parties, to_party=to_parties,user = user ,type = "INVOICE",interim_state = "AWAITING BUYER APPROVAL",to_state = "AWAITING BUYER APPROVAL")
             event.save()
         else:
-            invoice = Invoices.objects.create(party = from_parties,invoice_no = gs.get('invoice_no'),due_date = gs.get('due_date'),amount =  gs.get('invoice_amount'),finance_currency_type = currency , settlement_currency_type = currency )
+            invoice = Invoices.objects.create(party = from_parties,invoice_no = gs.get('invoice_no'),due_date = gs.get('due_date'),program_type = cc , amount =  gs.get('invoice_amount'),finance_currency_type = currency , settlement_currency_type = currency )
             work = workflowitems.objects.create(
             invoice=invoice, current_from_party=from_parties ,current_to_party=to_parties , event_users=user , interim_state = "FINANCE REQUESTED" , final_state = "FINANCE REQUESTED")
             work.save()

@@ -1,12 +1,14 @@
 # django fsm flows using djano-viewflow package == 2.0a02
 from urllib import request
-from transaction.code import myuser
+# from transaction.code import myuser
 from transaction.states import StateChoices
 from transaction.models import workevents, workflowitems
 from viewflow import fsm
 from accounts.models import Parties ,  signatures
 from transaction.views import  currentuser, myfun
 
+def myuser(request):
+        return request.user
 
 class WorkFlow(object):
     # workitems = workflowitems()
@@ -559,9 +561,7 @@ class WorkFlow(object):
             workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_C, final='YES', user = user ,type = "PROGRAM",
                                       to_state=StateChoices.STATUS_ACCEPTED, interim_state=StateChoices.STATUS_ACCEPTED, from_party=self.workflowitems.current_from_party, to_party=bank)
         return None
-
-
-
+        
 # APPROVE TRANSITION
 
     @stage.transition(source=StateChoices.STATUS_AW_APPROVAL, target=StateChoices.STATUS_AWAITING_SIGN_A)

@@ -330,10 +330,20 @@ class Programcreateserializer(serializers.Serializer):
             grace_period=grace_period, interest_rate=interest_rate, interest_rate_type=interest_rate_type,
             interest_type=interest_type, margin=margin , comments = comments
         )
+        # type = {
+        #    "party" : str(party),"program_type":str(program_type),"finance_request_type":finance_request_type,"limit_currency":str(limit_currency),"total_limit_amount":str(total_limit_amount),
+        #    "finance_currency":str(finance_currency),"settlement_currency":str(settlement_currency), "expiry_date":expiry_date, "max_finance_percentage":str(max_finance_percentage),
+        #     "max_invoice_age_for_funding":str(max_invoice_age_for_funding), "max_age_for_repayment":str(max_age_for_repayment),
+        #     "minimum_amount":str(minimum_amount), "minimum_period":str(minimum_period), "maximum_amount":str(maximum_amount),
+        #    "maximum_period":str(maximum_period), "financed_amount":str(financed_amount), "balance_amount":str(balance_amount),
+        #     "grace_period":str(grace_period), "interest_rate":str(interest_rate), "interest_rate_type":str(interest_rate_type),
+        #     "interest_type":interest_type,"margin":str(margin)     
+        # }
         program.save()
         work = workflowitems.objects.create(
             program=program, current_from_party=from_party,current_to_party=to_party, event_users=event_user)
         work.save()
+        
         type = {
             "comments" : []
         }
@@ -540,6 +550,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
             'id',
             'wf_item_id',
             'party',
+            'program_type',
             'created_by',
             'pairing',
             'invoice_no',

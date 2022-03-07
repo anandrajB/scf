@@ -631,7 +631,7 @@ class InvoiceFlow(object):
                                       interim_state=StateChoices.STATUS_ARCHIVED, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party, final="YES")
 
 
-# <------------------------------------|RF and DF FLOW|--------------------------------------------->
+# <------------------------------------|RF and DF FLOW|--FOR INVOICE SUBMIT ------------------------------------------->
 
 
     @stage.transition(source=StateChoices.STATUS_DRAFT, target=StateChoices.STATUS_AWAITING_SIGN_A)
@@ -640,7 +640,7 @@ class InvoiceFlow(object):
         obj = signatures.objects.get(
             party=user.party, action__desc__contains="SUBMIT", model="INVOICE")
         type = workflowitems.objects.get(id=self.workflowitems.id)
-        program_type = type.invoice.pairing.program_type.program_type
+        program_type = type.invoice.program_type
 
         if(obj.sign_a == True and obj.sign_b != True and obj.sign_c != True and (program_type == "RF" or program_type == "DF")):
 
@@ -650,7 +650,7 @@ class InvoiceFlow(object):
             self.workflowitems.next_available_transitions = [
                 StateChoices.STATUS_AWAITING_SIGN_A]
             ws = workflowitems.objects.get(id=self.workflowitems.id)
-            workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_DRAFT, to_state=StateChoices.STATUS_FINANCE_REQUESTED,type = "INVOICE" ,
+            workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_DRAFT, to_state=StateChoices.STATUS_FINANCE_REQUESTED,type = "INVOICE" ,user = user , 
                                       interim_state=StateChoices.STATUS_AWAITING_SIGN_A, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party)
 
         elif(obj.sign_a == True and obj.sign_b == True and obj.sign_c != True and (program_type == "RF" or program_type == "DF")):
@@ -661,7 +661,7 @@ class InvoiceFlow(object):
             self.workflowitems.next_available_transitions = [
                 StateChoices.STATUS_AWAITING_SIGN_A, StateChoices.STATUS_AWAITING_SIGN_B]
             ws = workflowitems.objects.get(id=self.workflowitems.id)
-            workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_DRAFT, to_state=StateChoices.STATUS_FINANCE_REQUESTED,type = "INVOICE" ,
+            workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_DRAFT, to_state=StateChoices.STATUS_FINANCE_REQUESTED,type = "INVOICE" , user = user , 
                                       interim_state=StateChoices.STATUS_AWAITING_SIGN_A, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party)
 
         elif(obj.sign_a == True and obj.sign_b == True and obj.sign_c == True and (program_type == "RF" or program_type == "DF")):
@@ -672,7 +672,7 @@ class InvoiceFlow(object):
             self.workflowitems.next_available_transitions = [
                 StateChoices.STATUS_AWAITING_SIGN_A, StateChoices.STATUS_AWAITING_SIGN_B, StateChoices.STATUS_AWAITING_SIGN_C]
             ws = workflowitems.objects.get(id=self.workflowitems.id)
-            workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_DRAFT, to_state=StateChoices.STATUS_FINANCE_REQUESTED,type = "INVOICE" ,
+            workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_DRAFT, to_state=StateChoices.STATUS_FINANCE_REQUESTED,type = "INVOICE" , user = user , 
                                       interim_state=StateChoices.STATUS_AWAITING_SIGN_A, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party)
 
     @stage.transition(source=StateChoices.STATUS_AWAITING_SIGN_A, target=StateChoices.STATUS_AWAITING_SIGN_B)
@@ -681,7 +681,7 @@ class InvoiceFlow(object):
         obj = signatures.objects.get(
             party=user.party, action__desc__contains="SUBMIT", model="INVOICE")
         type = workflowitems.objects.get(id=self.workflowitems.id)
-        program_type = type.invoice.pairing.program_type.program_type
+        program_type = type.invoice.program_type
 
         if(obj.sign_a == True and obj.sign_b != True and obj.sign_c != True and (program_type == "RF" or program_type == "DF")):
 
@@ -690,7 +690,7 @@ class InvoiceFlow(object):
             self.workflowitems.action = "SUBMIT"
             self.workflowitems.next_available_transitions = []
             ws = workflowitems.objects.get(id=self.workflowitems.id)
-            workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_A, to_state=StateChoices.STATUS_FINANCE_REQUESTED,type = "INVOICE" ,
+            workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_A, to_state=StateChoices.STATUS_FINANCE_REQUESTED,type = "INVOICE" , user = user , 
                                       interim_state=StateChoices.STATUS_FINANCE_REQUESTED, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party, final="YES")
 
         elif(obj.sign_a == True and obj.sign_b == True and obj.sign_c != True and (program_type == "RF" or program_type == "DF")):
@@ -701,7 +701,7 @@ class InvoiceFlow(object):
             self.workflowitems.next_available_transitions = [
                 StateChoices.STATUS_AWAITING_SIGN_B]
             ws = workflowitems.objects.get(id=self.workflowitems.id)
-            workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_A, to_state=StateChoices.STATUS_FINANCE_REQUESTED,type = "INVOICE" ,
+            workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_A, to_state=StateChoices.STATUS_FINANCE_REQUESTED,type = "INVOICE" , user = user , 
                                       interim_state=StateChoices.STATUS_AWAITING_SIGN_B, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party)
 
         elif(obj.sign_a == True and obj.sign_b == True and obj.sign_c == True and (program_type == "RF" or program_type == "DF")):
@@ -712,7 +712,7 @@ class InvoiceFlow(object):
             self.workflowitems.next_available_transitions = [
                 StateChoices.STATUS_AWAITING_SIGN_B, StateChoices.STATUS_AWAITING_SIGN_C]
             ws = workflowitems.objects.get(id=self.workflowitems.id)
-            workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_A, to_state=StateChoices.STATUS_FINANCE_REQUESTED,type = "INVOICE" ,
+            workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_A, to_state=StateChoices.STATUS_FINANCE_REQUESTED,type = "INVOICE" , user = user , 
                                       interim_state=StateChoices.STATUS_AWAITING_SIGN_B, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party)
 
     @stage.transition(source=StateChoices.STATUS_AWAITING_SIGN_B, target=StateChoices.STATUS_AWAITING_SIGN_C)
@@ -721,7 +721,7 @@ class InvoiceFlow(object):
         obj = signatures.objects.get(
             party=user.party, action__desc__contains="SUBMIT", model="INVOICE")
         type = workflowitems.objects.get(id=self.workflowitems.id)
-        program_type = type.invoice.pairing.program_type.program_type
+        program_type = type.invoice.program_type
 
         if(obj.sign_a == True and obj.sign_b == True and obj.sign_c != True and (program_type == "RF" or program_type == "DF")):
 
@@ -730,7 +730,7 @@ class InvoiceFlow(object):
             self.workflowitems.action = "SUBMIT"
             self.workflowitems.next_available_transitions = []
             ws = workflowitems.objects.get(id=self.workflowitems.id)
-            workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_B, to_state=StateChoices.STATUS_FINANCE_REQUESTED,type = "INVOICE" ,
+            workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_B, to_state=StateChoices.STATUS_FINANCE_REQUESTED,type = "INVOICE" , user = user ,
                                       interim_state=StateChoices.STATUS_FINANCE_REQUESTED, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party, final="YES")
 
         elif(obj.sign_a == True and obj.sign_b == True and obj.sign_c == True and (program_type == "RF" or program_type == "DF")):
@@ -741,7 +741,7 @@ class InvoiceFlow(object):
             self.workflowitems.next_available_transitions = [
                 StateChoices.STATUS_AWAITING_SIGN_C]
             ws = workflowitems.objects.get(id=self.workflowitems.id)
-            workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_B, to_state=StateChoices.STATUS_FINANCE_REQUESTED,type = "INVOICE" ,
+            workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_B, to_state=StateChoices.STATUS_FINANCE_REQUESTED,type = "INVOICE" , user = user , 
                                       interim_state=StateChoices.STATUS_AWAITING_SIGN_C, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party)
 
     @stage.transition(source=StateChoices.STATUS_AWAITING_SIGN_C, target=StateChoices.STATUS_FINANCE_REQUESTED)
@@ -750,7 +750,7 @@ class InvoiceFlow(object):
         obj = signatures.objects.get(
             party=user.party, action__desc__contains="SUBMIT", model="INVOICE")
         type = workflowitems.objects.get(id=self.workflowitems.id)
-        program_type = type.invoice.pairing.program_type.program_type
+        program_type = type.invoice.program_type
 
         if(obj.sign_a == True and obj.sign_b == True and obj.sign_c == True and (program_type == "RF" or program_type == "DF")):
 
@@ -759,7 +759,7 @@ class InvoiceFlow(object):
             self.workflowitems.action = "SUBMIT"
             self.workflowitems.next_available_transitions = []
             ws = workflowitems.objects.get(id=self.workflowitems.id)
-            workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_C, to_state=StateChoices.STATUS_FINANCE_REQUESTED,type = "INVOICE" ,
+            workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_C, to_state=StateChoices.STATUS_FINANCE_REQUESTED,type = "INVOICE" , user = user , 
                                       interim_state=StateChoices.STATUS_FINANCE_REQUESTED, from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party, final="YES")
 
 # RETURN TRANSITION

@@ -70,7 +70,7 @@ class ProgramCreateApiView(ListCreateAPIView):
         queryset = self.get_queryset()
         serializer = ProgramListserializer(queryset,many=True)
         qs = ProgramMetaData(queryset , many = True)
-        return Response({"status": "success","metadata":qs.data,"data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"status": "success","data": serializer.data}, status=status.HTTP_200_OK)
 
 
     def post(self, request):
