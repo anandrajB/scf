@@ -565,7 +565,7 @@ class SignaturesUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
 class ActionApiview(ListCreateAPIView):
     queryset = Action.objects.all()
     serializer_class = Actionserializer
-    # permission_classes = [IsAuthenticated,Is_Administrator]
+    permission_classes = [IsAuthenticated,Is_Administrator]
 
     def list(self, request):
         queryset = Action.objects.all()

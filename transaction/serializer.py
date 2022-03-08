@@ -630,6 +630,7 @@ class InvoiceUploadserializer(serializers.Serializer):
             'financing_currency' : str(financing_currency),
             'settlement_currency' : str(settlement_currency)
         }
+        
         uploads = Invoiceuploads.objects.create(program_type = program_type , invoices = invoices ,**validated_data)
         work = workflowitems.objects.create(
             uploads=uploads, current_from_party=from_party,current_to_party=to_party, event_users=event_user)
