@@ -24,7 +24,7 @@ class PairingSerializer(serializers.ModelSerializer):
 class Workeventsserializer(serializers.ModelSerializer):
     from_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
     to_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
-    name = serializers.SerializerMethodField()
+    display_name = serializers.SerializerMethodField()
 
     class Meta:
         model = workevents
@@ -36,15 +36,15 @@ class Workeventsserializer(serializers.ModelSerializer):
             'interim_state',
             'from_party',
             'to_party',
-            'user',
-            'name',
+            'event_user',
+            'display_name',
             'record_datas',
             'created_date',
             'type'
         ]
 
-    def get_name(self,obj):
-        return "anand"
+    def get_display_name(self,obj):
+        return obj.event_user.display_name
 
 
 
@@ -101,6 +101,7 @@ class Workitemserializer(serializers.ModelSerializer):
     current_from_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
     current_to_party = serializers.SlugRelatedField(read_only=True, slug_field='name')
     wf_item_id = serializers.SerializerMethodField()
+    user = serializers.SlugRelatedField(read_only=True, slug_field='email')
 
     class Meta:
         model = workflowitems
@@ -112,7 +113,7 @@ class Workitemserializer(serializers.ModelSerializer):
             'next_available_transitions',
             'current_from_party',
             'current_to_party',
-            'event_users',
+            'user',
             'created_date',
             'action',
             'subaction',
@@ -160,7 +161,7 @@ class ProgramMetaData(serializers.ModelSerializer):
         
 
     def get_user_id(self,obj):
-        return obj.workflowitems.event_users.email
+        return obj.workflowitems.user.email
     
     def get_action(self,obj):
         return obj.workflowitems.action
@@ -220,7 +221,7 @@ class ProgramListserializer(serializers.ModelSerializer):
         ]
 
     def get_created_by(self,obj):
-        return obj.workflowitems.event_users.email
+        return obj.workflowitems.user.email
 
     def get_wf_item_id(self,obj):
         return obj.workflowitems.id
@@ -259,7 +260,7 @@ class Programcreateserializer(serializers.Serializer):
         ('RF', 'RF'),
         ('DF', 'DF')
     ]
-    
+    id = serializers.IntegerField(read_only=True)
     party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all())
     program_type = serializers.ChoiceField(choices=program_type)
     finance_request_type = serializers.ChoiceField(choices=finance_request_type, default=None)
@@ -282,12 +283,13 @@ class Programcreateserializer(serializers.Serializer):
     interest_rate_type = serializers.ChoiceField(choices=interest_rate_type)
     interest_rate = serializers.DecimalField(max_digits=8, decimal_places=2)
     margin = serializers.DecimalField(max_digits=8, decimal_places=2)
-    event_user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    user = serializers.PrimaryKeyRelatedField(queryset = User.objects.all(),required = False)
+    event_user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(),required = False)
     comments = serializers.CharField(required = False)
     # sign = serializers.PrimaryKeyRelatedField(queryset = signatures.objects.all())
     # record_datas = serializers.JSONField()
-    from_party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all())
-    to_party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all())
+    from_party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all(),required  = False)
+    to_party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all(),required = False)
     
 
     def create(self, validated_data):
@@ -311,6 +313,7 @@ class Programcreateserializer(serializers.Serializer):
         grace_period = validated_data.pop('grace_period')
         from_party = validated_data.pop('from_party')
         to_party = validated_data.pop('to_party')
+        user = validated_data.pop('user')
         interest_type = validated_data.pop('interest_type')
         interest_rate_type = validated_data.pop('interest_rate_type')
         interest_rate = validated_data.pop('interest_rate')
@@ -320,7 +323,7 @@ class Programcreateserializer(serializers.Serializer):
         # sign = validated_data.pop('sign')
         # record_datas = validated_data.pop('record_datas')
 
-        program = Programs.objects.create(
+        program = Programs.objects.create(**validated_data,
             party=party, program_type=program_type, finance_request_type=finance_request_type,
             limit_currency=limit_currency, total_limit_amount=total_limit_amount, finance_currency=finance_currency,
             settlement_currency=settlement_currency, expiry_date=expiry_date, max_finance_percentage=max_finance_percentage,
@@ -330,6 +333,7 @@ class Programcreateserializer(serializers.Serializer):
             grace_period=grace_period, interest_rate=interest_rate, interest_rate_type=interest_rate_type,
             interest_type=interest_type, margin=margin , comments = comments
         )
+        
         # type = {
         #    "party" : str(party),"program_type":str(program_type),"finance_request_type":finance_request_type,"limit_currency":str(limit_currency),"total_limit_amount":str(total_limit_amount),
         #    "finance_currency":str(finance_currency),"settlement_currency":str(settlement_currency), "expiry_date":expiry_date, "max_finance_percentage":str(max_finance_percentage),
@@ -341,13 +345,13 @@ class Programcreateserializer(serializers.Serializer):
         # }
         program.save()
         work = workflowitems.objects.create(
-            program=program, current_from_party=from_party,current_to_party=to_party, event_users=event_user)
+            program=program, current_from_party=from_party,current_to_party=to_party, user = user)
         work.save()
         
         type = {
             "comments" : []
         }
-        event = workevents.objects.create( user = event_user , record_datas = type,workitems=work, from_party=from_party, to_party=to_party , type = "PROGRAM")
+        event = workevents.objects.create( event_user = event_user , record_datas = type,workitems=work, from_party=from_party, to_party=to_party , type = "PROGRAM")
         event.save()
         return program
 
@@ -485,10 +489,10 @@ class InvoiceCreateserializer(serializers.Serializer):
         invoice = Invoices.objects.create(party = party,pairing = pairing , invoice_no =  invoice_number , issue_date = issue_date ,due_date = due_date , invoice_currency = invoice_currency,amount = amount,funding_req_type = funding_request_type,finance_currency_type = finance_currency_type,settlement_currency_type = settlement_currency_type , interest_rate = interest_rate , financed_amount = financed_amount , bank_loan_id = bank_loan )
         invoice.save()
         work = workflowitems.objects.create(
-            invoice=invoice, current_from_party=from_party,current_to_party=to_party, event_users=event_user)
+            invoice=invoice, current_from_party=from_party,current_to_party=to_party, user=event_user)
         work.save()
         event = workevents.objects.create(
-            workitems=work, from_party=from_party, to_party=to_party,user = event_user ,type = "INVOICE")
+            workitems=work, from_party=from_party, to_party=to_party,event_user = event_user ,type = "INVOICE")
         event.save()
         return invoice
 
@@ -527,7 +531,7 @@ class WorkitemInvoiceserializer(serializers.ModelSerializer):
             'next_available_transitions',
             'current_from_party',
             'current_to_party',
-            'event_users',
+            'user',
             'created_date',
             'action',
             'subaction',
@@ -570,7 +574,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
     
 
     def get_created_by(self,obj):
-        return obj.workflowitems.event_users.email
+        return obj.workflowitems.user.email
 
     def get_wf_item_id(self,obj):
         return obj.workflowitems.id
@@ -602,7 +606,7 @@ class InvoiceUploadserializer(serializers.Serializer):
     event_user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     from_party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all())
     to_party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all())
-
+    invoices = serializers.JSONField()
 
     def create(self, validated_data):
         pairing = validated_data.pop('pairing')
@@ -618,23 +622,12 @@ class InvoiceUploadserializer(serializers.Serializer):
         from_party = validated_data.pop('from_party')
         to_party = validated_data.pop('to_party')
         event_user = validated_data.pop('event_user')
-        
-        invoices = {
-            'buyer_id' : buyer_id,
-            'pairing' : str(pairing),
-            'buyer_name' : str(buyer_name),
-            'invoice_no' : invoice_no,
-            'invoice_date' : str(invoice_date),
-            'invoice_amount' : invoice_amount,
-            'due_date' : str(due_date),
-            'financing_currency' : str(financing_currency),
-            'settlement_currency' : str(settlement_currency)
-        }
+        invoices = validated_data.pop('invoices')
         
         uploads = Invoiceuploads.objects.create(program_type = program_type , invoices = invoices ,**validated_data)
         work = workflowitems.objects.create(
-            uploads=uploads, current_from_party=from_party,current_to_party=to_party, event_users=event_user)
-        event = workevents.objects.create( user = event_user ,
+            uploads=uploads, current_from_party=from_party,current_to_party=to_party, user=event_user)
+        event = workevents.objects.create( event_user = event_user ,
             workitems=work, from_party=from_party, to_party=to_party) 
         uploads.save()
         work.save()
@@ -679,7 +672,7 @@ class WorkitemInvoiceUploadserializer(serializers.ModelSerializer):
             'next_available_transitions',
             'current_from_party',
             'current_to_party',
-            'event_users',
+            'user',
             'created_date',
             'action',
             'subaction',
@@ -712,7 +705,7 @@ class InvoiceUploadlistserializer(serializers.ModelSerializer):
     
 
     def get_created_by(self,obj):
-        return obj.workflowitems.event_users.email
+        return obj.workflowitems.user.email
 
     def get_wf_item_id(self,obj):
         return obj.workflowitems.id

@@ -194,7 +194,7 @@ class workflowitems(models.Model):
     interim_state = models.CharField(max_length=50, default=StateChoices.STATUS_DRAFT)
     final_state = models.CharField(max_length=50, default=StateChoices.STATUS_DRAFT)
     next_available_transitions = ArrayField(models.CharField(max_length=500,blank=True, null=True),blank=True, null=True)
-    event_users = models.ForeignKey("accounts.User", on_delete=models.CASCADE, related_name='customername')
+    user = models.ForeignKey("accounts.User", on_delete=models.CASCADE, related_name='customername')
     current_from_party = models.ForeignKey("accounts.Parties", on_delete=models.DO_NOTHING, related_name='from_party')
     current_to_party = models.ForeignKey("accounts.Parties", on_delete=models.DO_NOTHING, related_name='to_party')
     action = models.CharField(max_length=25, default='SAVE')
@@ -208,12 +208,12 @@ class workflowitems(models.Model):
 class workevents(models.Model):
 
     workitems = models.ForeignKey(workflowitems, on_delete=models.CASCADE, related_name='workflowevent')
-    user = models.ForeignKey('accounts.User',on_delete=models.CASCADE)
     from_state = models.CharField(max_length=50, default='DRAFT')
     to_state = models.CharField(max_length=50, default='DRAFT')
     interim_state = models.CharField(max_length=50, default='DRAFT')
     from_party = models.ForeignKey('accounts.Parties', on_delete=models.CASCADE, related_name='from_we_party')
     to_party = models.ForeignKey('accounts.Parties', on_delete=models.CASCADE, related_name='to_wf_party')
+    event_user = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='event_user')
     record_datas = models.JSONField(blank=True, null=True)
     end = models.CharField(max_length=55,blank=True, null=True)
     final = models.CharField(max_length=55,blank=True, null=True)

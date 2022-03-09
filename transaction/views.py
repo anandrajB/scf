@@ -2,6 +2,7 @@ from urllib.request import Request
 from django.http import Http404
 from accounts.models import Parties, signatures, userprocessauth
 from accounts.permission import Is_Administrator
+from transaction.FSM.program import myuser
 from transaction.permission.upload_permissions import Ismaker_upload
 from rest_framework.viewsets import GenericViewSet
 from .models import (
@@ -68,17 +69,17 @@ class ProgramCreateApiView(ListCreateAPIView):
     
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        serializer = ProgramListserializer(queryset,many=True)
+        serializer = ProgramListserializer(queryset,many=True,)
         qs = ProgramMetaData(queryset , many = True)
         return Response({"status": "success","data": serializer.data}, status=status.HTTP_200_OK)
 
 
     def post(self, request):
         user = request.user
-        serializer = Programcreateserializer(data=request.data)
+        serializer = Programcreateserializer(data=request.data,context={'request': request})
         if serializer.is_valid():
-            serializer.save(from_party = user.party,to_party = user.party,event_user = user)
-            return Response({"status": "success"}, status=status.HTTP_201_CREATED)
+            serializer.save(from_party = user.party,user = user , to_party = user.party,event_user = user)
+            return Response({"status": "success","data": serializer.data}, status=status.HTTP_201_CREATED)
         return Response({"status": "failure", "data": serializer.errors})
 
 
@@ -167,6 +168,7 @@ class InvoiceUpdateDeleteApiview(RetrieveUpdateDestroyAPIView):
         queryset = Invoices.objects.all()
         user = get_object_or_404(queryset, pk=pk)
         serializer = InvoiceSerializer(user)
+        
         return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
     def update(self, request, pk=None):
@@ -361,18 +363,7 @@ def currentuser(request):
     return request.user
 
 
-def myfun(request):
-    user = request.user
-    bank = Parties.objects.get(party_type="BANK")
-    if user.is_administrator == True:
-        obj = signatures.objects.get(
-                party=bank, action__desc__contains="REJECT", model="PROGRAM")
-        
-    else :
-        obj = signatures.objects.get(
-                party=user.party, action__desc__contains="REJECT", model="PROGRAM")
-    
-    return obj
+
 
 from rest_framework.request import HttpRequest, Request
 from django.http import request as RQ
@@ -400,7 +391,9 @@ class TestApiview(APIView):
     def get(self, request, pk, *args, **kwargs):
         obj = generics.get_object_or_404(workflowitems, id=pk)
         # print(obj)
-        print(type(obj.id))
+        user = myuser(request)
+        print(type(user))
+        
         # qs = userprocessauth.objects.get(user = user)
         # print(qs.user.party.customer_id) 
         # my object for the party user related 
