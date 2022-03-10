@@ -277,6 +277,7 @@ class signatureslistserializer(serializers.ModelSerializer):
     class Meta:
         model = signatures
         fields = [
+            'id',
             'model',
             'action',
             'party',

@@ -22,6 +22,7 @@ def submit_transition(request):
         obj = signatures.objects.get(
                 party=user.party, action__desc__contains="SUBMIT", model="PROGRAM")
     return obj
+    
 
 
 # FUNCTION FOR REJECT SIGNATURES BASED ON USER_TYPE i.e ., bank / customer
@@ -35,7 +36,6 @@ def reject_transition(request):
         obj = signatures.objects.get(
                 party=user.party, action__desc__contains="REJECT", model="PROGRAM")
     return obj
-
 
 
 
@@ -58,6 +58,7 @@ class WorkFlow(object):
         return self.workflowitems.initial_state
 
 
+
 # --------------------------------------------------------------------------------------------------
 # SUBMIT TRANSITION
 # --------------------------------------------------------------------------------------------------
@@ -65,6 +66,7 @@ class WorkFlow(object):
     @stage.transition(source=[StateChoices.STATUS_DRAFT, StateChoices.STATUS_AW_ACCEPT], target=StateChoices.STATUS_AWAITING_SIGN_A)
     def submit(self,request):
         user = request.user
+        party = request.user.party
         obj = submit_transition(request)
         if (obj.sign_a == True and obj.sign_b != True and obj.sign_c != True):
             self.workflowitems.interim_state = StateChoices.STATUS_AWAITING_SIGN_A
@@ -72,6 +74,8 @@ class WorkFlow(object):
             self.workflowitems.initial_state = StateChoices.STATUS_AWAITING_SIGN_A
             self.workflowitems.next_available_transitions = [
                 StateChoices.STATUS_AWAITING_SIGN_A]
+            self.workflowitems.current_from_party = party
+            self.workflowitems.current_to_party = party
             self.workflowitems.action = 'SUBMIT'
             self.workflowitems.subaction = StateChoices.SUBMIT
             ws = workflowitems.objects.get(id=self.workflowitems.id)
@@ -85,6 +89,8 @@ class WorkFlow(object):
             self.workflowitems.initial_state = StateChoices.STATUS_AWAITING_SIGN_A
             self.workflowitems.next_available_transitions = [
                 StateChoices.STATUS_AWAITING_SIGN_A, StateChoices.STATUS_AWAITING_SIGN_B]
+            self.workflowitems.current_from_party = party
+            self.workflowitems.current_to_party = party
             self.workflowitems.action = 'SUBMIT'
             self.workflowitems.subaction = StateChoices.SUBMIT
             ws = workflowitems.objects.get(id=self.workflowitems.id)
@@ -96,6 +102,8 @@ class WorkFlow(object):
         elif (obj.sign_a == True and obj.sign_b == True and obj.sign_c == True):
             self.workflowitems.interim_state = StateChoices.STATUS_AWAITING_SIGN_A
             self.workflowitems.final_state = StateChoices.STATUS_AW_APPROVAL
+            self.workflowitems.current_from_party = party
+            self.workflowitems.current_to_party = party
             self.workflowitems.next_available_transitions = [
                 StateChoices.STATUS_AWAITING_SIGN_A, StateChoices.STATUS_AWAITING_SIGN_B, StateChoices.STATUS_AWAITING_SIGN_C]
             self.workflowitems.action = 'SUBMIT'
@@ -111,23 +119,25 @@ class WorkFlow(object):
     @stage.transition(source=StateChoices.STATUS_AWAITING_SIGN_A, target=StateChoices.STATUS_AWAITING_SIGN_B)
     def submit_level_1(self,request):
         user = request.user
+        party = request.user.party
         bank = Parties.objects.get(party_type="BANK")
         obj = submit_transition(request)
-
+        
         if (obj.sign_a == True and obj.sign_b != True and obj.sign_c != True):
             self.workflowitems.interim_state = StateChoices.STATUS_AW_APPROVAL
             self.workflowitems.final_state = StateChoices.STATUS_AW_APPROVAL
             self.workflowitems.next_available_transitions = []
             self.workflowitems.action = 'SUBMIT'
             self.workflowitems.subaction = StateChoices.SIGN_A
-            # self.workflowitems.current_to_party = bank
-            # self.workflowitems.initial_state = StateChoices.STATUS_AW_ACCEPT
+            self.workflowitems.current_from_party = party
+            self.workflowitems.initial_state = StateChoices.STATUS_AW_ACCEPT
             ws = workflowitems.objects.get(id=self.workflowitems.id)
             cs = workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_A, event_user = user , 
                                       to_state=StateChoices.STATUS_AW_APPROVAL, interim_state=StateChoices.STATUS_AW_APPROVAL, from_party=self.workflowitems.current_from_party, type = "PROGRAM",to_party=self.workflowitems.current_to_party)
             if request.user.party.party_type  == "BANK":
                 cs.c_final = "YES"
-                self.workflowitems.current_to_party = self.workflowitems.current_from_party
+                cs.to_party = self.workflowitems.user.party
+                self.workflowitems.current_to_party = self.workflowitems.user.party
                 cs.save()
             else:
                 cs.final = "YES"
@@ -140,26 +150,25 @@ class WorkFlow(object):
             self.workflowitems.interim_state = StateChoices.STATUS_AWAITING_SIGN_B
             self.workflowitems.final_state = StateChoices.STATUS_AW_APPROVAL
             self.workflowitems.action = 'SUBMIT'
-            self.workflowitems.current_to_party = self.workflowitems.current_from_party
             self.workflowitems.initial_state = StateChoices.STATUS_AWAITING_SIGN_B
             self.workflowitems.subaction = StateChoices.SIGN_A
-            self.workflowitems.next_available_transitions = [
-                StateChoices.STATUS_AWAITING_SIGN_B]
-            # self.workflowitems.initial_state = StateChoices.STATUS_AW_ACCEPT
+            self.workflowitems.current_from_party = party
+            self.workflowitems.current_to_party = party
+            self.workflowitems.next_available_transitions = [StateChoices.STATUS_AWAITING_SIGN_B]
             ws = workflowitems.objects.get(id=self.workflowitems.id)
             workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_A, event_user = user , 
                                       to_state=StateChoices.STATUS_AW_APPROVAL, interim_state=StateChoices.STATUS_AWAITING_SIGN_B, from_party=self.workflowitems.current_from_party,type = "PROGRAM", to_party=self.workflowitems.current_to_party)
 
         
-
         elif (obj.sign_a == True and obj.sign_b == True and obj.sign_c == True):
             self.workflowitems.interim_state = StateChoices.STATUS_AWAITING_SIGN_B
             self.workflowitems.final_state = StateChoices.STATUS_AW_APPROVAL
             self.workflowitems.initial_state = StateChoices.STATUS_AWAITING_SIGN_B
+            self.workflowitems.current_from_party = party
+            self.workflowitems.current_to_party = party
             self.workflowitems.subaction = StateChoices.SIGN_A
             self.workflowitems.action = 'SUBMIT'
-            self.workflowitems.next_available_transitions = [
-                StateChoices.STATUS_AWAITING_SIGN_B, StateChoices.STATUS_AWAITING_SIGN_C]
+            self.workflowitems.next_available_transitions = [StateChoices.STATUS_AWAITING_SIGN_B, StateChoices.STATUS_AWAITING_SIGN_C]
             ws = workflowitems.objects.get(id=self.workflowitems.id)
             workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_A, event_user = user , 
                                       to_state=StateChoices.STATUS_AW_APPROVAL, interim_state=StateChoices.STATUS_AWAITING_SIGN_B, type = "PROGRAM",from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party)
@@ -168,26 +177,28 @@ class WorkFlow(object):
     @stage.transition(source=StateChoices.STATUS_AWAITING_SIGN_B, target=StateChoices.STATUS_AWAITING_SIGN_C)
     def submit_level_2(self,request):
         user = request.user
+        party = request.user.party
         bank = Parties.objects.get(party_type="BANK")
         obj = submit_transition(request)
 
-        # elif (obj.sign_a != True and obj.sign_b != True and obj.sign_c == True):
-        #     pass
+       
 
         if (obj.sign_a == True and obj.sign_b == True and obj.sign_c != True):
             self.workflowitems.interim_state = StateChoices.STATUS_AW_APPROVAL
             self.workflowitems.final_state = StateChoices.STATUS_AW_APPROVAL
             self.workflowitems.next_available_transitions = []
             self.workflowitems.subaction = StateChoices.SIGN_B
-            # self.workflowitems.current_to_party = bank
+            self.workflowitems.current_from_party = party
             self.workflowitems.action = 'SUBMIT'
             self.workflowitems.initial_state = StateChoices.STATUS_AW_ACCEPT
             ws = workflowitems.objects.get(id=self.workflowitems.id)
             cs = workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_B, event_user = user , 
                                       to_state=StateChoices.STATUS_AW_APPROVAL, interim_state=StateChoices.STATUS_AW_APPROVAL, type = "PROGRAM",from_party=self.workflowitems.current_from_party, to_party=self.workflowitems.current_to_party)
+            
             if request.user.party.party_type  == "BANK":
                 cs.c_final = "YES"
-                self.workflowitems.current_to_party = self.workflowitems.current_from_party
+                cs.to_party = self.workflowitems.user.party
+                self.workflowitems.current_to_party = self.workflowitems.user.party
                 cs.save()
             else:
                 cs.final = "YES"
@@ -201,7 +212,8 @@ class WorkFlow(object):
             self.workflowitems.final_state = StateChoices.STATUS_AW_APPROVAL
             self.workflowitems.next_available_transitions = [
                 StateChoices.STATUS_AWAITING_SIGN_C]
-            self.workflowitems.current_to_party = self.workflowitems.current_from_party
+            self.workflowitems.current_from_party = party
+            self.workflowitems.current_to_party = party
             self.workflowitems.subaction = StateChoices.SIGN_B
             self.workflowitems.action = 'SUBMIT'
             ws = workflowitems.objects.get(id=self.workflowitems.id)
@@ -211,6 +223,7 @@ class WorkFlow(object):
 
     @stage.transition(source=StateChoices.STATUS_AWAITING_SIGN_C, target=StateChoices.STATUS_AW_APPROVAL)
     def submit_level_3(self,request):
+        party = request.user.party
         bank = Parties.objects.get(party_type="BANK")
         user = request.user
         self.workflowitems.interim_state = StateChoices.STATUS_AW_APPROVAL
@@ -218,20 +231,22 @@ class WorkFlow(object):
         self.workflowitems.initial_state = StateChoices.STATUS_AW_ACCEPT
         self.workflowitems.next_available_transitions = []
         self.workflowitems.action = 'SUBMIT'
-        self.workflowitems.current_to_party = bank
+        self.workflowitems.current_from_party = party
         self.workflowitems.subaction = StateChoices.SIGN_C
         ws = workflowitems.objects.get(id=self.workflowitems.id)
         cs = workevents.objects.create(workitems=ws, from_state=StateChoices.STATUS_AWAITING_SIGN_C,  event_user = user,
                                   to_state=StateChoices.STATUS_AW_APPROVAL, interim_state=StateChoices.STATUS_AW_APPROVAL, from_party=self.workflowitems.current_from_party, type = "PROGRAM",to_party=self.workflowitems.current_to_party)
         if request.user.party.party_type  == "BANK":
             cs.c_final = "YES"
-            self.workflowitems.current_to_party = self.workflowitems.current_from_party
+            cs.to_party = self.workflowitems.user.party
+            self.workflowitems.current_to_party = self.workflowitems.user.party
             cs.save()
         else:
             cs.final = "YES"
             self.workflowitems.current_to_party = bank
             cs.to_party = bank
             cs.save()
+
 
 # -------------------------------------------------------------------------------------------------
 # REJECT TRANSITIONS

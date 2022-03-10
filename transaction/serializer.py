@@ -61,6 +61,7 @@ class Workeventsmessageserializer(serializers.ModelSerializer):
     action = serializers.SerializerMethodField()
     subaction = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
+    display_name = serializers.SerializerMethodField()
 
     class Meta:
         model = workevents
@@ -79,6 +80,8 @@ class Workeventsmessageserializer(serializers.ModelSerializer):
             'to_party',
             'action',
             'subaction',
+            'event_user',
+            'display_name',
             'type',
             'status',
             'created_date'
@@ -89,6 +92,9 @@ class Workeventsmessageserializer(serializers.ModelSerializer):
 
     def get_subaction(self,obj):
         return obj.workitems.subaction
+
+    def get_display_name(self,obj):
+        return obj.event_user.display_name
 
     def get_status(self,obj):
         return obj.to_state
