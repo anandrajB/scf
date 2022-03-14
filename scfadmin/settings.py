@@ -2,7 +2,7 @@ from pathlib import Path
 import os
 import dj_database_url
 import dotenv
-
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,8 +29,6 @@ ALLOWED_HOSTS = ['tfxworld.com', '*', '*.tfxworld.com', '.tfxworld.com']
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
-
-
 
 
 # COMMENT THIS BEFORE USING TENANT'S
@@ -133,7 +131,6 @@ MIDDLEWARE = [
 ]
 
 
-
 # WHITENOISE  AND CORS SETTINGS
 
 
@@ -143,7 +140,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'scfadmin.urls'
-
 
 
 # DEFAULT TEMPLATES AND 404
@@ -180,7 +176,6 @@ WSGI_APPLICATION = 'scfadmin.wsgi.application'
 # DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 
-
 # # DATABASE HEROKU ADD - ON
 
 # DATABASES = {
@@ -198,16 +193,44 @@ WSGI_APPLICATION = 'scfadmin.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django_tenants.postgresql_backend',
-        'NAME': 'scf2',
-        'USER': 'postgres',
-        'PASSWORD': 'root123',
+        'NAME': 'scf',
+        'USER': 'sheik',
+        'PASSWORD': 'root',
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=4),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=100),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': False,
 
+    'ALGORITHM': 'HS256',
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'JWK_URL': None,
+    'LEEWAY': 0,
 
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+
+    'JTI_CLAIM': 'jti',
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
 
 
 # TESTING SQLITE
@@ -268,7 +291,6 @@ STATICFILES_DIRS = (
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-
 # CUSTOM AUTH BACKEND
 
 AUTHENTICATION_BACKENDS = [
@@ -287,7 +309,6 @@ EMAIL_HOST_USER = os.environ['EMAIL_ID']
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_APP_PASSWORD']
 
 
-
 # REST FRAMEWORK AUTH TOKEN AND SETTINGS
 
 REST_FRAMEWORK = {
@@ -299,7 +320,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated",
-    'rest_framework.permissions.AllowAny'],
+                                   'rest_framework.permissions.AllowAny'],
 
     # "DATE_INPUT_FORMATS": ["%d-%m-%Y"]
 }
@@ -315,8 +336,7 @@ REST_FRAMEWORK = {
 # }
 
 
-
-# REST SWAGGER 
+# REST SWAGGER
 SWAGGER_SETTINGS = {
     'exclude_url_names': [],
     'exclude_namespaces': [],
@@ -363,7 +383,7 @@ SWAGGER_SETTINGS = {
     # 'unauthenticated_user': 'django.contrib.auth.models.AnonymousUser',
     'permission_denied_handler': None,
     'resource_access_handler': None,
-    'base_path':'helloreverb.com/docs',
+    'base_path': 'helloreverb.com/docs',
     'info': {
         'contact': 'apiteam@wordnik.com',
         'description': 'This is a sample server Petstore server. '

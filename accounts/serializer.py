@@ -2,31 +2,34 @@ from urllib import request
 from django.contrib.auth import get_user_model
 from .models import (
     Action,
-    Banks, 
+    Banks,
     Countries,
     Currencies,
-    Parties, 
-    PhoneOTP, 
-    signatures, 
+    Parties,
+    PhoneOTP,
+    signatures,
     userprocessauth,
     Models
-)  
+)
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from django.conf import settings
 from django.core.mail import EmailMessage
 import time
+from django.contrib import auth
+from rest_framework.exceptions import AuthenticationFailed
 
 # MY USER MODEL
 User = get_user_model()
 
 
 # EMAIL FUNCTION FOR EMAIL OTP
-def email_to(to_email,key):
-    
+def email_to(to_email, key):
+
     subject = "OTP for Finflo Login "
 
-    message = """Dear {0} ,  your otp to login is {1} """.format(str(to_email),str(key))
+    message = """Dear {0} ,  your otp to login is {1} """.format(
+        str(to_email), str(key))
 
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [to_email]
@@ -42,16 +45,15 @@ def email_to(to_email,key):
     email.send(fail_silently=False)
 
 
-
-# OTP SERIALIZER 
+# OTP SERIALIZER
 
 class Otpserializer(serializers.ModelSerializer):
     class Meta:
         model = PhoneOTP
         fields = ['otp']
 
-        
-# SERIALIZER'S 
+
+# SERIALIZER'S
 
 class BankListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -66,7 +68,8 @@ class BankSignupSerializer(serializers.Serializer):
     city = serializers.CharField()
     state = serializers.CharField()
     zipcode = serializers.CharField()
-    country_code = serializers.PrimaryKeyRelatedField(queryset = Countries.objects.all())
+    country_code = serializers.PrimaryKeyRelatedField(
+        queryset=Countries.objects.all())
 
     def create(self, validated_data):
         name = validated_data.pop("name")
@@ -76,18 +79,22 @@ class BankSignupSerializer(serializers.Serializer):
         city = validated_data.pop('city')
         state = validated_data.pop('state')
         zipcode = validated_data.pop('zipcode')
-        bank = Banks.objects.create(name = name , address_line_1 = address_line_1 , address_line_2 = address_line_2 , city = city ,state = state, zipcode = zipcode , country_code = country_code)
+        bank = Banks.objects.create(name=name, address_line_1=address_line_1, address_line_2=address_line_2,
+                                    city=city, state=state, zipcode=zipcode, country_code=country_code)
         return bank
 
     def validate_name(self, attrs):
-        if Banks.objects.filter(name= attrs).exists():
+        if Banks.objects.filter(name=attrs).exists():
             raise serializers.ValidationError("bank name already exists")
         return attrs
 
 
 class partieserializer(serializers.ModelSerializer):
-    country_code = serializers.SlugRelatedField(read_only=True, slug_field='country')
-    base_currency = serializers.SlugRelatedField(read_only=True, slug_field='description')
+    country_code = serializers.SlugRelatedField(
+        read_only=True, slug_field='country')
+    base_currency = serializers.SlugRelatedField(
+        read_only=True, slug_field='description')
+
     class Meta:
         model = Parties
         fields = [
@@ -107,22 +114,23 @@ class partieserializer(serializers.ModelSerializer):
         ]
 
 
-
 class PartiesSignupSerailizer(serializers.Serializer):
 
     party_type_choices = [
-    ('CUSTOMER','CUSTOMER'),
-    ('BANK','BANK'),
-    ('OTHER','OTHER'),
-    ('SELLER','SELLER'),
-    ('BUYER','BUYER'),
+        ('CUSTOMER', 'CUSTOMER'),
+        ('BANK', 'BANK'),
+        ('OTHER', 'OTHER'),
+        ('SELLER', 'SELLER'),
+        ('BUYER', 'BUYER'),
     ]
 
     name = serializers.CharField()
     customer_id = serializers.CharField()
-    country_code = serializers.PrimaryKeyRelatedField(queryset = Countries.objects.all())
+    country_code = serializers.PrimaryKeyRelatedField(
+        queryset=Countries.objects.all())
     name = serializers.CharField()
-    base_currency = serializers.PrimaryKeyRelatedField(queryset = Currencies.objects.all())
+    base_currency = serializers.PrimaryKeyRelatedField(
+        queryset=Currencies.objects.all())
     party_type = serializers.ChoiceField(choices=party_type_choices)
     address_1 = serializers.CharField()
     on_boarded = serializers.BooleanField()
@@ -144,30 +152,27 @@ class PartiesSignupSerailizer(serializers.Serializer):
         on_boarded = validated_data.pop('on_boarded')
         zipcode = validated_data.pop('zipcode')
         party = Parties.objects.create(
-            party_type = party_type  ,onboarded = on_boarded,state = state,country_code = country_code ,customer_id = customer_user_id , name = name ,base_currency = base_currency , address_line_1 = address_1 , address_line_2 = address_2 , city = city , zipcode =zipcode
+            party_type=party_type, onboarded=on_boarded, state=state, country_code=country_code, customer_id=customer_user_id, name=name, base_currency=base_currency, address_line_1=address_1, address_line_2=address_2, city=city, zipcode=zipcode
         )
         return party
 
-
-    def validate_customer_id(self,value):
-        if Parties.objects.filter(customer_id = value).exists():
-            raise serializers.ValidationError("A party with this customer_id / account already exists , try another customer_id")
+    def validate_customer_id(self, value):
+        if Parties.objects.filter(customer_id=value).exists():
+            raise serializers.ValidationError(
+                "A party with this customer_id / account already exists , try another customer_id")
         return value
-        
-
-    
 
 
 class UserSignupSerializer(serializers.Serializer):
     email = serializers.CharField()
     phone = serializers.CharField()
-    party = serializers.PrimaryKeyRelatedField(queryset = Parties.objects.all())
+    party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all())
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     display_name = serializers.CharField()
     supervisor = serializers.BooleanField()
     administrator = serializers.BooleanField()
-    
+
     def create(self, validated_data):
         email = validated_data.pop('email')
         phone = validated_data.pop('phone')
@@ -178,37 +183,62 @@ class UserSignupSerializer(serializers.Serializer):
         supervisor = validated_data.pop('supervisor')
         administrator = validated_data.pop('administrator')
         if party.party_type == "BANK":
-            user = User.objects.create(phone = phone , email = email ,first_name = first_name ,  last_name =last_name ,display_name = display_name , party = party,  is_supervisor = supervisor , is_administrator = True )
+            user = User.objects.create(phone=phone, email=email, first_name=first_name,  last_name=last_name,
+                                       display_name=display_name, party=party,  is_supervisor=supervisor, is_administrator=True)
             user.save()
         else:
-            user = User.objects.create(phone = phone , email = email ,first_name = first_name ,  last_name =last_name ,display_name = display_name , party = party,  is_supervisor = supervisor , is_administrator = administrator )
+            user = User.objects.create(phone=phone, email=email, first_name=first_name,  last_name=last_name,
+                                       display_name=display_name, party=party,  is_supervisor=supervisor, is_administrator=administrator)
             user.save()
         return user
 
-    def validate_email(self,value):
-        if User.objects.filter(email = value).exists():
-            raise serializers.ValidationError("user with this email_id already exists")
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError(
+                "user with this email_id already exists")
         return value
-        
+
     def validate_phone(self, attrs):
-        if User.objects.filter(phone = attrs).exists():
-            raise serializers.ValidationError("user with this phone number already exits")
+        if User.objects.filter(phone=attrs).exists():
+            raise serializers.ValidationError(
+                "user with this phone number already exits")
         return attrs
 
-    
 
 class LoginSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(max_length=255)
+    phone = serializers.IntegerField()
+    tokens = serializers.CharField(max_length=70, read_only=True)
+
     class Meta:
         model = User
-        fields = ["email","phone"]
+        fields = ['email', 'phone', 'tokens']
 
+    def validate(self, attrs):
+        email = attrs.get('email', '')
+        phone = attrs.get('phone', '')
 
+        user = auth.authenticate(email=email, phone=phone)
 
-    
+        if not user:
+            raise AuthenticationFailed("Invalid credentials")
+
+        if not user.is_active:
+            raise AuthenticationFailed("Account inactive")
+
+        return {
+            'email': user.email,
+            'phone': user.phone,
+            'tokens': user.tokens
+        }
+    # class Meta:
+    #     model = User
+    #     fields = ["email","phone"]
 
 
 class GetUserSerilaizer(serializers.ModelSerializer):
-    party = serializers.SlugRelatedField(read_only = True , slug_field= 'name')
+    party = serializers.SlugRelatedField(read_only=True, slug_field='name')
+
     class Meta:
         model = User
         fields = [
@@ -226,7 +256,6 @@ class GetUserSerilaizer(serializers.ModelSerializer):
             "created_date",
         ]
 
-    
 
 class UserUpdateSerilaizer(serializers.ModelSerializer):
     # party = serializers.SlugRelatedField(read_only = True , slug_field='name')
@@ -272,8 +301,9 @@ class Modelserializer(serializers.ModelSerializer):
 
 
 class signatureslistserializer(serializers.ModelSerializer):
-    action = serializers.SlugRelatedField(read_only = True ,slug_field='desc')
-    party = serializers.SlugRelatedField(read_only = True , slug_field= 'name')
+    action = serializers.SlugRelatedField(read_only=True, slug_field='desc')
+    party = serializers.SlugRelatedField(read_only=True, slug_field='name')
+
     class Meta:
         model = signatures
         fields = [
@@ -294,7 +324,8 @@ class signaturecreateserializer(serializers.ModelSerializer):
 
 
 class Userprocessserialzier(serializers.ModelSerializer):
-    action = serializers.SlugRelatedField(read_only = True ,slug_field='desc')
+    action = serializers.SlugRelatedField(read_only=True, slug_field='desc')
+
     class Meta:
         model = userprocessauth
         fields = [
@@ -308,15 +339,14 @@ class Userprocessserialzier(serializers.ModelSerializer):
             'sign_c'
         ]
 
+
 def users(request):
-        return request.user.id
-
-
-
+    return request.user.id
 
 
 class userprocesscreateserializer(serializers.ModelSerializer):
     action = serializers.PrimaryKeyRelatedField(queryset=Action.objects.all())
+
     class Meta:
         model = userprocessauth
         fields = [
@@ -329,4 +359,3 @@ class userprocesscreateserializer(serializers.ModelSerializer):
             'sign_b',
             'sign_c'
         ]
-
