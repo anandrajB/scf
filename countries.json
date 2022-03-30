@@ -1,0 +1,44 @@
+[
+    {
+        "model": "accounts.countries",
+        "pk": 1,
+        "fields": {
+            "country": "INDIA"
+        }
+    },
+    {
+        "model": "accounts.countries",
+        "pk": 2,
+        "fields": {
+            "country": "BELGIUM"
+        }
+    },
+    {
+        "model": "accounts.countries",
+        "pk": 3,
+        "fields": {
+            "country": "BAHRAIN"
+        }
+    },
+    {
+        "model": "accounts.countries",
+        "pk": 4,
+        "fields": {
+            "country": "BELARUS"
+        }
+    },
+    {
+        "model": "accounts.countries",
+        "pk": 5,
+        "fields": {
+            "country": "CHINA"
+        }
+    },
+    {
+        "model": "accounts.countries",
+        "pk": 6,
+        "fields": {
+            "country": "COLOMBIA"
+        }
+    }
+]

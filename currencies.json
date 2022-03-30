@@ -1,0 +1,1314 @@
+[
+    {
+        "model": "accounts.currencies",
+        "pk": 1,
+        "fields": {
+            "iso": 784,
+            "description": "AED"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 2,
+        "fields": {
+            "iso": 971,
+            "description": "AFN"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 3,
+        "fields": {
+            "iso": 8,
+            "description": "ALL"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 4,
+        "fields": {
+            "iso": 51,
+            "description": "AMD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 5,
+        "fields": {
+            "iso": 532,
+            "description": "ANG"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 6,
+        "fields": {
+            "iso": 973,
+            "description": "AOA"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 7,
+        "fields": {
+            "iso": 32,
+            "description": "ARS"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 8,
+        "fields": {
+            "iso": 36,
+            "description": "AUD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 9,
+        "fields": {
+            "iso": 533,
+            "description": "AWG"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 10,
+        "fields": {
+            "iso": 944,
+            "description": "AZN"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 11,
+        "fields": {
+            "iso": 977,
+            "description": "BAM"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 12,
+        "fields": {
+            "iso": 52,
+            "description": "BBD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 13,
+        "fields": {
+            "iso": 50,
+            "description": "BDT"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 14,
+        "fields": {
+            "iso": 975,
+            "description": "BGN"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 15,
+        "fields": {
+            "iso": 48,
+            "description": "BHD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 16,
+        "fields": {
+            "iso": 108,
+            "description": "BIF"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 17,
+        "fields": {
+            "iso": 60,
+            "description": "BMD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 18,
+        "fields": {
+            "iso": 96,
+            "description": "BND"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 19,
+        "fields": {
+            "iso": 68,
+            "description": "BOB"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 20,
+        "fields": {
+            "iso": 986,
+            "description": "BRL"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 21,
+        "fields": {
+            "iso": 44,
+            "description": "BSD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 22,
+        "fields": {
+            "iso": 123,
+            "description": "BTC"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 23,
+        "fields": {
+            "iso": 64,
+            "description": "BTN"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 24,
+        "fields": {
+            "iso": 72,
+            "description": "BWP"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 25,
+        "fields": {
+            "iso": 933,
+            "description": "BYN"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 26,
+        "fields": {
+            "iso": 84,
+            "description": "BZD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 27,
+        "fields": {
+            "iso": 124,
+            "description": "CAD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 28,
+        "fields": {
+            "iso": 976,
+            "description": "CDF"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 29,
+        "fields": {
+            "iso": 756,
+            "description": "CHF"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 30,
+        "fields": {
+            "iso": 990,
+            "description": "CLF"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 31,
+        "fields": {
+            "iso": 152,
+            "description": "CLP"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 32,
+        "fields": {
+            "iso": 68,
+            "description": "BOB"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 33,
+        "fields": {
+            "iso": 156,
+            "description": "CNY"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 34,
+        "fields": {
+            "iso": 170,
+            "description": "COP"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 35,
+        "fields": {
+            "iso": 188,
+            "description": "CRC"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 36,
+        "fields": {
+            "iso": 931,
+            "description": "CUC"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 37,
+        "fields": {
+            "iso": 192,
+            "description": "CUP"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 38,
+        "fields": {
+            "iso": 132,
+            "description": "CVE"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 39,
+        "fields": {
+            "iso": 203,
+            "description": "CZK"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 40,
+        "fields": {
+            "iso": 262,
+            "description": "DJF"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 41,
+        "fields": {
+            "iso": 208,
+            "description": "DKK"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 42,
+        "fields": {
+            "iso": 214,
+            "description": "DOP"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 43,
+        "fields": {
+            "iso": 12,
+            "description": "DZD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 44,
+        "fields": {
+            "iso": 818,
+            "description": "EGP"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 45,
+        "fields": {
+            "iso": 232,
+            "description": "ERN"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 46,
+        "fields": {
+            "iso": 230,
+            "description": "ETB"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 47,
+        "fields": {
+            "iso": 978,
+            "description": "EUR"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 48,
+        "fields": {
+            "iso": 242,
+            "description": "FJD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 49,
+        "fields": {
+            "iso": 238,
+            "description": "FKP"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 50,
+        "fields": {
+            "iso": 826,
+            "description": "GBP"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 51,
+        "fields": {
+            "iso": 981,
+            "description": "GEL"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 53,
+        "fields": {
+            "iso": 936,
+            "description": "GHS"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 54,
+        "fields": {
+            "iso": 292,
+            "description": "GIP"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 55,
+        "fields": {
+            "iso": 270,
+            "description": "GMD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 56,
+        "fields": {
+            "iso": 324,
+            "description": "GNF"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 57,
+        "fields": {
+            "iso": 320,
+            "description": "GTQ"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 58,
+        "fields": {
+            "iso": 328,
+            "description": "GYD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 59,
+        "fields": {
+            "iso": 344,
+            "description": "HKD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 60,
+        "fields": {
+            "iso": 340,
+            "description": "HNL"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 61,
+        "fields": {
+            "iso": 191,
+            "description": "HRK"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 62,
+        "fields": {
+            "iso": 332,
+            "description": "HTG"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 63,
+        "fields": {
+            "iso": 348,
+            "description": "HUF"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 64,
+        "fields": {
+            "iso": 360,
+            "description": "IDR"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 65,
+        "fields": {
+            "iso": 376,
+            "description": "ILS"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 67,
+        "fields": {
+            "iso": 356,
+            "description": "INR"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 68,
+        "fields": {
+            "iso": 368,
+            "description": "IQD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 69,
+        "fields": {
+            "iso": 364,
+            "description": "IRR"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 70,
+        "fields": {
+            "iso": 352,
+            "description": "ISK"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 71,
+        "fields": {
+            "iso": 123,
+            "description": "JEP"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 72,
+        "fields": {
+            "iso": 123,
+            "description": "JMD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 73,
+        "fields": {
+            "iso": 123,
+            "description": "JOD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 74,
+        "fields": {
+            "iso": 123,
+            "description": "JPY"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 75,
+        "fields": {
+            "iso": 123,
+            "description": "KES"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 76,
+        "fields": {
+            "iso": 123,
+            "description": "KGS"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 77,
+        "fields": {
+            "iso": 123,
+            "description": "KHR"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 78,
+        "fields": {
+            "iso": 123,
+            "description": "KMF"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 79,
+        "fields": {
+            "iso": 456,
+            "description": "KPW"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 80,
+        "fields": {
+            "iso": 789,
+            "description": "KRW"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 81,
+        "fields": {
+            "iso": 222,
+            "description": "KWD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 82,
+        "fields": {
+            "iso": 123,
+            "description": "KYD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 83,
+        "fields": {
+            "iso": 123,
+            "description": "KZT"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 84,
+        "fields": {
+            "iso": 123,
+            "description": "LAK"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 85,
+        "fields": {
+            "iso": 123,
+            "description": "LBP"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 86,
+        "fields": {
+            "iso": 123,
+            "description": "LKR"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 87,
+        "fields": {
+            "iso": 123,
+            "description": "LRD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 88,
+        "fields": {
+            "iso": 123,
+            "description": "LSL"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 89,
+        "fields": {
+            "iso": 123,
+            "description": "LYD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 90,
+        "fields": {
+            "iso": 456,
+            "description": "MAD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 91,
+        "fields": {
+            "iso": 789,
+            "description": "MDL"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 92,
+        "fields": {
+            "iso": 789,
+            "description": "MXN"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 93,
+        "fields": {
+            "iso": 123,
+            "description": "MGA"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 94,
+        "fields": {
+            "iso": 123,
+            "description": "MKD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 95,
+        "fields": {
+            "iso": 123,
+            "description": "MMK"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 96,
+        "fields": {
+            "iso": 123,
+            "description": "MNT"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 97,
+        "fields": {
+            "iso": 123,
+            "description": "MOP"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 98,
+        "fields": {
+            "iso": 123,
+            "description": "MRO"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 99,
+        "fields": {
+            "iso": 123,
+            "description": "MUR"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 100,
+        "fields": {
+            "iso": 123,
+            "description": "MVR"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 101,
+        "fields": {
+            "iso": 456,
+            "description": "MWK"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 102,
+        "fields": {
+            "iso": 789,
+            "description": "MXN"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 103,
+        "fields": {
+            "iso": 222,
+            "description": "MYR"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 104,
+        "fields": {
+            "iso": 123,
+            "description": "MZN"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 105,
+        "fields": {
+            "iso": 123,
+            "description": "NAD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 106,
+        "fields": {
+            "iso": 123,
+            "description": "NGN"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 107,
+        "fields": {
+            "iso": 123,
+            "description": "NIO"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 108,
+        "fields": {
+            "iso": 123,
+            "description": "NOK"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 109,
+        "fields": {
+            "iso": 123,
+            "description": "NPR"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 110,
+        "fields": {
+            "iso": 123,
+            "description": "NZD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 111,
+        "fields": {
+            "iso": 123,
+            "description": "OMR"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 112,
+        "fields": {
+            "iso": 456,
+            "description": "PAB"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 113,
+        "fields": {
+            "iso": 789,
+            "description": "PEN"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 114,
+        "fields": {
+            "iso": 222,
+            "description": "PGK"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 115,
+        "fields": {
+            "iso": 123,
+            "description": "PHP"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 116,
+        "fields": {
+            "iso": 123,
+            "description": "PKR"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 117,
+        "fields": {
+            "iso": 123,
+            "description": "PLN"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 118,
+        "fields": {
+            "iso": 123,
+            "description": "PYG"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 119,
+        "fields": {
+            "iso": 123,
+            "description": "QAR"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 120,
+        "fields": {
+            "iso": 123,
+            "description": "RON"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 121,
+        "fields": {
+            "iso": 123,
+            "description": "RSD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 122,
+        "fields": {
+            "iso": 123,
+            "description": "RUB"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 123,
+        "fields": {
+            "iso": 123,
+            "description": "RWF"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 124,
+        "fields": {
+            "iso": 123,
+            "description": "SAR"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 125,
+        "fields": {
+            "iso": 123,
+            "description": "SBD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 126,
+        "fields": {
+            "iso": 123,
+            "description": "SCR"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 127,
+        "fields": {
+            "iso": 456,
+            "description": "SDG"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 128,
+        "fields": {
+            "iso": 789,
+            "description": "SEK"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 129,
+        "fields": {
+            "iso": 222,
+            "description": "SGD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 130,
+        "fields": {
+            "iso": 123,
+            "description": "SHP"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 131,
+        "fields": {
+            "iso": 123,
+            "description": "SLL"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 132,
+        "fields": {
+            "iso": 123,
+            "description": "SOS"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 133,
+        "fields": {
+            "iso": 123,
+            "description": "SRD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 134,
+        "fields": {
+            "iso": 123,
+            "description": "SSP"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 135,
+        "fields": {
+            "iso": 123,
+            "description": "STD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 136,
+        "fields": {
+            "iso": 123,
+            "description": "SVC"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 137,
+        "fields": {
+            "iso": 456,
+            "description": "SYP"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 138,
+        "fields": {
+            "iso": 789,
+            "description": "SZL"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 139,
+        "fields": {
+            "iso": 222,
+            "description": "THB"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 140,
+        "fields": {
+            "iso": 123,
+            "description": "TJS"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 141,
+        "fields": {
+            "iso": 123,
+            "description": "TMT"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 142,
+        "fields": {
+            "iso": 123,
+            "description": "TND"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 143,
+        "fields": {
+            "iso": 123,
+            "description": "TOP"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 144,
+        "fields": {
+            "iso": 123,
+            "description": "TRY"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 145,
+        "fields": {
+            "iso": 123,
+            "description": "TTD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 146,
+        "fields": {
+            "iso": 123,
+            "description": "TWD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 147,
+        "fields": {
+            "iso": 123,
+            "description": "TZS"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 148,
+        "fields": {
+            "iso": 456,
+            "description": "UAH"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 149,
+        "fields": {
+            "iso": 123,
+            "description": "UGX"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 150,
+        "fields": {
+            "iso": 456,
+            "description": "USD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 151,
+        "fields": {
+            "iso": 789,
+            "description": "UYI"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 152,
+        "fields": {
+            "iso": 789,
+            "description": "UYU"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 153,
+        "fields": {
+            "iso": 222,
+            "description": "UZS"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 154,
+        "fields": {
+            "iso": 123,
+            "description": "VEF"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 155,
+        "fields": {
+            "iso": 999,
+            "description": "XXXXX"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 156,
+        "fields": {
+            "iso": 123,
+            "description": "VND"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 157,
+        "fields": {
+            "iso": 123,
+            "description": "VUV"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 158,
+        "fields": {
+            "iso": 123,
+            "description": "WST"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 159,
+        "fields": {
+            "iso": 123,
+            "description": "XAF"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 160,
+        "fields": {
+            "iso": 456,
+            "description": "XCD"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 161,
+        "fields": {
+            "iso": 222,
+            "description": "XOF"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 162,
+        "fields": {
+            "iso": 123,
+            "description": "XPF"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 163,
+        "fields": {
+            "iso": 886,
+            "description": "YER"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 164,
+        "fields": {
+            "iso": 710,
+            "description": "ZAR"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 165,
+        "fields": {
+            "iso": 967,
+            "description": "ZMW"
+        }
+    },
+    {
+        "model": "accounts.currencies",
+        "pk": 166,
+        "fields": {
+            "iso": 932,
+            "description": "ZWL"
+        }
+    }
+]
