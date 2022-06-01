@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  scfdb:
+    container_name: scfdb
+    image: postgres:14.1
+    ports:
+      - "5432:5432"
+    volumes: 
+      - ./db_data:/var/lib/postgresql/data
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: scf-backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  scfweb:
+    container_name: scfweb
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - '8000:8000'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: scf-backend
+    depends_on:
+      scfdb:
+        condition: service_healthy
+    links:
+      - scfdb
+  scfpgadmin:
+    container_name: scfpgadmin
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: asif@venzo.com
+      PGADMIN_DEFAULT_PASSWORD: secret
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - scfdb
+volumes:
+    db_data:
+    pgadmin_data:

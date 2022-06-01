@@ -1,0 +1,14 @@
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: scf_procuction_blr-1-242w1
+  username: anand
+  password: root
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: scf
+  host:  aws.ec2.com
+  username: myapp
+  password: password1

@@ -1,0 +1,12 @@
+.cache
+.tox
+.tx
+__pycache__
+*.pyc
+.pyc
+db.sqlite3
+rootkey.csv
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

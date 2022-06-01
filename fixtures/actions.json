@@ -1,0 +1,74 @@
+[
+    {
+        "model": "accounts.action",
+        "pk": 1,
+        "fields": {
+            "desc": "SUBMIT",
+            "bank": false,
+            "customer": false
+        }
+    },
+    {
+        "model": "accounts.action",
+        "pk": 2,
+        "fields": {
+            "desc": "APPROVE",
+            "bank": false,
+            "customer": false
+        }
+    },
+    {
+        "model": "accounts.action",
+        "pk": 3,
+        "fields": {
+            "desc": "ACCEPT",
+            "bank": false,
+            "customer": false
+        }
+    },
+    {
+        "model": "accounts.action",
+        "pk": 4,
+        "fields": {
+            "desc": "REJECT",
+            "bank": false,
+            "customer": false
+        }
+    },
+    {
+        "model": "accounts.action",
+        "pk": 5,
+        "fields": {
+            "desc": "REQUEST FINANCE",
+            "bank": false,
+            "customer": false
+        }
+    },
+    {
+        "model": "accounts.action",
+        "pk": 6,
+        "fields": {
+            "desc": "SETTLE",
+            "bank": false,
+            "customer": false
+        }
+    },
+    {
+        "model": "accounts.action",
+        "pk": 7,
+        "fields": {
+            "desc": "OVERDUE",
+            "bank": false,
+            "customer": false
+        }
+    },
+    {
+        "model": "accounts.action",
+        "pk": 8,
+        "fields": {
+            "desc": "ARCHIVE",
+            "bank": false,
+            "customer": false
+        }
+    }
+]

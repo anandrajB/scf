@@ -1,0 +1,2 @@
+buyer_id,buyer_name,invoice_no,"invoice_date",invoice_amount,due_date,financing_currency,settlement_currency
+13,VENZO,1231,"23-12-1998",1213,05-05-2022,INR,AED

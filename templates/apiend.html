@@ -1,0 +1,186 @@
+
+<html>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<title>SCFBACKEND-url's</title>
+</body>
+    <nav class="navbar sticky-top navbar-dark bg-dark">
+        <div class="container-fluid">
+          <span class="navbar-brand mb-0 h1">SCF_BACKEND - API URLS</span>
+        </div>
+    </nav>     
+<article role="main" id="top">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title h3 mb-3">AUTH</h5>
+          <ul class="lists bottom-line">
+            <li><a href="/api-auth/login">Login</a></li>
+            <li><a href="/api-auth/logout">Logout</a></li>
+            <li><a href="/api-auth/signup">signup</a></li>
+            <li><a href="/api-auth/user">user</a></li>
+            <li><a href="/api-auth/inactive_user">inactive-user</a></li>
+            <li><a href="/api-auth/otp">otp sending</a></li>
+            <li><a href="/api-auth/otp-v/?email=xyz@gmail.com&phone=9000">otp-verify</a></li>
+            <li><a href="/api-auth/userprocess">userprocess</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      
+    <section id="css2">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title h3 mb-3">PARTY</h5>
+          <ul class="lists bottom-line">
+            <li><a href="/api-auth/party">Party</a></li>
+            <li><a href="/api-auth/bank">Bank</a></li>
+            <li><a href="/api-auth/currency">currency</a></li>
+            <li><a href="/api-auth/country">country</a></li>
+            <li><a href="/api-auth/signatures">signatures</a></li>
+            <li><a href="/api-auth/action">actions</a></li>
+            <li><a href="/api-auth/models">models</a></li>
+          </ul>
+        </div>
+      </div>
+      
+    </section>
+    <section id="css3">
+       <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title h3 mb-3">MANAGE SCF</h5>
+          <ul class="lists bottom-line">
+            <li><a href="/api/program">Program</a></li>
+            <li><a href="/api/invoice">Invoice</a></li>
+            <li><a href="/api/invoiceupload">invoiceupload</a></li>
+            <li><a href="/api/counterparty">counterparty</a></li>
+            <li><a href="/api/pairing">pairing</a></li>
+          </ul>
+        </div>
+      </div>
+    
+      </section>
+      <section id="css3">
+        <div class="card mb-3">
+         <div class="card-body">
+           <h5 class="card-title h3 mb-3">FSM TRANSITION's AND ACTION's</h5>
+           <ul class="lists bottom-line">
+             <li><a href="/api/program/transition/submit/1/">Program_submit</a></li>
+             <li><a href="/api/program/transition/reject/1/">Program_reject</a></li>
+             <li><a href="/api/program/transition/accept/1/">Program_accept</a></li>
+             <li><a href="/api/program/transition/approve/1/">Program_approve</a></li>
+             <li><a href="/api/program/transition/return/1/">Program_return</a></li>
+             <li><a href="/api/program/transition/delete/1/">Program_delete</a></li>
+             <li><a href="/api/invoiceupload/transition/submit/1/">invoice-upload_submit</a></li>
+             <li><a href="/api/invoice/transition/approve/1/">invoice_approve</a></li>
+             <li><a href="/api/invoice/transition/submit/1/">invoice_submit</a></li>
+             <li><a href="/api/invoice/transition/reject/1/">invoice_reject</a></li>
+             <li><a href="/api/invoice/transition/RQF/1/">invoice_Finance_Request</a></li>
+             <li><a href="/api/invoice/transition/archive/1/">invoice_archive</a></li>
+             <li><a href="/api/invoice/transition/settle/1/">invoice_settle</a></li>
+             <li><a href="/api/invoice/transition/overdue/1/">invoice_overdue</a></li>
+             <li><a href="/api/invoice/transition/return/1/">invoice_return</a></li>
+           </ul>
+         </div>
+       </div>
+     
+       </section>
+      <section id="html">
+        <div class="card mb-3">
+          <div class="card-body">
+          <h5 class="card-title h3 mb-3">INBOX</h5>
+          <ul class="lists bottom-line">
+            <li><a href="/api/messages/inbox/">Inbox</a></li>
+            <li><a href="/api/messages/inbox/?record_type=PROGRAM">Inbox-program</a></li>
+            <li><a href="/api/messages/inbox/?record_type=INVOICE">Inbox-finance-request</a></li>
+            <li><a href="/api/messages/inbox/?record_type=INVOICE_UPLOAD">Inbox-invoice</a></li>
+            <li><a href="/api/messages/inbox/?record_type=AW_AP">Inbox-awaiting-approval</a></li>
+            <li><a href="/api/messages/workflow-history/?wf-item=1">workflow-History-list</a></li>
+            <li><a href="/api/messages/draft">draft</a></li>
+            <li><a href="/api/messages/sent">sent</a></li>
+          </ul>
+        </div>
+      </div>
+    
+    </section>
+    <section id="html">
+      <div class="card mb-3">
+        <div class="card-body">
+        <h5 class="card-title h3 mb-3">OTHERS</h5>
+        <ul class="lists bottom-line">
+          <li><a href="/graphql">Graph_QL</a></li> 
+        </ul>
+      </div>
+    </div>
+  
+  </section>
+    
+    </article>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <body>
+    </html>
+
+<style>
+
+:root {
+  --ff: 'Fira Mono', sans-serif;
+}
+
+.lists {
+  position: relative;
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-left: -30px;
+}
+
+.lists li {
+  position: relative;
+  margin-left: 30px;
+}
+
+.lists li a {
+  position: relative;
+  display: block;
+  font-family: var(--ff);
+  font-size: 1.1rem;
+  padding: 10px 0;
+  width: 100%;
+  text-decoration: none;
+  color: #7c7c7c;
+  transition: all .2s;
+}
+
+.lists li a:hover {
+  color: #3c3c3c;
+}
+
+/* bottom-line */
+
+.lists.bottom-line li {
+  float: left;
+  width: calc(33.33% - 30px);
+}
+.lists.bottom-line li::after {
+  position: absolute;
+  content: "";
+  right: 0;
+  bottom: -1px;
+  width: 0;
+  height: 1px;
+  background: red;
+  transition: all .5s;
+}
+.lists.bottom-line li:hover::after {
+  width: 100%;
+  left: 0;
+  right: auto;
+}
+.lists.bottom-line li a {
+  border-bottom: 1px solid #f5f5f5;
+}
+.lists.bottom-line li a:hover {
+  color: #3c3c3c;
+  padding-left: 10px;
+}
+
+</style>
