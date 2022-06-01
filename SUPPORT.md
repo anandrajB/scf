@@ -3,11 +3,12 @@
 ## check out:
 
 1. User Documentation — https://documenter.getpostman.com/view/11858287/Uyr5pf1h
-2. Developer Documentation — Postman documentation and collection support
-3. Contributors :\
+2. Swagger doc - https://venzoscf.herokuapp.com/apidoc/
+3. Developer Documentation — Postman documentation and collection support
+4. Contributors :\
     3.1 - https://github.com/anandrajB \
     3.2 -  https://github.com/Mohamed-Sheik-Ali
-4. Packages : NIL
+5. Packages : NIL
 
 
 ## Supported versions
