@@ -42,6 +42,7 @@ from .serializer import (
     Workflowitemsupdateserializer,
     Workitemsmessagesawapserializer,
     WorkFlowitemsEnquirySerializer,
+    Workitemserializer,
     csvserializer
 )
 
@@ -614,14 +615,14 @@ class FileUploadAPIView(APIView):
 
 class WorkFlowItemUpdateApi(RetrieveUpdateAPIView):
     queryset = workflowitems.objects.all()
-    serializer_class = Workflowitemsupdateserializer
+    serializer_class = Workitemserializer
 
 
     def update(self, request, pk=None):
         queryset = workflowitems.objects.all()
         state = request.data.get('state')
         user = get_object_or_404(queryset, pk=pk)
-        serializer = Workflowitemsupdateserializer(user, data=request.data)
+        serializer = Workitemserializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             obj = generics.get_object_or_404(queryset, id=serializer.data['id'])
@@ -662,7 +663,7 @@ class InboxNotificationCountApiView(APIView):
 
 
 
-
+## WORKEVENTS UPDATE API VIEW
 
 class WorkEventsUpdateApi(RetrieveUpdateDestroyAPIView):
     queryset = workevents.objects.all()

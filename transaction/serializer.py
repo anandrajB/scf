@@ -96,6 +96,26 @@ class Workitemserializer(serializers.ModelSerializer):
     def get_wf_item_id(self,obj):
         return obj.id
 
+    def update(self, instance, validated_data):
+        instance.invoice = validated_data.get("invoice", instance.invoice)
+        # instance.initial_state = validated_data.get("initial_state", instance.initial_state)
+        # instance.interim_state = validated_data.get("interim_state", instance.interim_state)
+        # instance.final_state = validated_data.get("final_state", instance.final_state)
+        # instance.action = validated_data.get("action", instance.action)
+        # instance.subaction = validated_data.get("subaction", instance.subaction)
+        # instance.type = validated_data.get("type", instance.type)
+        instance.is_read = validated_data.get("is_read", instance.is_read)
+        financed_amount = validated_data.get('financed_amount')
+        interest_rate = validated_data.get('interest_rate')
+        finance_currency_type = validated_data.get('finance_currency_type')
+        settlement_currency_type = validated_data.get('settlement_currency_type')
+        try:
+            Invoices.objects.filter(id = instance.invoice.id).update(financed_amount = financed_amount , interest_rate =interest_rate , finance_currency_type = finance_currency_type, settlement_currency_type = settlement_currency_type)
+            instance.save()
+        except:
+            instance.save()
+        return instance
+
 
 
 
@@ -987,6 +1007,8 @@ def validate_invoice_extension(value):
     if not ext.lower() in invoice_extensions:
         raise ValidationError('Unsupported file extension. Must be in .csv or .xlsx format')
 
+
+# INVOICE CSV SERIALIZER
 
 class csvserializer(serializers.Serializer):
     invoice = serializers.FileField(validators = [validate_invoice_extension])
