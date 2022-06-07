@@ -76,6 +76,7 @@ class Workitemserializer(serializers.ModelSerializer):
     class Meta:
         model = workflowitems
         fields = [
+            'id',
             'wf_item_id',
             'initial_state',
             'interim_state',
@@ -86,6 +87,7 @@ class Workitemserializer(serializers.ModelSerializer):
             'user',
             'created_date',
             'action',
+            'is_read',
             'subaction',
             'type',
             'workflowevent'
