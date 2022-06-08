@@ -20,6 +20,7 @@ def profile_img_path(instance, filename):
 
 class Currencies(models.Model):
     iso = models.IntegerField()
+    dial_code = models.IntegerField()
     description = models.CharField(max_length=10)
 
     def save(self, *args, **kwargs):
