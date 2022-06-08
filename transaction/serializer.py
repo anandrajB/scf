@@ -481,7 +481,7 @@ class InvoiceUploadserializer(serializers.Serializer):
     wf_item_id = serializers.SerializerMethodField()
     program_type = serializers.ChoiceField(choices = program_type)
     invoices = serializers.JSONField()
-    attached_file = serializers.FileField()
+    attached_file = serializers.FileField(required = False)
     event_user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(),required=False)
     to_party = serializers.PrimaryKeyRelatedField(queryset = Parties.objects.all(),required = False)
     from_party = serializers.PrimaryKeyRelatedField(queryset = Parties.objects.all(),required = False)
