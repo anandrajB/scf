@@ -30,6 +30,35 @@ class Transitionpartytype(models.Model):
         verbose_name_plural = "Transitionpartytype"
 
 
+class InterestRateType(models.Model):
+    description = models.CharField(max_length=55)
+
+    def __str__(self):
+        return self.description
+    
+    def save(self, *args, **kwargs):
+        self.description = self.description.upper()
+        return super(InterestRateType, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = "InterestRateType"
+
+
+
+class InterestChoice(models.Model):
+    description = models.CharField(max_length=55)
+
+    def __str__(self):
+        return self.description
+    
+    def save(self, *args, **kwargs):
+        self.description = self.description.upper()
+        return super(InterestChoice, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = "InterestChoice"
+
+
 # PROGRAM MODEL
 
 class Programs(models.Model):
