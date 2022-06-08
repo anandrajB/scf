@@ -5,6 +5,22 @@ from django.contrib.postgres.fields import ArrayField
 from transaction.states import StateChoices
 
 
+
+## FILE PATH DIRECTORY  -- ATTACHEMENT FILES -- 
+
+def program_file_path(instance,filename):
+    return 'scf/program/{0}--{1}/{2}'.format(instance.party.name , instance.party.party_type , filename)
+
+
+def pairing_file_path(instance,filename):
+    return 'scf/pairing/user_{0}/{1}/{2}'.format(instance.counterparty_id.id , instance.counterparty_id.name , filename)
+
+
+def invoice_upload_file_path(instance,filename):
+    return 'scf/invoice_attachements/{0}'.format(filename)
+
+
+
 #  MODELS RELATED TO TRANSACTION
 
 class Transitionpartytype(models.Model):
@@ -59,6 +75,7 @@ class Programs(models.Model):
     financed_amount = models.DecimalField(max_digits=8, decimal_places=2,blank=True, null=True)
     balance_amount = models.DecimalField(max_digits=8, decimal_places=2,blank=True, null=True)
     grace_period = models.IntegerField(blank=True, null=True)
+    attached_file = models.FileField(upload_to=program_file_path)
     interest_type = models.CharField(choices=interest_choices, default=None, max_length=15,blank=True, null=True)
     interest_rate_type = models.CharField(choices=interest_rate_type_choices, max_length=15, default=None,blank=True, null=True)
     interest_rate = models.DecimalField(max_digits=8, decimal_places=2,blank=True, null=True)
@@ -128,6 +145,7 @@ class Pairings(models.Model):
     financed_amount = models.DecimalField(max_digits=8, decimal_places=2,blank=True, null=True)
     balance_amount = models.DecimalField(max_digits=8, decimal_places=2,blank=True, null=True)
     grace_period = models.IntegerField(blank=True, null=True)
+    attached_file = models.FileField(upload_to=pairing_file_path)
     interest_type = models.CharField(choices=interest_choices, default=None, max_length=15,blank=True, null=True)
     interest_rate_type = models.CharField(choices=interest_rate_type_choices, max_length=15, default=None)
     interest_rate = models.DecimalField(max_digits=8, decimal_places=2,blank=True, null=True)
@@ -194,6 +212,7 @@ class Invoiceuploads(models.Model):
     program_type = models.CharField(choices=program_type, default='*', max_length=15)
     # user = models.OneToOneField("accounts.User", on_delete=models.CASCADE, related_name='customername')
     invoices = models.JSONField()
+    attached_file = models.FileField(upload_to=invoice_upload_file_path)
     is_finished = models.BooleanField(default=None,blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
 

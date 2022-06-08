@@ -15,7 +15,7 @@ from .models import (
 )
 
 from rest_framework.authtoken.models import Token 
-
+from django.utils.safestring import mark_safe
 
 
 
@@ -36,8 +36,14 @@ admin_site = MyAdminSite()
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
+
+    
+
+    
+
     fieldsets = (
         (None, {'fields': ('email', 'phone', 'first_name','last_name','display_name')}),
+        ('profile picture', {'fields': ('profile_tags',)}),
         ('Permissions', {'fields': ('is_active','is_supervisor', 'is_administrator',)}),
         ('Party', {'fields': ('party',)}),
         ('Important Dates', {'fields': ('last_login',)}),
@@ -45,10 +51,10 @@ class UserAdmin(admin.ModelAdmin):
     filter_horizontal = (
         'user_permissions',
     )
-
+    readonly_fields = ['profile_tags']
     list_display = ('email', 'phone', 'party','is_supervisor', "is_administrator" ,'is_active')
     search_fields = ['email','phone','party__name']
-    # list_filter = ('is_supervisor','is_administrator','created_date','is_active')
+    # list_filter = ('is_supervisor','is_administrator','is_active')
 
 
 

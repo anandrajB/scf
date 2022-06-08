@@ -5,6 +5,14 @@ from django.contrib.auth.models import (
     PermissionsMixin
 )
 from django.core.validators import RegexValidator
+from django.utils.safestring import mark_safe
+
+
+def profile_img_path(instance, filename):
+    return "accounts/user_pic/{email}/{filename}".format( email = instance.email ,filename=filename)
+
+# def party_img_path(instance, filename):
+#     return "accounts/party_pic/{}/{email}/{filename}".format( email = instance.email ,filename=filename)
 
 
 
@@ -164,6 +172,7 @@ class User(AbstractBaseUser,PermissionsMixin):
     display_name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True, blank = False)
     is_supervisor = models.BooleanField(default=False)
+    profile_img = models.FileField(upload_to = profile_img_path)
     is_administrator = models.BooleanField(default=False)
     is_master_admin = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
@@ -195,6 +204,12 @@ class User(AbstractBaseUser,PermissionsMixin):
     @property
     def is_superuser(self):
         return self.is_master_admin
+
+    ## for admin panel user
+    def profile_tags(self):
+            return mark_safe('<img src="/media/%s" width="150" height="150" />' % (self.profile_img))
+
+    profile_tags.short_description = 'Image'
 
     
 

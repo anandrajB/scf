@@ -104,6 +104,7 @@ class UserSignupSerializer(serializers.Serializer):
     display_name = serializers.CharField(required = False)
     supervisor = serializers.BooleanField(required = False)
     administrator = serializers.BooleanField(required = False)
+    profile_picture = serializers.FileField(required = False)
 
     
     def create(self, validated_data):
@@ -112,11 +113,12 @@ class UserSignupSerializer(serializers.Serializer):
         first_name = validated_data.pop('first_name')
         last_name = validated_data.pop('last_name')
         display_name = validated_data.pop('display_name')
+        profile_picture = validated_data.pop('profile_picture')
         party = validated_data.pop('party')
         supervisor = validated_data.pop('supervisor')
         administrator = validated_data.pop('administrator')
     
-        user = User.objects.create(phone = phone , email = email ,first_name = first_name ,  last_name =last_name ,display_name = display_name , party = party,  is_supervisor = supervisor , is_administrator = administrator )
+        user = User.objects.create(phone = phone , email = email ,first_name = first_name ,  last_name =last_name, profile_img = profile_picture,display_name = display_name , party = party,  is_supervisor = supervisor , is_administrator = administrator )
         user.save()
         return user
         
@@ -156,6 +158,7 @@ class GetUserSerilaizer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             'party',
+            'profile_img',
             'is_active',
             "is_supervisor",
             "is_administrator",
@@ -174,6 +177,7 @@ class UserUpdateSerilaizer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'display_name',
+            'profile_img',
             'party',
             'is_active',
             'is_supervisor',

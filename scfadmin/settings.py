@@ -182,6 +182,7 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.media',
                 'django.contrib.messages.context_processors.messages',
             ],
             'libraries': {
@@ -244,7 +245,7 @@ else:
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django_tenants.postgresql_backend',
-#         'NAME': 'scf1',
+#         'NAME': 'testing1',
 #         'USER': 'postgres',
 #         'PASSWORD': 'root',
 #         'HOST': 'localhost',
