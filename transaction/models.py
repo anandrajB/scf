@@ -9,7 +9,7 @@ from transaction.states import StateChoices
 ## FILE PATH DIRECTORY  -- ATTACHEMENT FILES -- 
 
 def program_file_path(instance,filename):
-    return 'scf/program/{0}--{1}/{2}'.format(instance.party.name , instance.party.party_type , filename)
+    return 'scf/program/{0}/{1}'.format(instance.party.name , filename)
 
 
 def pairing_file_path(instance,filename):

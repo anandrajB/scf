@@ -1,6 +1,8 @@
-import os
-from django.core.exceptions import ValidationError
 from rest_framework import serializers
+from transaction.custom_validators import (
+    validate_file_extension , 
+    validate_invoice_extension
+)
 from .models import (
     Invoices,
     Invoiceuploads,
@@ -8,7 +10,6 @@ from .models import (
     Programs,
     workflowitems
 )
-from rest_framework import generics
 from accounts.models import (
     Countries, 
     Currencies, 
@@ -289,7 +290,7 @@ class Programcreateserializer(serializers.Serializer):
     # record_datas = serializers.JSONField()
     from_party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all(),required  = False)
     to_party = serializers.PrimaryKeyRelatedField(queryset=Parties.objects.all(),required = False)
-    file = serializers.FileField(required = False)
+    file = serializers.FileField(required = False , validators = [validate_file_extension])
     
 
     def create(self, validated_data):
@@ -481,7 +482,7 @@ class InvoiceUploadserializer(serializers.Serializer):
     wf_item_id = serializers.SerializerMethodField()
     program_type = serializers.ChoiceField(choices = program_type)
     invoices = serializers.JSONField()
-    attached_file = serializers.FileField(required = False)
+    attached_file = serializers.FileField(required = False , validators = [validate_file_extension])
     event_user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(),required=False)
     to_party = serializers.PrimaryKeyRelatedField(queryset = Parties.objects.all(),required = False)
     from_party = serializers.PrimaryKeyRelatedField(queryset = Parties.objects.all(),required = False)
@@ -593,7 +594,7 @@ class CounterPartySerializer(serializers.Serializer):
     margin = serializers.IntegerField()
     program_id = serializers.PrimaryKeyRelatedField(queryset = Programs.objects.all())
     program_type = serializers.CharField(required = False)
-    file = serializers.FileField(required = False)
+    file = serializers.FileField(required = False ,  validators = [validate_file_extension])
     
     def create(self, validated_data):
         customer_id = validated_data.pop('customer_id')
@@ -1012,13 +1013,7 @@ class WorkFlowitemsEnquirySerializer(serializers.ModelSerializer):
 
 
 
-# CUSTOM FILE VALIDATOR FOR INVOICE CSV UPLOAD
 
-def validate_invoice_extension(value):
-    ext = os.path.splitext(value.name)[1]  
-    invoice_extensions = ['.csv','.xlsx']
-    if not ext.lower() in invoice_extensions:
-        raise ValidationError('Unsupported file extension. Must be in .csv or .xlsx format')
 
 
 # INVOICE CSV SERIALIZER
