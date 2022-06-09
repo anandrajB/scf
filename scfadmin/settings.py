@@ -26,8 +26,12 @@ SECRET_KEY = os.environ['SECRET_KEY']
 AUTH_USER_MODEL = 'accounts.User'
 
 
+# APPEND_SLASH=False
+
+
+
 # –––––––––––––––––––––#
-#  HIGH PRIORITY - 3   #
+#  HIGH PRIORITY - 1   #
 # –––––––––––––––––––––#
 
 DEBUG = True
@@ -207,6 +211,10 @@ WSGI_APPLICATION = 'scfadmin.wsgi.application'
 
 # DATABASE HEROKU  heroku testing database
 
+
+# –––––––––––––––––––––#
+#  HIGH PRIORITY - 2   #
+# –––––––––––––––––––––#
 
 
 # SETUP : 1
@@ -388,9 +396,21 @@ GRAPH_MODEL = {
 
 
 
-# APPEND_SLASH=False
 
 
+# ––––––––––––––------–––––––#
+#    SSL TLS CONFIGURATION   #
+# ––––––––––––––––------–––––#
+
+# CORS_REPLACE_HTTPS_REFERER      = False
+# HOST_SCHEME                     = "http://"
+# SECURE_PROXY_SSL_HEADER         = None
+# SECURE_SSL_REDIRECT             = False
+# SESSION_COOKIE_SECURE           = False
+# CSRF_COOKIE_SECURE              = False
+# SECURE_HSTS_SECONDS             = None
+# SECURE_HSTS_INCLUDE_SUBDOMAINS  = False
+# SECURE_FRAME_DENY               = False
 
 
 
@@ -470,5 +490,7 @@ JAZZMIN_UI_TWEAKS = {
 
 
 # –––––––––– END OF JAZZMIN SETTINGS ––––––––––#
+
+
 
 
