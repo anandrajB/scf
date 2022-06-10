@@ -28,15 +28,19 @@
 1. python manage.py loaddata fixtures/accounts.json
 2. python manage.py loaddata fixtures/transactions.json
 
+#### common
+3. python manage.py loaddata fixtures/data.json   
+
 #### misc
-3. python manage.py loaddata fixtures/actions.json   
-4. python manage.py loaddata fixtures/currencies.json
-5. python manage.py loaddata fixtures/countries.json
+4. python manage.py loaddata fixtures/actions.json  
+5. python manage.py loaddata fixtures/currencies.json 
+6. python manage.py loaddata fixtures/countries.json 
 
 ## TABLE DATA'S DUMPING - TESTING
 
-1. heroku run -a venzoscf python manage.py loaddata fixtures/data.json
-2. heroku run -a venzoscf python manage.py loaddata fixtures/actions.json
+1. heroku run -a venzoscf python manage.py loaddata fixtures/data.json\
+\
+***important NOTE:*** *The data.json maintains all the currencies , countries , actions data*
 
 ## RUNNING TEST CASES **
 
@@ -91,6 +95,8 @@
 
 ## WORKING ENVIRONMENTS
 
-1. TESTING    :  http://venzoscf.herokuapp.com
+1. TESTING_1    :  http://venzoscf.herokuapp.com 
 
-2. PRODUCTION :  http://206.189.129.55/
+2. TESTING_2    :  https://scftestenv.herokuapp.com/
+
+2. PRODUCTION   :  http://206.189.129.55/
