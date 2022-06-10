@@ -52,6 +52,4 @@ urlpatterns = [
     path('action/<int:pk>/',ActionUpdateDeleteApiview.as_view()),
     path('models/',ModelApiview.as_view()),
     path('models/<int:pk>/',ModelUpdateDeleteApiview.as_view())
-]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
-    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
+]
