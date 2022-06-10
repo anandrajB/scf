@@ -692,6 +692,7 @@ class MiscApiView(APIView):
         if data == "IC":
             qs = InterestChoice.objects.all()
             ser = Interestchoiceserializer(qs, many=True)
-        qs = InterestRateType.objects.all()
-        ser = Interestratetypechoiceserializer(qs, many=True)
+        else:
+            qs = InterestRateType.objects.all()
+            ser = Interestratetypechoiceserializer(qs, many=True)
         return Response({"Status": "Success", "data": ser.data}, status=status.HTTP_200_OK)
