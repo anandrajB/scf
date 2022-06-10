@@ -43,8 +43,8 @@ from transaction.api.ProgramTransition import (
     ProgramTransitionDeleteApiview,
     ProgramReturnTransitionview
 )
-
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -112,4 +112,5 @@ urlpatterns = [
     path('invoiceupload/transition/submit/<int:pk>/',InvoiceUploadTransitionApiView.as_view(), name='invoice-upload-submit'),
     path('invoiceupload/transition/return/<int:pk>/',InvoiceUploadReturnTransitionview.as_view(), name='invoice-upload-return'),
     
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
