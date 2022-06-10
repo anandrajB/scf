@@ -68,16 +68,7 @@ class Programs(models.Model):
         ('ON_REQUEST', 'ON_REQUEST')
     ]
 
-    interest_choices = [
-        ('FIXED', 'FIXED'),
-        ('FLOATING', 'FLOATING')
-    ]
-
-    interest_rate_type_choices = [
-        ('LIBOR', 'LIBOR'),
-        ('EURIBOR', 'EURIBOR'),
-        ('SOFOR', 'SOFOR')
-    ]
+    
     
     program_type = [
         ('ALL', 'ALL'),
@@ -105,8 +96,8 @@ class Programs(models.Model):
     balance_amount = models.DecimalField(max_digits=8, decimal_places=2,blank=True, null=True)
     grace_period = models.IntegerField(blank=True, null=True)
     attached_file = models.FileField(upload_to=program_file_path)
-    interest_type = models.CharField(choices=interest_choices, default=None, max_length=15,blank=True, null=True)
-    interest_rate_type = models.CharField(choices=interest_rate_type_choices, max_length=15, default=None,blank=True, null=True)
+    interest_type = models.ForeignKey(InterestChoice,on_delete=models.DO_NOTHING)
+    interest_rate_type = models.ForeignKey(InterestRateType,on_delete=models.DO_NOTHING)
     interest_rate = models.DecimalField(max_digits=8, decimal_places=2,blank=True, null=True)
     margin = models.DecimalField(max_digits=8, decimal_places=2,blank=True, null=True)
     comments = models.CharField(max_length=155,blank=True, null=True)
@@ -175,8 +166,8 @@ class Pairings(models.Model):
     balance_amount = models.DecimalField(max_digits=8, decimal_places=2,blank=True, null=True)
     grace_period = models.IntegerField(blank=True, null=True)
     attached_file = models.FileField(upload_to=pairing_file_path)
-    interest_type = models.CharField(choices=interest_choices, default=None, max_length=15,blank=True, null=True)
-    interest_rate_type = models.CharField(choices=interest_rate_type_choices, max_length=15, default=None)
+    interest_type = models.ForeignKey(InterestChoice,on_delete=models.DO_NOTHING)
+    interest_rate_type = models.ForeignKey(InterestRateType,on_delete=models.DO_NOTHING)
     interest_rate = models.DecimalField(max_digits=8, decimal_places=2,blank=True, null=True)
     margin = models.DecimalField(max_digits=8, decimal_places=2,blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
@@ -335,7 +326,7 @@ class workevents(models.Model):
                     "balance_amount" : str(qs.balance_amount),
                     "grace_period" : qs.grace_period,
                     "interest_type" : qs.interest_type,
-                    "interest_rate_type" : qs.interest_rate_type,
+                    "interest_rate_type" : qs.interest_rate_type.description,
                     "interest_rate": str(qs.interest_rate),
                     "margin" : str(qs.margin),
                     "status" : qs.status,

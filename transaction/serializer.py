@@ -482,7 +482,7 @@ class InvoiceUploadserializer(serializers.Serializer):
     wf_item_id = serializers.SerializerMethodField()
     program_type = serializers.ChoiceField(choices = program_type)
     invoices = serializers.JSONField()
-    attached_file = serializers.FileField(required = False , validators = [validate_file_extension])
+    file = serializers.FileField(required = False , validators = [validate_file_extension])
     event_user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(),required=False)
     to_party = serializers.PrimaryKeyRelatedField(queryset = Parties.objects.all(),required = False)
     from_party = serializers.PrimaryKeyRelatedField(queryset = Parties.objects.all(),required = False)
@@ -494,9 +494,9 @@ class InvoiceUploadserializer(serializers.Serializer):
         event_user = validated_data.pop('event_user')
         from_party = validated_data.pop('from_party')
         to_party = validated_data.pop('to_party')
-        attached_file = validated_data.pop('attached_file')
+        file = validated_data.pop('attached_file')
         
-        uploads = Invoiceuploads.objects.create(program_type = program_type , invoices = invoices ,attached_file = attached_file,**validated_data )
+        uploads = Invoiceuploads.objects.create(program_type = program_type , invoices = invoices ,attached_file = file,**validated_data )
         work = workflowitems.objects.create(
             uploads=uploads, current_from_party=from_party,current_to_party=to_party, user=event_user , type="UPLOAD")
         event = workevents.objects.create( event_user = event_user , type = "UPLOAD",
