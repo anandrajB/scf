@@ -191,6 +191,8 @@ class ProgramListserializer(serializers.ModelSerializer):
     party = serializers.SlugRelatedField(read_only=True, slug_field='name')
     created_by = serializers.SerializerMethodField()
     wf_item_id = serializers.SerializerMethodField()
+    interest_type = serializers.SlugRelatedField(read_only=True, slug_field='description')
+    interest_rate_type = serializers.SlugRelatedField(read_only=True, slug_field='description')
 
     class Meta:
         model = Programs
@@ -245,16 +247,6 @@ class Programcreateserializer(serializers.Serializer):
         ('ON_REQUEST', 'ON_REQUEST')
     ]
 
-    interest_type = [
-        ('FIXED', 'FIXED'),
-        ('FLOATING', 'FLOATING')
-    ]
-
-    interest_rate_type = [
-        ('LIBOR', 'LIBOR'),
-        ('EURIBOR', 'EURIBOR'),
-        ('SOFOR', 'SOFOR')
-    ]
 
     program_type = [
         ('ALL', 'ALL'),
@@ -281,8 +273,8 @@ class Programcreateserializer(serializers.Serializer):
     # financed_amount = serializers.DecimalField(max_digits=8, decimal_places=2,required = False)
     # balance_amount = serializers.DecimalField(max_digits=8, decimal_places=2,required = False)
     grace_period = serializers.IntegerField()
-    interest_type = serializers.ChoiceField(choices=interest_type)
-    interest_rate_type = serializers.ChoiceField(choices=interest_rate_type)
+    interest_type = serializers.PrimaryKeyRelatedField(queryset=InterestChoice.objects.all(),required = False)
+    interest_rate_type = serializers.PrimaryKeyRelatedField(queryset=InterestRateType.objects.all(),required = False)
     # interest_rate = serializers.DecimalField(max_digits=8, decimal_places=2,required = False)
     margin = serializers.DecimalField(max_digits=8, decimal_places=2)
     user = serializers.PrimaryKeyRelatedField(queryset = User.objects.all(),required = False)
@@ -591,8 +583,8 @@ class CounterPartySerializer(serializers.Serializer):
     max_invoice_percent = serializers.IntegerField(required=False)
     max_tenor = serializers.IntegerField()
     grace_period = serializers.IntegerField()
-    interest_type = serializers.ChoiceField(choices = interest_type )
-    interest_rate_type = serializers.ChoiceField(choices = interest_rate_type)
+    interest_type = serializers.PrimaryKeyRelatedField(queryset=InterestChoice.objects.all(),required = False)
+    interest_rate_type = serializers.PrimaryKeyRelatedField(queryset=InterestRateType.objects.all(),required = False)
     margin = serializers.IntegerField()
     program_id = serializers.PrimaryKeyRelatedField(queryset = Programs.objects.all())
     program_type = serializers.CharField(required = False)
@@ -741,7 +733,7 @@ class CounterPartyListSerializer(serializers.ModelSerializer):
         return obj.pairings.grace_period
 
     def get_Interest_Rate_Type(self,obj):
-        return obj.pairings.interest_rate_type
+        return obj.pairings.interest_rate_type.description
 
     def get_Margin(self,obj):
         return obj.pairings.margin
@@ -759,7 +751,7 @@ class CounterPartyListSerializer(serializers.ModelSerializer):
         return obj.pairings.financed_amount
 
     def get_interest_type(self,obj):
-        return obj.pairings.interest_type
+        return obj.pairings.interest_type.description
 
 
 

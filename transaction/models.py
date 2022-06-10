@@ -325,7 +325,7 @@ class workevents(models.Model):
                     "financed_amount":str(qs.financed_amount),
                     "balance_amount" : str(qs.balance_amount),
                     "grace_period" : qs.grace_period,
-                    "interest_type" : qs.interest_type,
+                    "interest_type" : qs.interest_type.description,
                     "interest_rate_type" : qs.interest_rate_type.description,
                     "interest_rate": str(qs.interest_rate),
                     "margin" : str(qs.margin),
