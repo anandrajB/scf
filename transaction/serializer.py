@@ -4,6 +4,8 @@ from transaction.custom_validators import (
     validate_invoice_extension
 )
 from .models import (
+    InterestChoice,
+    InterestRateType,
     Invoices,
     Invoiceuploads,
     Pairings,
@@ -1061,3 +1063,16 @@ class Workflowitemsupdateserializer(serializers.Serializer):
         except:
             instance.save()
         return instance
+
+
+class Interestchoiceserializer(serializers.ModelSerializer):
+    class Meta:
+        model = InterestChoice
+        fields = '__all__'
+
+
+
+class Interestratetypechoiceserializer(serializers.ModelSerializer):
+    class Meta:
+        model = InterestRateType
+        fields = '__all__'

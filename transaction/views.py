@@ -5,6 +5,8 @@ from accounts.permission.base_permission import Is_Buyer, Is_Bank
 from transaction.FSM.Invoice import InvoiceFlow
 from transaction.FSM.invoice_bank import InvoiceBankFlow 
 from .models import (
+    InterestChoice,
+    InterestRateType,
     Invoices,
     Invoiceuploads,
     Pairings,
@@ -29,6 +31,8 @@ from rest_framework.response import Response
 from .serializer import (
     CounterPartyListSerializer,
     CounterPartySerializer,
+    Interestchoiceserializer,
+    Interestratetypechoiceserializer,
     InvoiceCreateserializer,
     InvoiceSerializer,
     InvoiceUploadlistserializer,
@@ -679,3 +683,15 @@ class WorkEventsUpdateApi(RetrieveUpdateDestroyAPIView):
         return Response({"status": "failure", "data": serializer.errors}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
 
+
+class MiscApiView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        data = self.request.query_params.get('type')
+        if data == "IC":
+            qs = InterestChoice.objects.all()
+            ser = Interestchoiceserializer(qs, many=True)
+        qs = InterestRateType.objects.all()
+        ser = Interestratetypechoiceserializer(qs, many=True)
+        return Response({"Status": "Success", "data": ser.data}, status=status.HTTP_200_OK)

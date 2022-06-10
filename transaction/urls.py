@@ -25,7 +25,8 @@ from .views import (
     TestApiview,
     WorkFlowItemUpdateApi,
     WorkEventsUpdateApi,
-    InboxNotificationCountApiView
+    InboxNotificationCountApiView,
+    MiscApiView
  
 )
 from transaction.api.InvoiceUploadTransition import (
@@ -82,7 +83,7 @@ urlpatterns = [
     path('workflowitem/<int:pk>/',WorkFlowItemUpdateApi.as_view(),name='workflowitem-update-api'),
     path('workevents/<int:pk>/',WorkEventsUpdateApi.as_view() , name = 'workevent_update_api'),
     path('notification/',InboxNotificationCountApiView.as_view(),name='notification-api-unread-messages-count'),
-    
+    path('choices/',MiscApiView.as_view(),name = 'interest and rate_type list api ')
 
     #### TRANSITIONS ####
 
