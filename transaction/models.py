@@ -6,6 +6,7 @@ from transaction.states import StateChoices
 
 
 
+
 ## FILE PATH DIRECTORY  -- ATTACHEMENT FILES -- 
 
 def program_file_path(instance,filename):
@@ -18,6 +19,7 @@ def pairing_file_path(instance,filename):
 
 def invoice_upload_file_path(instance,filename):
     return 'scf/invoice_attachements/{0}'.format(filename)
+
 
 
 

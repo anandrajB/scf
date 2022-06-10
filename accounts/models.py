@@ -8,12 +8,13 @@ from django.core.validators import RegexValidator
 from django.utils.safestring import mark_safe
 
 
+
+
 def profile_img_path(instance, filename):
     return "accounts/user_pic/{email}/{filename}".format( email = instance.email ,filename=filename)
 
 # def party_img_path(instance, filename):
 #     return "accounts/party_pic/{}/{email}/{filename}".format( email = instance.email ,filename=filename)
-
 
 
 # CURRENCIES      

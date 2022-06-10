@@ -253,7 +253,7 @@ else:
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django_tenants.postgresql_backend',
-#         'NAME': 'scf11',
+#         'NAME': 'scf12',
 #         'USER': 'postgres',
 #         'PASSWORD': 'root',
 #         'HOST': 'localhost',
