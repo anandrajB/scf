@@ -441,7 +441,7 @@ class CounterPartyApiview(APIView):
     def get(self, request):
         queryset = Parties.objects.filter(party_type="SELLER")
         ser = CounterPartyListSerializer(queryset, many=True)
-        return Response({"Status": "Success", "data": ser.data}, status=status.HTTP_201_CREATED)
+        return Response({"Status": "Success", "data": ser.data}, status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = CounterPartySerializer(data=request.data)
@@ -498,7 +498,7 @@ class WorkEventHistoryListAPI(APIView):
     def get(self, request):
         queryset = self.get_queryset(self)
         ser = WorkEventHistorySerializer(queryset, many=True)
-        return Response({"Status": "Success", "data": ser.data}, status=status.HTTP_201_CREATED)
+        return Response({"Status": "Success", "data": ser.data}, status=status.HTTP_200_OK)
 
 
 
