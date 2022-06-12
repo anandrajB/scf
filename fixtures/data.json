@@ -3366,5 +3366,40 @@
             "bank": false,
             "customer": false
         }
+    },
+    {
+        "model": "transaction.interestratetype",
+        "pk": 1,
+        "fields": {
+            "description": "EURIBOR"
+        }
+    },
+    {
+        "model": "transaction.interestratetype",
+        "pk": 2,
+        "fields": {
+            "description": "LIBOR"
+        }
+    },
+    {
+        "model": "transaction.interestratetype",
+        "pk": 3,
+        "fields": {
+            "description": "SOFOR"
+        }
+    },
+    {
+        "model": "transaction.interestchoice",
+        "pk": 1,
+        "fields": {
+            "description": "FIXED"
+        }
+    },
+    {
+        "model": "transaction.interestchoice",
+        "pk": 2,
+        "fields": {
+            "description": "FLOATING"
+        }
     }
 ]
